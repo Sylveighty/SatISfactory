@@ -3,12 +3,9 @@
 A web-based Student Information System (SIS) built with Spring Boot, Thymeleaf, and MySQL.
 Developed as a proof-of-concept for the Polytechnic University of the Philippines — Manila Campus.
 
-> **Status:** Step 1 complete — authentication, role routing, and base UI functional.
-> Active development follows an Agile Kanban workflow.
-
 ---
 
-## Features (Step 1)
+## Features 
 
 - Role-based login system (Admin, Faculty, Student)
 - Automatic dashboard routing after login based on role
@@ -39,13 +36,13 @@ Developed as a proof-of-concept for the Polytechnic University of the Philippine
 | Layer | Technology |
 |---|---|
 | Language | Java 17 (OpenJDK 17) |
-| Framework | Spring Boot 3.2.5 |
+| Framework | Spring Boot 3.5.14 |
 | Build | Maven |
 | Security | Spring Security 6 |
 | Persistence | Spring Data JPA / Hibernate |
 | Database | MySQL 8 |
 | Templates | Thymeleaf 3 |
-| Frontend | Plain HTML/CSS (no JS frameworks) |
+| Frontend | Plain HTML/CSS (no JS frameworks currently) |
 | Editor | VS Code |
 
 ---
@@ -96,8 +93,8 @@ src/main/
 **1. Clone the repository**
 
 ```bash
-git clone https://github.com/<your-username>/pup-sis.git
-cd pup-sis
+git clone https://github.com/Sylveighty/SatISfactory.git
+cd SatISfactory
 ```
 
 **2. Create the database**
