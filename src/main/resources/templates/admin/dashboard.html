@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard — PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- Sidebar fragment -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <!-- Main content -->
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Admin Dashboard</h2>
+            <div class="header-right">
+                <span>Welcome, <strong th:text="${username}">admin</strong></span>
+                <span class="role-badge admin">Administrator</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <div class="page-title">
+                <h3>System Overview</h3>
+                <p>Polytechnic University of the Philippines — Manila Campus</p>
+            </div>
+
+            <div class="dashboard-grid">
+
+                <div class="dash-card">
+                    <div class="dash-icon">📚</div>
+                    <div class="dash-body">
+                        <h4>Curriculum</h4>
+                        <p>Create and manage academic programs and course maps</p>
+                    </div>
+                    <a th:href="@{/admin/curriculum}" class="dash-link">Manage →</a>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-icon">👥</div>
+                    <div class="dash-body">
+                        <h4>Students</h4>
+                        <p>Student records, enrollment, and curriculum assignment</p>
+                    </div>
+                    <a th:href="@{/admin/students}" class="dash-link">Manage →</a>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-icon">👤</div>
+                    <div class="dash-body">
+                        <h4>Faculty</h4>
+                        <p>Faculty records, accounts, and subject assignment</p>
+                    </div>
+                    <a th:href="@{/admin/faculty}" class="dash-link">Manage →</a>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-icon">📖</div>
+                    <div class="dash-body">
+                        <h4>Subjects</h4>
+                        <p>Subject catalog, course availability, eligible faculty</p>
+                    </div>
+                    <a th:href="@{/admin/subjects}" class="dash-link">Manage →</a>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-icon">🏫</div>
+                    <div class="dash-body">
+                        <h4>Sections</h4>
+                        <p>Section creation and student assignment</p>
+                    </div>
+                    <a th:href="@{/admin/sections}" class="dash-link">Manage →</a>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-icon">📅</div>
+                    <div class="dash-body">
+                        <h4>Schedules</h4>
+                        <p>Faculty and section scheduling with conflict detection</p>
+                    </div>
+                    <a th:href="@{/admin/schedules}" class="dash-link">Manage →</a>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+</div>
+</body>
+</html>

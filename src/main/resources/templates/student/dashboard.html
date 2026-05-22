@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard — PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Student Dashboard</h2>
+            <div class="header-right">
+                <span>Welcome, <strong th:text="${username}">student1</strong></span>
+                <span class="role-badge student">Student</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <div class="page-title">
+                <h3>Student Portal</h3>
+                <p>View your grades, enrollment, and profile information</p>
+            </div>
+
+            <div class="dashboard-grid">
+
+                <div class="dash-card">
+                    <div class="dash-icon">👤</div>
+                    <div class="dash-body">
+                        <h4>My Profile</h4>
+                        <p>View and update your personal information</p>
+                    </div>
+                    <a th:href="@{/student/profile}" class="dash-link">View →</a>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-icon">📊</div>
+                    <div class="dash-body">
+                        <h4>My Grades</h4>
+                        <p>View your grades per subject and semester</p>
+                    </div>
+                    <a th:href="@{/student/grades}" class="dash-link">View →</a>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-icon">📋</div>
+                    <div class="dash-body">
+                        <h4>Enrollment</h4>
+                        <p>Enroll in subjects for the upcoming school year</p>
+                    </div>
+                    <a th:href="@{/student/enrollment}" class="dash-link">Enroll →</a>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+</div>
+</body>
+</html>
