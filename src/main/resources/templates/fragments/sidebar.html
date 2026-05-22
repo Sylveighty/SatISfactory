@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<body>
+
+<!--
+  This file defines a reusable sidebar fragment.
+  Usage in any page:  <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+  The sec:authorize attributes show/hide nav groups based on the logged-in role.
+-->
+<nav th:fragment="sidebar" class="sidebar">
+
+    <!-- Brand / System Name -->
+    <div class="sidebar-header">
+        <span class="sidebar-logo">PUP</span>
+        <span class="sidebar-title">SIS</span>
+    </div>
+
+    <!-- ── Admin Navigation ─────────────────────────────────────────── -->
+    <ul sec:authorize="hasRole('ADMIN')" class="sidebar-nav">
+        <li class="nav-label">Administration</li>
+        <li>
+            <a th:href="@{/admin/dashboard}" class="nav-link">
+                <i class="nav-icon">⊞</i> Dashboard
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/curriculum}" class="nav-link">
+                <i class="nav-icon">📚</i> Curriculum
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/students}" class="nav-link">
+                <i class="nav-icon">👥</i> Students
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/faculty}" class="nav-link">
+                <i class="nav-icon">👤</i> Faculty
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/subjects}" class="nav-link">
+                <i class="nav-icon">📖</i> Subjects
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/sections}" class="nav-link">
+                <i class="nav-icon">🏫</i> Sections
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/schedules}" class="nav-link">
+                <i class="nav-icon">📅</i> Schedules
+            </a>
+        </li>
+    </ul>
+
+    <!-- ── Faculty Navigation ───────────────────────────────────────── -->
+    <ul sec:authorize="hasRole('FACULTY')" class="sidebar-nav">
+        <li class="nav-label">Faculty Portal</li>
+        <li>
+            <a th:href="@{/faculty/dashboard}" class="nav-link">
+                <i class="nav-icon">⊞</i> Dashboard
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/faculty/profile}" class="nav-link">
+                <i class="nav-icon">👤</i> My Profile
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/faculty/schedules}" class="nav-link">
+                <i class="nav-icon">📅</i> My Schedules
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/faculty/classes}" class="nav-link">
+                <i class="nav-icon">👥</i> Class Lists
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/faculty/grades}" class="nav-link">
+                <i class="nav-icon">📝</i> Encode Grades
+            </a>
+        </li>
+    </ul>
+
+    <!-- ── Student Navigation ───────────────────────────────────────── -->
+    <ul sec:authorize="hasRole('STUDENT')" class="sidebar-nav">
+        <li class="nav-label">Student Portal</li>
+        <li>
+            <a th:href="@{/student/dashboard}" class="nav-link">
+                <i class="nav-icon">⊞</i> Dashboard
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/student/profile}" class="nav-link">
+                <i class="nav-icon">👤</i> My Profile
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/student/grades}" class="nav-link">
+                <i class="nav-icon">📊</i> My Grades
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/student/enrollment}" class="nav-link">
+                <i class="nav-icon">📋</i> Enrollment
+            </a>
+        </li>
+    </ul>
+
+    <!-- Logout at the bottom -->
+    <div class="sidebar-footer">
+        <div class="sidebar-user" sec:authentication="name"></div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout">🚪 Sign Out</button>
+        </form>
+    </div>
+
+</nav>
+</body>
+</html>
