@@ -1,7 +1,7 @@
 # SatISfactory
 
 A web-based Student Information System (SIS) built with Spring Boot, Thymeleaf, and MySQL.
-Developed as a proof-of-concept for the Polytechnic University of the Philippines — Manila Campus.
+Developed as a proof-of-concept finals project for the Polytechnic University of the Philippines - San Pedro Campus.
 
 ---
 
@@ -10,7 +10,7 @@ Developed as a proof-of-concept for the Polytechnic University of the Philippine
 - Role-based login system (Admin, Faculty, Student)
 - Automatic dashboard routing after login based on role
 - Persistent sidebar navigation scoped to each role
-- PUP maroon branded UI — no external CSS frameworks
+- PUP maroon branded UI, no external CSS frameworks
 - BCrypt password hashing via Spring Security
 - Database seeding with default test accounts
 
@@ -168,7 +168,7 @@ Thymeleaf templates render server-side HTML returned by controllers.
 ## Branching Strategy
 
 main          production-ready, tagged releases
-dev           integration branch — PRs merge here first
+dev           integration branch - PRs merge here first
 feat/<name>   feature branches, branched from dev
 
 **Example flow:**
@@ -210,4 +210,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development workflow, branch
 ## License
 
 This project is for academic and educational purposes.
-Polytechnic University of the Philippines — San Pedro Campus.
+Polytechnic University of the Philippines - San Pedro Campus.
