@@ -1,0 +1,29 @@
+name: CI Build Check
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  build:
+    name: Compile & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven (skip tests for now)
+        run: ./mvnw clean package -DskipTests
+
+      - name: Confirm JAR was produced
+        run: ls -lh target/*.jar
