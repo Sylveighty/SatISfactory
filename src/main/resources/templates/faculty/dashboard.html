@@ -27,50 +27,13 @@
         <main class="content-area">
             <div class="page-title">
                 <h3>Faculty Portal</h3>
-                <p>Manage your schedules, class lists, and grade encoding</p>
+                <p>Select a module from the sidebar to get started.</p>
             </div>
-
-            <div class="dashboard-grid">
-
-                <div class="dash-card">
-                    <div class="dash-icon">👤</div>
-                    <div class="dash-body">
-                        <h4>My Profile</h4>
-                        <p>View and update your personal information</p>
-                    </div>
-                    <a th:href="@{/faculty/profile}" class="dash-link">View →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">📅</div>
-                    <div class="dash-body">
-                        <h4>My Schedules</h4>
-                        <p>View your assigned class schedules and rooms</p>
-                    </div>
-                    <a th:href="@{/faculty/schedules}" class="dash-link">View →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">👥</div>
-                    <div class="dash-body">
-                        <h4>Class Lists</h4>
-                        <p>Browse the list of students per section</p>
-                    </div>
-                    <a th:href="@{/faculty/classes}" class="dash-link">View →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">📝</div>
-                    <div class="dash-body">
-                        <h4>Encode Grades</h4>
-                        <p>Submit and update student grades per subject</p>
-                    </div>
-                    <a th:href="@{/faculty/grades}" class="dash-link">Encode →</a>
-                </div>
-
+            <div class="dashboard-welcome">
+                <p>Signed in as <strong th:text="${username}">faculty1</strong> &nbsp;·&nbsp;
+                <span class="role-badge faculty">Faculty</span></p>
             </div>
         </main>
-
     </div>
 </div>
 </body>

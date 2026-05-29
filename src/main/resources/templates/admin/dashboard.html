@@ -29,68 +29,13 @@
         <main class="content-area">
             <div class="page-title">
                 <h3>System Overview</h3>
-                <p>Polytechnic University of the Philippines — Manila Campus</p>
+                <p>Select a module from the sidebar to get started.</p>
             </div>
-
-            <div class="dashboard-grid">
-
-                <div class="dash-card">
-                    <div class="dash-icon">📚</div>
-                    <div class="dash-body">
-                        <h4>Curriculum</h4>
-                        <p>Create and manage academic programs and course maps</p>
-                    </div>
-                    <a th:href="@{/admin/curriculum}" class="dash-link">Manage →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">👥</div>
-                    <div class="dash-body">
-                        <h4>Students</h4>
-                        <p>Student records, enrollment, and curriculum assignment</p>
-                    </div>
-                    <a th:href="@{/admin/students}" class="dash-link">Manage →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">👤</div>
-                    <div class="dash-body">
-                        <h4>Faculty</h4>
-                        <p>Faculty records, accounts, and subject assignment</p>
-                    </div>
-                    <a th:href="@{/admin/faculty}" class="dash-link">Manage →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">📖</div>
-                    <div class="dash-body">
-                        <h4>Subjects</h4>
-                        <p>Subject catalog, course availability, eligible faculty</p>
-                    </div>
-                    <a th:href="@{/admin/subjects}" class="dash-link">Manage →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">🏫</div>
-                    <div class="dash-body">
-                        <h4>Sections</h4>
-                        <p>Section creation and student assignment</p>
-                    </div>
-                    <a th:href="@{/admin/sections}" class="dash-link">Manage →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">📅</div>
-                    <div class="dash-body">
-                        <h4>Schedules</h4>
-                        <p>Faculty and section scheduling with conflict detection</p>
-                    </div>
-                    <a th:href="@{/admin/schedules}" class="dash-link">Manage →</a>
-                </div>
-
+            <div class="dashboard-welcome">
+                <p>Signed in as <strong th:text="${username}">admin</strong> &nbsp;·&nbsp;
+                <span class="role-badge admin">Administrator</span></p>
             </div>
-        </main>
-
+        </main> 
     </div>
 </div>
 </body>
