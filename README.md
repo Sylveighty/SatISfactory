@@ -1,7 +1,7 @@
 # SatISfactory
 
 A web-based Student Information System (SIS) built with Spring Boot, Thymeleaf, and MySQL.
-Developed as a proof-of-concept for the Polytechnic University of the Philippines — Manila Campus.
+Developed as a proof-of-concept finals project for the Polytechnic University of the Philippines - San Pedro Campus.
 
 ---
 
@@ -10,7 +10,7 @@ Developed as a proof-of-concept for the Polytechnic University of the Philippine
 - Role-based login system (Admin, Faculty, Student)
 - Automatic dashboard routing after login based on role
 - Persistent sidebar navigation scoped to each role
-- PUP maroon branded UI — no external CSS frameworks
+- PUP maroon branded UI, no external CSS frameworks
 - BCrypt password hashing via Spring Security
 - Database seeding with default test accounts
 
@@ -49,6 +49,7 @@ Developed as a proof-of-concept for the Polytechnic University of the Philippine
 
 ## Project Structure
 
+```text
 src/main/
 ├── java/com/pup/sis/
 │   ├── SisApplication.java       # Entry point
@@ -76,6 +77,7 @@ src/main/
 ├── admin/dashboard.html
 ├── faculty/dashboard.html
 └── student/dashboard.html
+```
 
 ---
 
@@ -148,11 +150,13 @@ These are seeded automatically on the first run. Passwords are BCrypt-hashed in 
 
 The project follows a standard layered Spring Boot architecture:
 
+```text
 Browser
 └── Controller          (handles HTTP requests)
 └── Service       (business logic, orchestration)
 └── Repository (data access via JPA)
 └── Entity (maps to database tables)
+```
 Security layer intercepts all requests before they reach controllers.
 Thymeleaf templates render server-side HTML returned by controllers.
 
@@ -168,7 +172,7 @@ Thymeleaf templates render server-side HTML returned by controllers.
 ## Branching Strategy
 
 main          production-ready, tagged releases
-dev           integration branch — PRs merge here first
+dev           integration branch - PRs merge here first
 feat/<name>   feature branches, branched from dev
 
 **Example flow:**
@@ -185,20 +189,22 @@ git push origin feat/student-crud
 
 ## Commit Convention
 
+```text
 feat(scope): short description of what was added
 fix(scope): short description of what was fixed
 chore(scope): tooling, config, non-feature work
 docs(scope): documentation only
 refactor(scope): code change with no behaviour change
-
+```
 Examples from this project:
 
+```text
 feat(entity): add User entity and Role enum
 feat(security): configure SecurityFilterChain with role-based access
 feat(ui): add sidebar fragment with role-based navigation
 chore(config): configure MySQL datasource and JPA properties
 docs: add README with setup and architecture sections
-
+```
 ---
 
 ## Contributing
@@ -210,4 +216,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development workflow, branch
 ## License
 
 This project is for academic and educational purposes.
-Polytechnic University of the Philippines — San Pedro Campus.
+Polytechnic University of the Philippines - San Pedro Campus.
