@@ -49,6 +49,7 @@ Developed as a proof-of-concept finals project for the Polytechnic University of
 
 ## Project Structure
 
+```text
 src/main/
 ├── java/com/pup/sis/
 │   ├── SisApplication.java       # Entry point
@@ -76,6 +77,7 @@ src/main/
 ├── admin/dashboard.html
 ├── faculty/dashboard.html
 └── student/dashboard.html
+```
 
 ---
 
