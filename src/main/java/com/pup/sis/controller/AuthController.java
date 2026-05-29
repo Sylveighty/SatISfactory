@@ -8,24 +8,44 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AuthController {
 
-    // Root URL → redirect to login
+    // Root URL redirects to welcome page
     @GetMapping("/")
     public String root() {
-        return "redirect:/login";
+        return "redirect:/welcome";
     }
 
-    @GetMapping("/login")
-    public String loginPage(
-            @RequestParam(required = false) String error,
-            @RequestParam(required = false) String logout,
-            Model model) {
+    @GetMapping("/welcome")
+    public String welcomePage() {
+        return "welcome";
+    }
 
+    @GetMapping("/login/student")
+    public String studentLogin(
+            @RequestParam(required = false) String error,
+            Model model) {
         if (error != null) {
-            model.addAttribute("error", "Invalid username or password. Please try again.");
+            model.addAttribute("error", "Invalid student number or password.");
         }
-        if (logout != null) {
-            model.addAttribute("message", "You have been logged out successfully.");
+        return "login-student";
+    }
+
+    @GetMapping("/login/faculty")
+    public String facultyLogin(
+            @RequestParam(required = false) String error,
+            Model model) {
+        if (error != null) {
+            model.addAttribute("error", "Invalid faculty ID or password.");
         }
-        return "login"; // resolves to templates/login.html
+        return "login-faculty";
+    }
+
+    @GetMapping("/login/admin")
+    public String adminLogin(
+            @RequestParam(required = false) String error,
+            Model model) {
+        if (error != null) {
+            model.addAttribute("error", "Invalid credentials. Please try again.");
+        }
+        return "login-admin";
     }
 }
