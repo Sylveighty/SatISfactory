@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Sign In — PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="role-login-page">
+
+    <a th:href="@{/welcome}" class="back-link">← Back</a>
+
+    <div class="role-login-container">
+        <div class="role-login-card">
+
+            <div class="role-login-header">
+                <div class="role-login-seal">PUP</div>
+                <div class="role-login-brand">
+                    <span class="role-login-sis">SIS</span>
+                    <span class="role-login-subtitle">STUDENT SIGN IN</span>
+                </div>
+            </div>
+
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <form th:action="@{/login}" method="post" class="role-login-form">
+                <div class="form-group">
+                    <label for="username">Student Number</label>
+                    <input type="text" id="username" name="username"
+                           placeholder="e.g. 2024-00123-SP-0" required>
+                </div>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName"
+                           placeholder="LAST NAME, FIRST NAME">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password"
+                           placeholder="••••••••••" required>
+                </div>
+                <button type="submit" class="btn-login">Sign in</button>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>

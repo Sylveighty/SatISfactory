@@ -50,53 +50,56 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .authenticationProvider(authenticationProvider())
-            .authorizeHttpRequests(auth -> auth
-                // Allow login page and static assets without authentication
-                .requestMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
-                // Lock each section to its corresponding role
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/faculty/**").hasRole("FACULTY")
-                .requestMatchers("/student/**").hasRole("STUDENT")
-                // Everything else requires being logged in
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .successHandler(roleBasedSuccessHandler())
-                .failureUrl("/login?error=true")
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout=true")
-                .permitAll()
-            );
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .authenticationProvider(authenticationProvider())
+        .authorizeHttpRequests(auth -> auth
+            // Public pages - no authentication needed
+            .requestMatchers(
+                "/", "/welcome",
+                "/login/student", "/login/faculty", "/login/admin",
+                "/css/**", "/js/**", "/images/**"
+            ).permitAll()
+            // Role-locked sections
+            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .requestMatchers("/faculty/**").hasRole("FACULTY")
+            .requestMatchers("/student/**").hasRole("STUDENT")
+            // Everything else requires login
+            .anyRequest().authenticated()
+        )
+        .formLogin(form -> form
+            // Unauthenticated users land on welcome, not a login page
+            .loginPage("/welcome")
+            .loginProcessingUrl("/login")
+            .successHandler(roleBasedSuccessHandler())
+            // On failure, go back to whichever role login page the user came from
+            .failureUrl("/login/student?error=true")
+            .permitAll()
+        )
+        .logout(logout -> logout
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/welcome")
+            .permitAll()
+        );
 
-        return http.build();
-    }
+    return http.build();
+}
 
-    /**
-     * After a successful login, redirect to the correct dashboard
-     * based on the user's role instead of a fixed URL.
-     */
-    @Bean
-    public AuthenticationSuccessHandler roleBasedSuccessHandler() {
-        return (HttpServletRequest req, HttpServletResponse res, Authentication auth) -> {
-            String role = auth.getAuthorities().stream()
-                .findFirst()
-                .map(a -> a.getAuthority())
-                .orElse("");
+@Bean
+public AuthenticationSuccessHandler roleBasedSuccessHandler() {
+    return (HttpServletRequest req, HttpServletResponse res, Authentication auth) -> {
+        String role = auth.getAuthorities().stream()
+            .findFirst()
+            .map(a -> a.getAuthority())
+            .orElse("");
 
-            switch (role) {
-                case "ROLE_ADMIN"   -> res.sendRedirect("/admin/dashboard");
-                case "ROLE_FACULTY" -> res.sendRedirect("/faculty/dashboard");
-                case "ROLE_STUDENT" -> res.sendRedirect("/student/dashboard");
-                default             -> res.sendRedirect("/login");
-            }
-        };
-    }
+        switch (role) {
+            case "ROLE_ADMIN"   -> res.sendRedirect("/admin/dashboard");
+            case "ROLE_FACULTY" -> res.sendRedirect("/faculty/dashboard");
+            case "ROLE_STUDENT" -> res.sendRedirect("/student/dashboard");
+            default             -> res.sendRedirect("/welcome");
+        }
+    };
+}
 }

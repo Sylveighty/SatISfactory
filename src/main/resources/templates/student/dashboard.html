@@ -8,6 +8,8 @@
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
+<body class="has-topbar">
+<div th:replace="~{fragments/topbar :: topbar}"></div>
 <div class="app-layout">
 
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
@@ -25,41 +27,13 @@
         <main class="content-area">
             <div class="page-title">
                 <h3>Student Portal</h3>
-                <p>View your grades, enrollment, and profile information</p>
+                <p>Select a module from the sidebar to get started.</p>
             </div>
-
-            <div class="dashboard-grid">
-
-                <div class="dash-card">
-                    <div class="dash-icon">👤</div>
-                    <div class="dash-body">
-                        <h4>My Profile</h4>
-                        <p>View and update your personal information</p>
-                    </div>
-                    <a th:href="@{/student/profile}" class="dash-link">View →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">📊</div>
-                    <div class="dash-body">
-                        <h4>My Grades</h4>
-                        <p>View your grades per subject and semester</p>
-                    </div>
-                    <a th:href="@{/student/grades}" class="dash-link">View →</a>
-                </div>
-
-                <div class="dash-card">
-                    <div class="dash-icon">📋</div>
-                    <div class="dash-body">
-                        <h4>Enrollment</h4>
-                        <p>Enroll in subjects for the upcoming school year</p>
-                    </div>
-                    <a th:href="@{/student/enrollment}" class="dash-link">Enroll →</a>
-                </div>
-
+            <div class="dashboard-welcome">
+                <p>Signed in as <strong th:text="${username}">student1</strong> &nbsp;·&nbsp;
+                <span class="role-badge student">Student</span></p>
             </div>
         </main>
-
     </div>
 </div>
 </body>
