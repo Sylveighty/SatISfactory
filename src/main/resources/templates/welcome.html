@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome — PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="welcome-page">
+
+    <div class="welcome-wrapper">
+
+        <div class="welcome-seal">
+            <div class="seal-placeholder">PUP</div>
+        </div>
+
+        <h1 class="welcome-title">Welcome to SIS</h1>
+        <p class="welcome-subtitle">Polytechnic University of the Philippines</p>
+
+        <div class="welcome-cards">
+
+            <div class="welcome-card">
+                <div class="welcome-card-icon">🛡</div>
+                <h2 class="welcome-card-role">Admin</h2>
+                <a th:href="@{/login/admin}" class="welcome-card-link">Continue →</a>
+            </div>
+
+            <div class="welcome-card">
+                <div class="welcome-card-icon">💼</div>
+                <h2 class="welcome-card-role">Faculty</h2>
+                <a th:href="@{/login/faculty}" class="welcome-card-link">Continue →</a>
+            </div>
+
+            <div class="welcome-card">
+                <div class="welcome-card-icon">🎓</div>
+                <h2 class="welcome-card-role">Student</h2>
+                <a th:href="@{/login/student}" class="welcome-card-link">Continue →</a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
