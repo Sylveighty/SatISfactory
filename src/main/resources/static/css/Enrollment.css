@@ -1,0 +1,192 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
+
+
+body{
+    background:#f4eded;
+}
+
+
+
+.container{
+    display:flex;
+    min-height:100vh;
+}
+
+
+
+.sidebar{
+    width:220px;
+    background:#7a0000;
+    color:white;
+    padding:20px;
+    position:relative;
+}
+
+
+
+.logo h1{
+    font-size:50px;
+    
+}
+
+.logo p{
+    margin-bottom:30px;
+    font-size:10px;
+}
+
+
+
+nav{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    padding:5px 8px;
+}
+
+nav a.active{
+    background:white;
+    color:#7a0000;
+    padding-left:8px;
+    border-radius:4px;
+}
+
+
+
+.user-box{
+    position:absolute;
+    bottom:20px;
+    width:80%;
+    border-top:1px solid #d3d3d3;
+    padding-top:15px;
+}
+
+.user-box h4{
+    font-size:16px;
+    margin:5px 0;
+}
+
+.change-pass{
+    margin-top:15px;
+    width:100%;
+    padding:6px;
+    background:none;
+    border:none;
+    color:orange;
+    cursor:pointer;
+}
+
+.logout{
+    width:100%;
+    padding:8px;
+    border:1px solid white;
+    background:none;
+    color:white;
+    cursor:pointer;
+}
+
+
+.main{
+    flex: 1;
+}
+
+
+.topbar{
+    background: #5a0000;
+    color: gold;
+    padding: 15px 25px;
+}
+
+.page-title{
+    background: #ddd;
+    padding: 15px 40px;
+    font-size: 30px;
+}
+
+
+.student-info{
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 50px;
+    gap: 30px;
+}
+
+.info-left h3{
+    color: red;
+    text-decoration: underline;
+}
+
+.status-box{
+    margin-top: 20px;
+    background: #f5f5f5;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: fit-content;
+}
+
+.procedure{
+    width: 320px;
+    background: #eee;
+    border: 1px solid #bbb;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+
+.table-section{
+    padding: 0 50px 50px;
+}
+
+.table-header{
+    background: #7a0000;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px 6px 0 0;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td{
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+th{
+    background: #f2f2f2;
+}
+
+td button{
+    padding: 6px 10px;
+    background: #ddd;
+    border: none;
+    cursor: pointer;
+}
+
+.save-btn{
+    margin-top: 20px;
+    text-align: right;
+}
+
+.save-btn button{
+    background: #7a0000;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+}
