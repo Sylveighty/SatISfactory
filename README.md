@@ -150,11 +150,13 @@ These are seeded automatically on the first run. Passwords are BCrypt-hashed in 
 
 The project follows a standard layered Spring Boot architecture:
 
+```text
 Browser
 └── Controller          (handles HTTP requests)
 └── Service       (business logic, orchestration)
 └── Repository (data access via JPA)
 └── Entity (maps to database tables)
+```
 Security layer intercepts all requests before they reach controllers.
 Thymeleaf templates render server-side HTML returned by controllers.
 
@@ -187,20 +189,22 @@ git push origin feat/student-crud
 
 ## Commit Convention
 
+```text
 feat(scope): short description of what was added
 fix(scope): short description of what was fixed
 chore(scope): tooling, config, non-feature work
 docs(scope): documentation only
 refactor(scope): code change with no behaviour change
-
+```
 Examples from this project:
 
+```text
 feat(entity): add User entity and Role enum
 feat(security): configure SecurityFilterChain with role-based access
 feat(ui): add sidebar fragment with role-based navigation
 chore(config): configure MySQL datasource and JPA properties
 docs: add README with setup and architecture sections
-
+```
 ---
 
 ## Contributing
