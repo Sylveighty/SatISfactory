@@ -232,3 +232,8 @@ nav a.active{
     font-size:18px;
   }
 }
+
+a {
+    color: white;
+    text-decoration: none;
+}
