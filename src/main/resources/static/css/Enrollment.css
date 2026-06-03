@@ -190,3 +190,14 @@ td button{
     border-radius: 5px;
     cursor: pointer;
 }
+
+select {
+    padding: 5px;
+    border-radius: 5px;
+    width: 180px;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
