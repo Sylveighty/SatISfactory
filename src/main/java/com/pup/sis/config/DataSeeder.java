@@ -1,5 +1,6 @@
 package com.pup.sis.config;
 
+import com.pup.sis.entity.Course;
 import com.pup.sis.entity.Role;
 import com.pup.sis.entity.User;
 import com.pup.sis.repository.UserRepository;
@@ -7,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.pup.sis.repository.CourseRepository;
 
 /**
  * Runs once on startup.
@@ -18,9 +20,9 @@ public class DataSeeder {
 
     @Bean
     public CommandLineRunner seedUsers(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder) {
-
+        UserRepository userRepository,
+        CourseRepository courseRepository,
+        PasswordEncoder passwordEncoder) {
         return args -> {
             if (userRepository.count() > 0) {
                 return; // Already seeded — skip
@@ -55,7 +57,20 @@ public class DataSeeder {
             student.setRole(Role.STUDENT);
             student.setEnabled(true);
             userRepository.save(student);
+            
+            // ── Courses ────────────────────────────────────────────────────
+            courseRepository.save(new Course(
+            "BSIT",
+            "Bachelor of Science in Information Technology"));
 
+            courseRepository.save(new Course(
+            "BSCS",
+            "Bachelor of Science in Computer Science"));
+
+            courseRepository.save(new Course(
+            "BSIS",
+            "Bachelor of Science in Information Systems"));
+            
             System.out.println("✓ Default users seeded successfully.");
         };
     }

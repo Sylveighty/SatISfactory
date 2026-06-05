@@ -1,7 +1,8 @@
 package com.pup.sis.entity;
 
 import jakarta.persistence.*;
-
+import java.util.ArrayList;
+import java.util.List;
 @Entity
 public class Course {
 
@@ -12,6 +13,9 @@ public class Course {
     private String code;
 
     private String name;
+
+    @OneToMany(mappedBy = "course")
+    private List<Student> students = new ArrayList<>();
 
     public Course() {
     }
@@ -39,5 +43,13 @@ public class Course {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }
