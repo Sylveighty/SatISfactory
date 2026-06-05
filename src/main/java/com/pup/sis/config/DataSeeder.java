@@ -3,75 +3,86 @@ package com.pup.sis.config;
 import com.pup.sis.entity.Course;
 import com.pup.sis.entity.Role;
 import com.pup.sis.entity.User;
+import com.pup.sis.repository.CourseRepository;
 import com.pup.sis.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.pup.sis.repository.CourseRepository;
 
-/**
- * Runs once on startup.
- * Creates the three default accounts only if the users table is empty,
- * so it won't duplicate on every restart.
- */
+import java.util.List;
+import java.util.function.Supplier;
+
 @Configuration
 public class DataSeeder {
 
     @Bean
-    public CommandLineRunner seedUsers(
-        UserRepository userRepository,
-        CourseRepository courseRepository,
-        PasswordEncoder passwordEncoder) {
+    public CommandLineRunner seedDatabase(
+            UserRepository userRepository,
+            CourseRepository courseRepository,
+            PasswordEncoder passwordEncoder) {
+
         return args -> {
-            if (userRepository.count() > 0) {
-                return; // Already seeded — skip
+
+            // Prevent duplicate seeding
+            if (userRepository.count() > 0 || courseRepository.count() > 0) {
+                return;
             }
 
-            // ── Admin ──────────────────────────────────────────────────────
-            User admin = new User();
-            admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setFullName("System Administrator");
-            admin.setEmail("admin@pup.edu.ph");
-            admin.setRole(Role.ADMIN);
-            admin.setEnabled(true);
-            userRepository.save(admin);
+            // ─────────────────────────────────────────────
+            // USERS
+            // ─────────────────────────────────────────────
+            userRepository.saveAll(List.of(
+                    buildUser("admin",
+                            "admin123",
+                            "System Administrator",
+                            "admin@pup.edu.ph",
+                            Role.ADMIN,
+                            passwordEncoder),
 
-            // ── Faculty ────────────────────────────────────────────────────
-            User faculty = new User();
-            faculty.setUsername("faculty1");
-            faculty.setPassword(passwordEncoder.encode("faculty123"));
-            faculty.setFullName("Juan dela Cruz");
-            faculty.setEmail("jdelacruz@pup.edu.ph");
-            faculty.setRole(Role.FACULTY);
-            faculty.setEnabled(true);
-            userRepository.save(faculty);
+                    buildUser("faculty1",
+                            "faculty123",
+                            "Juan dela Cruz",
+                            "jdelacruz@pup.edu.ph",
+                            Role.FACULTY,
+                            passwordEncoder),
 
-            // ── Student ────────────────────────────────────────────────────
-            User student = new User();
-            student.setUsername("student1");
-            student.setPassword(passwordEncoder.encode("student123"));
-            student.setFullName("Maria Santos");
-            student.setEmail("msantos@pup.edu.ph");
-            student.setRole(Role.STUDENT);
-            student.setEnabled(true);
-            userRepository.save(student);
-            
-            // ── Courses ────────────────────────────────────────────────────
-            courseRepository.save(new Course(
-            "BSIT",
-            "Bachelor of Science in Information Technology"));
+                    buildUser("student1",
+                            "student123",
+                            "Maria Santos",
+                            "msantos@pup.edu.ph",
+                            Role.STUDENT,
+                            passwordEncoder)
+            ));
 
-            courseRepository.save(new Course(
-            "BSCS",
-            "Bachelor of Science in Computer Science"));
+            // ─────────────────────────────────────────────
+            // COURSES
+            // ─────────────────────────────────────────────
+            courseRepository.saveAll(List.of(
+                    new Course("BSIT", "Bachelor of Science in Information Technology"),
+                    new Course("BSCS", "Bachelor of Science in Computer Science"),
+                    new Course("BSIS", "Bachelor of Science in Information Systems")
+            ));
 
-            courseRepository.save(new Course(
-            "BSIS",
-            "Bachelor of Science in Information Systems"));
-            
-            System.out.println("✓ Default users seeded successfully.");
+            System.out.println("✓ Database seeding completed successfully.");
         };
+    }
+
+    private User buildUser(
+            String username,
+            String rawPassword,
+            String fullName,
+            String email,
+            Role role,
+            PasswordEncoder encoder) {
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(encoder.encode(rawPassword));
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setRole(role);
+        user.setEnabled(true);
+        return user;
     }
 }
