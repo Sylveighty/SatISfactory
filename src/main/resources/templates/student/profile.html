@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Student Portal</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge student">Student</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <!-- Flash messages -->
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <div class="page-title">
+                <h3>Personal Data</h3>
+            </div>
+
+            <!-- No profile linked to this account -->
+            <div th:if="${student == null}" class="alert alert-error">
+                No student profile found. Please contact the administrator.
+            </div>
+
+            <!-- Profile card -->
+            <div th:if="${student != null}" class="profile-card">
+
+                <h3 class="profile-name"
+                    th:text="${student.fullName + ' (' + student.studentNumber + ')'}">
+                </h3>
+
+                <form th:action="@{/student/profile}" method="post" class="profile-form">
+
+                    <!-- Read-only fields -->
+                    <div class="profile-row">
+                        <label class="profile-label">Student Number :</label>
+                        <span class="profile-value"
+                              th:text="${student.studentNumber}"></span>
+                    </div>
+
+                    <div class="profile-row">
+                        <label class="profile-label">Name :</label>
+                        <span class="profile-value"
+                              th:text="${student.fullName}"></span>
+                    </div>
+
+                    <div class="profile-row">
+                        <label class="profile-label">Gender :</label>
+                        <span class="profile-value"
+                              th:text="${student.gender != null ? student.gender : '-'}"></span>
+                    </div>
+
+                    <div class="profile-row">
+                        <label class="profile-label">Date of Birth :</label>
+                        <span class="profile-value"
+                              th:text="${student.dateOfBirth != null ?
+                                        #temporals.format(student.dateOfBirth, 'MMMM dd, yyyy')
+                                        : '-'}">
+                        </span>
+                    </div>
+
+                    <!-- Editable fields -->
+                    <div class="profile-row">
+                        <label class="profile-label">Place of Birth :</label>
+                        <input type="text" name="placeOfBirth" class="profile-input"
+                               th:value="${student.placeOfBirth}">
+                    </div>
+
+                    <div class="profile-row">
+                        <label class="profile-label">Mobile Number :</label>
+                        <input type="text" name="mobileNumber" class="profile-input"
+                               th:value="${student.mobileNumber}">
+                    </div>
+
+                    <div class="profile-row">
+                        <label class="profile-label">Email Address :</label>
+                        <input type="email" name="email" class="profile-input"
+                               th:value="${student.email}">
+                    </div>
+
+                    <div class="profile-row profile-row-tall">
+                        <label class="profile-label">
+                            Residential Address :
+                            <small>(Where you stay while studying in PUP)</small>
+                        </label>
+                        <textarea name="residentialAddress" class="profile-textarea"
+                                  th:text="${student.residentialAddress}"></textarea>
+                    </div>
+
+                    <div class="profile-row profile-row-tall">
+                        <label class="profile-label">Permanent Address :</label>
+                        <textarea name="permanentAddress" class="profile-textarea"
+                                  th:text="${student.permanentAddress}"></textarea>
+                    </div>
+
+                    <div class="profile-row">
+                        <label class="profile-label">
+                            Name of Spouse :
+                            <small>(if married)</small>
+                        </label>
+                        <input type="text" name="spouseName" class="profile-input"
+                               th:value="${student.spouseName}">
+                    </div>
+
+                    <div class="profile-certification">
+                        <em>I hereby certify that all the information provided are true
+                            and correct to the best of my knowledge.</em>
+                    </div>
+
+                    <div class="profile-save-row">
+                        <button type="submit" class="btn-save">Save</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

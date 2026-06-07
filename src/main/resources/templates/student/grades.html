@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grades - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Student Portal</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge student">Student</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div class="page-title">
+                <h3>Grades</h3>
+            </div>
+
+            <!-- No profile linked to this account -->
+            <div th:if="${student == null}" class="alert alert-error">
+                No student profile found. Please contact the administrator.
+            </div>
+
+            <div th:if="${student != null}">
+
+                <!-- Student info + GPA header box -->
+                <div class="grades-header-box">
+                    <div class="grades-header-meta">School Year</div>
+                    <div class="grades-header-sy">-- Not yet enrolled --</div>
+                    <div class="grades-header-name"
+                         th:text="${student.fullName}"></div>
+                    <div class="grades-header-id"
+                         th:text="${'(' + student.studentNumber + ')'}"></div>
+                    <div class="grades-header-gpa">GPA: --</div>
+                </div>
+
+                <!-- Grades table -->
+                <div class="table-wrapper" style="margin-top: 18px">
+                    <table class="sis-table">
+                        <thead>
+                            <tr>
+                                <th>Subject Code</th>
+                                <th>Description</th>
+                                <th>Faculty</th>
+                                <th>Units</th>
+                                <th>Section</th>
+                                <th>Final Grade</th>
+                                <th>Grade Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="7" class="table-empty">
+                                    No grade records yet.
+                                    Enrollment opens at the start of the next semester.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

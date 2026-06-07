@@ -6,10 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-/**
- * Service layer sits between controllers and the repository.
- * Keeps controllers thin and business logic testable.
- */
 @Service
 public class UserService {
 
@@ -25,5 +21,9 @@ public class UserService {
 
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 }
