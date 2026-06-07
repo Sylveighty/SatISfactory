@@ -28,6 +28,9 @@ public class StudentService {
     public Optional<Student> findByUser(User user) {
         return studentRepository.findByUser(user);
     }
+    public Optional<Student> findByStudentNumber(String studentNumber) {
+    return studentRepository.findByStudentNumber(studentNumber);
+    }
 
     public List<Student> search(String query) {
         return studentRepository.findByFullNameContainingIgnoreCase(query);

@@ -29,6 +29,10 @@ public class FacultyService {
         return facultyRepository.findByUser(user);
     }
 
+    public Optional<Faculty> findByFacultyId(String facultyId) {
+    return facultyRepository.findByFacultyId(facultyId);
+    }
+    
     public Faculty save(Faculty faculty) {
         return facultyRepository.save(faculty);
     }

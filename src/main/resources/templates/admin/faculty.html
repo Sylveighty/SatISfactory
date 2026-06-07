@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Faculty Management</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge admin">Administrator</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <!-- Flash messages -->
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <!-- Page header row -->
+            <div class="page-header-row">
+                <div class="page-title">
+                    <h3>Faculty</h3>
+                    <p>Manage faculty records and login accounts.</p>
+                </div>
+                <button class="btn-primary" onclick="openModal('newFacultyModal')">
+                    + New Faculty
+                </button>
+            </div>
+
+            <!-- Table -->
+            <div class="table-wrapper">
+                <table class="sis-table">
+                    <thead>
+                        <tr>
+                            <th>Faculty ID</th>
+                            <th>Full Name</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(facultyList)}">
+                            <td colspan="5" class="table-empty">No faculty records found.</td>
+                        </tr>
+                        <tr th:each="f : ${facultyList}">
+                            <td th:text="${f.facultyId}"></td>
+                            <td th:text="${f.fullName}"></td>
+                            <td th:text="${f.department != null ? f.department : '-'}"></td>
+                            <td th:text="${f.status != null ? f.status : '-'}"></td>
+                            <td class="table-actions">
+                                <a th:href="@{/admin/faculty/{id}/edit(id=${f.id})}"
+                                   class="btn-icon" title="Edit">✏</a>
+                                <form th:action="@{/admin/faculty/{id}/delete(id=${f.id})}"
+                                      method="post" style="display:inline"
+                                      onsubmit="return confirm('Delete this faculty record?')">
+                                    <button type="submit" class="btn-icon" title="Delete">🗑</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- New Faculty Modal -->
+<div id="newFacultyModal" class="modal-overlay" style="display:none">
+    <div class="modal-card">
+        <button class="modal-close" onclick="closeModal('newFacultyModal')">✕</button>
+        <h2 class="modal-title">New Faculty</h2>
+        <form th:action="@{/admin/faculty}" method="post">
+            <div class="modal-group">
+                <label class="modal-label">Faculty ID</label>
+                <input type="text" name="facultyId" class="modal-input"
+                       placeholder="e.g. FAC-2024-006" required>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Full Name</label>
+                <input type="text" name="fullName" class="modal-input"
+                       placeholder="LAST NAME, FIRST NAME" required>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Department</label>
+                <input type="text" name="department" class="modal-input"
+                       placeholder="e.g. Information Technology">
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Status</label>
+                <select name="status" class="modal-select">
+                    <option value="Full Time">Full Time</option>
+                    <option value="Part Time">Part Time</option>
+                </select>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Mobile Number</label>
+                <input type="text" name="mobileNumber" class="modal-input"
+                       placeholder="e.g. 0911-111-1111">
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Email</label>
+                <input type="email" name="email" class="modal-input"
+                       placeholder="e.g. name@pup.edu.ph">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel"
+                        onclick="closeModal('newFacultyModal')">Cancel</button>
+                <button type="submit" class="btn-modal-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Faculty Modal -->
+<div id="editFacultyModal" class="modal-overlay"
+     th:style="${editFaculty != null ? 'display:flex' : 'display:none'}">
+    <div class="modal-card" th:if="${editFaculty != null}">
+        <a th:href="@{/admin/faculty}" class="modal-close">✕</a>
+        <h2 class="modal-title">Edit Faculty</h2>
+        <form th:action="@{/admin/faculty/{id}(id=${editFaculty.id})}" method="post">
+            <div class="modal-group">
+                <label class="modal-label">Faculty ID</label>
+                <input type="text" class="modal-input"
+                       th:value="${editFaculty.facultyId}" disabled>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Full Name</label>
+                <input type="text" name="fullName" class="modal-input"
+                       th:value="${editFaculty.fullName}" required>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Department</label>
+                <input type="text" name="department" class="modal-input"
+                       th:value="${editFaculty.department}">
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Status</label>
+                <select name="status" class="modal-select">
+                    <option value="Full Time"
+                            th:selected="${editFaculty.status == 'Full Time'}">Full Time</option>
+                    <option value="Part Time"
+                            th:selected="${editFaculty.status == 'Part Time'}">Part Time</option>
+                </select>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Mobile Number</label>
+                <input type="text" name="mobileNumber" class="modal-input"
+                       th:value="${editFaculty.mobileNumber}">
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Email</label>
+                <input type="email" name="email" class="modal-input"
+                       th:value="${editFaculty.email}">
+            </div>
+            <div class="modal-actions">
+                <a th:href="@{/admin/faculty}" class="btn-modal-cancel">Cancel</a>
+                <button type="submit" class="btn-modal-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(id) {
+        document.getElementById(id).style.display = 'flex';
+    }
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
