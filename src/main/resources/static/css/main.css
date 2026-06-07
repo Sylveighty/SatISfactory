@@ -815,3 +815,283 @@ body.has-topbar .sidebar {
 .btn-login:hover {
     background: var(--maroon-mid);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ADMIN MODULE PAGES - Step 2
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Page header row (title left, action button right) ──────── */
+.page-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.page-header-row .page-title {
+    margin-bottom: 0;
+}
+
+/* ── Primary action button (New Student, New Faculty, etc.) ─── */
+.btn-primary {
+    background: var(--maroon);
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.btn-primary:hover {
+    background: var(--maroon-mid);
+}
+
+/* ── Search form ─────────────────────────────────────────────── */
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.search-form input {
+    flex: 1;
+    max-width: 360px;
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.15s;
+}
+
+.search-form input:focus {
+    border-color: var(--maroon);
+}
+
+.search-form button {
+    background: var(--maroon);
+    color: #fff;
+    border: none;
+    padding: 9px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.search-form button:hover {
+    background: var(--maroon-mid);
+}
+
+.clear-link {
+    font-size: 13px;
+    color: var(--maroon);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* ── Table wrapper ───────────────────────────────────────────── */
+.table-wrapper {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.table-empty {
+    text-align: center !important;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 36px 0 !important;
+}
+
+/* Fix alert margin when used inside content-area */
+.content-area .alert {
+    margin: 0 0 20px 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STUDENT PROFILE PAGE - Step 2
+   ══════════════════════════════════════════════════════════════ */
+
+.profile-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    box-shadow: var(--shadow-sm);
+    max-width: 780px;
+}
+
+.profile-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--maroon);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-bottom: 20px;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-row {
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Rows with textarea need top alignment instead of center */
+.profile-row-tall {
+    align-items: start;
+}
+
+.profile-row:last-of-type {
+    border-bottom: none;
+}
+
+.profile-label {
+    font-size: 13.5px;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+.profile-label small {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.profile-value {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.profile-input {
+    width: 100%;
+    padding: 7px 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    color: var(--text-main);
+    outline: none;
+    background: #fff;
+    transition: border-color 0.15s;
+}
+
+.profile-input:focus {
+    border-color: var(--maroon);
+    box-shadow: 0 0 0 3px rgba(61, 12, 12, 0.07);
+}
+
+.profile-textarea {
+    width: 100%;
+    padding: 7px 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    color: var(--text-main);
+    outline: none;
+    min-height: 76px;
+    resize: vertical;
+    font-family: inherit;
+    background: #fff;
+    transition: border-color 0.15s;
+}
+
+.profile-textarea:focus {
+    border-color: var(--maroon);
+    box-shadow: 0 0 0 3px rgba(61, 12, 12, 0.07);
+}
+
+.profile-certification {
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-muted);
+    border-left: 3px solid var(--maroon);
+    padding: 12px 16px;
+    margin: 22px 0 18px;
+    background: #fdf5f5;
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.profile-save-row {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Save button used in profile form */
+.btn-save {
+    background: var(--maroon);
+    color: #fff;
+    border: none;
+    padding: 10px 28px;
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-save:hover {
+    background: var(--maroon-mid);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STUDENT GRADES PAGE - Step 2
+   ══════════════════════════════════════════════════════════════ */
+
+.grades-header-box {
+    background: var(--maroon);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+}
+
+.grades-header-meta {
+    font-size: 11px;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.grades-header-sy {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.grades-header-name {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.grades-header-id {
+    font-size: 13px;
+    opacity: 0.75;
+    margin-bottom: 10px;
+}
+
+.grades-header-gpa {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+}
