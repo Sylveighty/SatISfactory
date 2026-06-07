@@ -496,6 +496,18 @@ body.has-topbar .sidebar {
     color: #fff;
 }
 
+.modal-preview {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: var(--radius);
+    padding: 10px 13px;
+    letter-spacing: 1px;
+}
+
 .modal-actions {
     display: flex;
     justify-content: flex-end;
@@ -609,6 +621,7 @@ body.has-topbar .sidebar {
     gap: 12px;
     transition: background 0.2s;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .welcome-card:hover {

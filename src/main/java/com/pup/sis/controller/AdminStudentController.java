@@ -46,6 +46,8 @@ public class AdminStudentController {
         model.addAttribute("students", students);
         model.addAttribute("courses", courseService.findAll());
         model.addAttribute("search", search != null ? search : "");
+        // Pass current year so the modal can pre-fill the year field
+        model.addAttribute("currentYear", java.time.LocalDate.now().getYear());
         return "admin/students";
     }
 
@@ -59,6 +61,7 @@ public class AdminStudentController {
         model.addAttribute("students", studentService.findAll());
         model.addAttribute("courses", courseService.findAll());
         model.addAttribute("search", "");
+        model.addAttribute("currentYear", java.time.LocalDate.now().getYear());
         model.addAttribute("editStudent", student);
         return "admin/students";
     }
@@ -67,20 +70,24 @@ public class AdminStudentController {
 
     @PostMapping
     public String create(
-            @RequestParam String studentNumber,
+            @RequestParam Integer studentYear,
+            @RequestParam Integer studentSeq,
+            @RequestParam(defaultValue = "0") String studentType,
             @RequestParam String fullName,
             @RequestParam Long courseId,
             @RequestParam(defaultValue = "1") Integer yearLevel,
             RedirectAttributes redirectAttributes) {
 
-        // Check for duplicate student number
+        // Build the formatted student number: YYYY-NNNNN-SP-0
+        String studentNumber = String.format("%d-%05d-SP-%s",
+                studentYear, studentSeq, studentType);
+
         if (studentService.findByStudentNumber(studentNumber).isPresent()) {
             redirectAttributes.addFlashAttribute("error",
                     "Student number " + studentNumber + " already exists.");
             return "redirect:/admin/students";
         }
 
-        // Create login account - student number is the username
         User user = new User();
         user.setUsername(studentNumber);
         user.setPassword(passwordEncoder.encode("changeme"));
@@ -89,7 +96,6 @@ public class AdminStudentController {
         user.setEnabled(true);
         userService.save(user);
 
-        // Create student profile linked to that account
         Student student = new Student();
         student.setStudentNumber(studentNumber);
         student.setFullName(fullName);
@@ -99,7 +105,8 @@ public class AdminStudentController {
         studentService.save(student);
 
         redirectAttributes.addFlashAttribute("success",
-                fullName + " added. Default password: changeme");
+                fullName + " added. Student number: " + studentNumber
+                + ". Default password: changeme");
         return "redirect:/admin/students";
     }
 

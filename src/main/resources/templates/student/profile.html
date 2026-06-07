@@ -63,17 +63,24 @@
 
                     <div class="profile-row">
                         <label class="profile-label">Gender :</label>
-                        <span class="profile-value"
-                              th:text="${student.gender != null ? student.gender : '-'}"></span>
+                        <select name="gender" class="profile-input">
+                            <option value="">Not specified</option>
+                            <option value="Male"
+                                    th:selected="${student.gender == 'Male'}">Male</option>
+                            <option value="Female"
+                                    th:selected="${student.gender == 'Female'}">Female</option>
+                            <option value="Prefer not to say"
+                                    th:selected="${student.gender == 'Prefer not to say'}">
+                                Prefer not to say
+                            </option>
+                        </select>
                     </div>
 
                     <div class="profile-row">
                         <label class="profile-label">Date of Birth :</label>
-                        <span class="profile-value"
-                              th:text="${student.dateOfBirth != null ?
-                                        #temporals.format(student.dateOfBirth, 'MMMM dd, yyyy')
-                                        : '-'}">
-                        </span>
+                        <input type="date" name="dateOfBirth" class="profile-input"
+                               th:value="${student.dateOfBirth != null ?
+                                           student.dateOfBirth.toString() : ''}">
                     </div>
 
                     <!-- Editable fields -->

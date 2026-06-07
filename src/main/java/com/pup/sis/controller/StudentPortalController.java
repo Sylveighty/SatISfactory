@@ -45,6 +45,8 @@ public class StudentPortalController {
     @PostMapping("/profile")
     public String updateProfile(
             Authentication auth,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String dateOfBirth,
             @RequestParam(required = false) String placeOfBirth,
             @RequestParam(required = false) String mobileNumber,
             @RequestParam(required = false) String email,
@@ -61,6 +63,15 @@ public class StudentPortalController {
             return "redirect:/student/profile";
         }
 
+        student.setGender(gender);
+
+        // Parse the date string from the HTML date input (format: yyyy-MM-dd)
+        if (dateOfBirth != null && !dateOfBirth.isBlank()) {
+            student.setDateOfBirth(java.time.LocalDate.parse(dateOfBirth));
+        } else {
+            student.setDateOfBirth(null);
+        }
+
         student.setPlaceOfBirth(placeOfBirth);
         student.setMobileNumber(mobileNumber);
         student.setEmail(email);
@@ -69,8 +80,7 @@ public class StudentPortalController {
         student.setSpouseName(spouseName);
         studentService.save(student);
 
-        redirectAttributes.addFlashAttribute("success",
-                "Profile updated successfully.");
+        redirectAttributes.addFlashAttribute("success", "Profile updated successfully.");
         return "redirect:/student/profile";
     }
 
