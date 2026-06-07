@@ -5,54 +5,35 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Entity
-@Table(name = "students")
+@Table(name = "faculty")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Student {
+public class Faculty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false, length = 30)
-    private String studentNumber;
+    private String facultyId;
 
     @Column(nullable = false, length = 150)
     private String fullName;
 
-    @Column(length = 10)
-    private String gender;
-
-    private LocalDate dateOfBirth;
-
     @Column(length = 100)
-    private String placeOfBirth;
+    private String department;
+
+    // "Full Time" or "Part Time"
+    @Column(length = 20)
+    private String status;
 
     @Column(length = 20)
     private String mobileNumber;
 
     @Column(length = 100)
     private String email;
-
-    @Column(length = 250)
-    private String residentialAddress;
-
-    @Column(length = 250)
-    private String permanentAddress;
-
-    @Column(length = 100)
-    private String spouseName;
-
-    // Stored as integer: 1, 2, 3, 4
-    private Integer yearLevel;
-
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
 
     @OneToOne
     @JoinColumn(name = "user_id")
