@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Configuration
 public class DataSeeder {
@@ -18,6 +19,8 @@ public class DataSeeder {
             CourseRepository courseRepository,
             StudentRepository studentRepository,
             FacultyRepository facultyRepository,
+            SubjectRepository subjectRepository,
+            SectionRepository sectionRepository,
             PasswordEncoder passwordEncoder) {
 
         return args -> {
@@ -37,17 +40,12 @@ public class DataSeeder {
             if (userRepository.count() == 0) {
 
                 Course bsit = courseRepository.findByCode("BSIT")
-                        .orElseThrow(() -> new RuntimeException("BSIT course not found"));
+                        .orElseThrow(() -> new RuntimeException("BSIT not found"));
 
                 // ── Admin ─────────────────────────────────────────────
-                User adminUser = buildUser(
-                        "ADM-0001",
-                        "admin123",
-                        "ADMIN USER",
-                        "admin@pup.edu.ph",
-                        Role.ADMIN,
-                        passwordEncoder);
-                userRepository.save(adminUser);
+                userRepository.save(buildUser(
+                        "ADM-0001", "admin123", "ADMIN USER",
+                        "admin@pup.edu.ph", Role.ADMIN, passwordEncoder));
 
                 // ── Faculty (5) ───────────────────────────────────────
                 seedFaculty(userRepository, facultyRepository, passwordEncoder,
@@ -77,48 +75,156 @@ public class DataSeeder {
 
                 System.out.println("✓ Faculty seeded.");
 
-                // ── Students (10) ─────────────────────────────────────
+                // ── Students ──────────────────────────────────────────
+                // Year enrolled is reflected in the student number.
+                // Format: YYYY-NNNNN-SP-0 (SP = San Pedro, 0 = Regular)
+
+                // Year 1 - enrolled 2026
                 seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00001-MN-0", "VANCE, ALEXANDER",
-                        bsit, 1, "Male", LocalDate.of(2006, 3, 15));
+                        "2026-00001-SP-0", "VANCE, ALEXANDER",
+                        bsit, 1, "Male", LocalDate.of(2007, 3, 15));
 
                 seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00002-MN-0", "ROSTOVA, ELENA",
-                        bsit, 1, "Female", LocalDate.of(2006, 7, 22));
+                        "2026-00002-SP-0", "ROSTOVA, ELENA",
+                        bsit, 1, "Female", LocalDate.of(2007, 7, 22));
 
                 seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00003-MN-0", "ZHOU, MEI-LING",
-                        bsit, 2, "Female", LocalDate.of(2005, 11, 3));
+                        "2026-00003-SP-0", "TANAKA, KENJI",
+                        bsit, 1, "Male", LocalDate.of(2007, 9, 30));
+
+                // Year 2 - enrolled 2025
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2025-00001-SP-0", "ZHOU, MEI-LING",
+                        bsit, 2, "Female", LocalDate.of(2006, 11, 3));
 
                 seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00004-MN-0", "ORTEGA, RAFAEL",
-                        bsit, 3, "Male", LocalDate.of(2004, 5, 18));
+                        "2025-00002-SP-0", "SANTOS, MARIA",
+                        bsit, 2, "Female", LocalDate.of(2006, 1, 11));
 
                 seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00005-MN-0", "SANTOS, MARIA",
-                        bsit, 2, "Female", LocalDate.of(2005, 1, 11));
+                        "2025-00003-SP-0", "NAIR, ANANYA",
+                        bsit, 2, "Female", LocalDate.of(2006, 4, 7));
 
                 seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00006-MN-0", "TANAKA, KENJI",
-                        bsit, 1, "Male", LocalDate.of(2006, 9, 30));
+                        "2025-00004-SP-0", "SILVA, MATEO",
+                        bsit, 2, "Male", LocalDate.of(2006, 8, 25));
+
+                // Year 3 - enrolled 2024
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2024-00001-SP-0", "ORTEGA, RAFAEL",
+                        bsit, 3, "Male", LocalDate.of(2005, 5, 18));
 
                 seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00007-MN-0", "NAIR, ANANYA",
-                        bsit, 2, "Female", LocalDate.of(2005, 4, 7));
+                        "2024-00002-SP-0", "HADDAD, ZARA",
+                        bsit, 3, "Female", LocalDate.of(2005, 6, 9));
 
+                // Year 4 - enrolled 2023
                 seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00008-MN-0", "SILVA, MATEO",
-                        bsit, 2, "Male", LocalDate.of(2005, 8, 25));
-
-                seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00009-MN-0", "HAYES, GENEVIEVE",
-                        bsit, 4, "Female", LocalDate.of(2003, 12, 14));
-
-                seedStudent(userRepository, studentRepository, passwordEncoder,
-                        "2024-00010-MN-0", "HADDAD, ZARA",
-                        bsit, 3, "Female", LocalDate.of(2004, 6, 9));
+                        "2023-00001-SP-0", "HAYES, GENEVIEVE",
+                        bsit, 4, "Female", LocalDate.of(2004, 12, 14));
 
                 System.out.println("✓ Students seeded.");
+                System.out.println("✓ Users seeded successfully.");
+            }
+
+            // ── Subjects ──────────────────────────────────────────────
+            if (subjectRepository.count() == 0) {
+
+                Course bsit = courseRepository.findByCode("BSIT")
+                        .orElseThrow(() -> new RuntimeException("BSIT not found"));
+
+                List<Course> bsitOnly = List.of(bsit);
+
+                // Year 1 subjects
+                subjectRepository.save(buildSubject("COMP 002",
+                        "Computer Programming 1",
+                        3, 2.0, 3.0, 5.0, bsitOnly));
+
+                // Year 2 subjects
+                subjectRepository.save(buildSubject("COMP 009",
+                        "Object Oriented Programming",
+                        3, 2.0, 3.0, 5.0, bsitOnly));
+
+                subjectRepository.save(buildSubject("COMP 010",
+                        "Information Management",
+                        3, 2.0, 3.0, 5.0, bsitOnly));
+
+                subjectRepository.save(buildSubject("COMP 012",
+                        "Network Administration",
+                        3, 2.0, 3.0, 5.0, bsitOnly));
+
+                subjectRepository.save(buildSubject("COMP 013",
+                        "Human Computer Interaction",
+                        3, 3.0, 0.0, 3.0, bsitOnly));
+
+                subjectRepository.save(buildSubject("COMP 014",
+                        "Quantitative Methods with Modeling and Simulation",
+                        3, 3.0, 0.0, 3.0, bsitOnly));
+
+                subjectRepository.save(buildSubject("ELEC IT-FE2",
+                        "BSIT Free Elective 2",
+                        3, 3.0, 0.0, 3.0, bsitOnly));
+
+                subjectRepository.save(buildSubject("INTE 202",
+                        "Integrative Programming and Technologies 1",
+                        3, 2.0, 3.0, 5.0, bsitOnly));
+
+                subjectRepository.save(buildSubject("PATHFIT 4",
+                        "Physical Activity Towards Health and Fitness 4",
+                        2, 2.0, 0.0, 2.0, bsitOnly));
+
+                // Year 3 subjects
+                subjectRepository.save(buildSubject("COMP 018",
+                        "Database Administration",
+                        3, 2.0, 3.0, 5.0, bsitOnly));
+
+                // Year 4 subjects
+                subjectRepository.save(buildSubject("COMP 023",
+                        "Social and Professional Issues in Computing",
+                        3, 3.0, 0.0, 3.0, bsitOnly));
+
+                System.out.println("✓ Subjects seeded.");
+            }
+
+            // ── Sections + Student Assignments ────────────────────────
+            if (sectionRepository.count() == 0) {
+
+                Course bsit = courseRepository.findByCode("BSIT")
+                        .orElseThrow(() -> new RuntimeException("BSIT not found"));
+
+                // Create 2 sections per year level for BSIT
+                Section bsit1_1 = sectionRepository.save(
+                        buildSection("BSIT-SP 1-1", bsit, 1));
+                Section bsit1_2 = sectionRepository.save(
+                        buildSection("BSIT-SP 1-2", bsit, 1));
+                Section bsit2_1 = sectionRepository.save(
+                        buildSection("BSIT-SP 2-1", bsit, 2));
+                Section bsit2_2 = sectionRepository.save(
+                        buildSection("BSIT-SP 2-2", bsit, 2));
+                Section bsit3_1 = sectionRepository.save(
+                        buildSection("BSIT-SP 3-1", bsit, 3));
+                Section bsit4_1 = sectionRepository.save(
+                        buildSection("BSIT-SP 4-1", bsit, 4));
+
+                // Assign Year 1 students
+                assignSection(studentRepository, "2026-00001-SP-0", bsit1_1);
+                assignSection(studentRepository, "2026-00002-SP-0", bsit1_1);
+                assignSection(studentRepository, "2026-00003-SP-0", bsit1_2);
+
+                // Assign Year 2 students
+                assignSection(studentRepository, "2025-00001-SP-0", bsit2_1);
+                assignSection(studentRepository, "2025-00002-SP-0", bsit2_1);
+                assignSection(studentRepository, "2025-00003-SP-0", bsit2_2);
+                assignSection(studentRepository, "2025-00004-SP-0", bsit2_2);
+
+                // Assign Year 3 students
+                assignSection(studentRepository, "2024-00001-SP-0", bsit3_1);
+                assignSection(studentRepository, "2024-00002-SP-0", bsit3_1);
+
+                // Assign Year 4 student
+                assignSection(studentRepository, "2023-00001-SP-0", bsit4_1);
+
+                System.out.println("✓ Sections seeded and students assigned.");
                 System.out.println("✓ Database seeding completed successfully.");
             }
         };
@@ -127,12 +233,8 @@ public class DataSeeder {
     // ── Helpers ──────────────────────────────────────────────────────────────
 
     private User buildUser(
-            String username,
-            String rawPassword,
-            String fullName,
-            String email,
-            Role role,
-            PasswordEncoder encoder) {
+            String username, String rawPassword, String fullName,
+            String email, Role role, PasswordEncoder encoder) {
 
         User user = new User();
         user.setUsername(username);
@@ -145,15 +247,9 @@ public class DataSeeder {
     }
 
     private void seedFaculty(
-            UserRepository userRepo,
-            FacultyRepository facultyRepo,
-            PasswordEncoder encoder,
-            String facultyId,
-            String fullName,
-            String department,
-            String status,
-            String mobile,
-            String email) {
+            UserRepository userRepo, FacultyRepository facultyRepo,
+            PasswordEncoder encoder, String facultyId, String fullName,
+            String department, String status, String mobile, String email) {
 
         User user = buildUser(
                 facultyId, "changeme", fullName, email, Role.FACULTY, encoder);
@@ -171,15 +267,9 @@ public class DataSeeder {
     }
 
     private void seedStudent(
-            UserRepository userRepo,
-            StudentRepository studentRepo,
-            PasswordEncoder encoder,
-            String studentNumber,
-            String fullName,
-            Course course,
-            Integer yearLevel,
-            String gender,
-            LocalDate dob) {
+            UserRepository userRepo, StudentRepository studentRepo,
+            PasswordEncoder encoder, String studentNumber, String fullName,
+            Course course, Integer yearLevel, String gender, LocalDate dob) {
 
         User user = buildUser(
                 studentNumber, "changeme", fullName, null, Role.STUDENT, encoder);
@@ -194,5 +284,41 @@ public class DataSeeder {
         s.setDateOfBirth(dob);
         s.setUser(user);
         studentRepo.save(s);
+    }
+
+    private Subject buildSubject(
+            String code, String name, int units,
+            double lec, double lab, double tuition,
+            List<Course> courses) {
+
+        Subject s = new Subject();
+        s.setCode(code);
+        s.setName(name);
+        s.setUnits(units);
+        s.setLecHours(lec);
+        s.setLabHours(lab);
+        s.setTuitionHours(tuition);
+        s.setCourses(new java.util.ArrayList<>(courses));
+        return s;
+    }
+
+    private Section buildSection(
+            String sectionName, Course course, int yearLevel) {
+
+        Section s = new Section();
+        s.setSectionName(sectionName);
+        s.setCourse(course);
+        s.setYearLevel(yearLevel);
+        return s;
+    }
+
+    private void assignSection(
+            StudentRepository studentRepo,
+            String studentNumber, Section section) {
+
+        studentRepo.findByStudentNumber(studentNumber).ifPresent(student -> {
+            student.setSection(section);
+            studentRepo.save(student);
+        });
     }
 }
