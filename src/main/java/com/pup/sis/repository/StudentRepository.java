@@ -1,5 +1,7 @@
 package com.pup.sis.repository;
 
+import com.pup.sis.entity.Course;
+import com.pup.sis.entity.Section;
 import com.pup.sis.entity.Student;
 import com.pup.sis.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +21,13 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     // Used by the admin search bar
     List<Student> findByFullNameContainingIgnoreCase(String name);
+
+    // Used by section assignment to find eligible students
+    List<Student> findByCourseAndYearLevel(Course course, Integer yearLevel);
+
+    // Used by section delete to unassign students
+    List<Student> findBySection(Section section);
+
+    // Used by section cards to show student count
+    long countBySection(Section section);
 }

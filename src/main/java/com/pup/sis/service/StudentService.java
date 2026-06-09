@@ -1,5 +1,7 @@
 package com.pup.sis.service;
 
+import com.pup.sis.entity.Course;
+import com.pup.sis.entity.Section;
 import com.pup.sis.entity.Student;
 import com.pup.sis.entity.User;
 import com.pup.sis.repository.StudentRepository;
@@ -34,6 +36,18 @@ public class StudentService {
 
     public List<Student> search(String query) {
         return studentRepository.findByFullNameContainingIgnoreCase(query);
+    }
+
+    public List<Student> findByCourseAndYearLevel(Course course, Integer yearLevel) {
+        return studentRepository.findByCourseAndYearLevel(course, yearLevel);
+    }
+
+    public List<Student> findBySection(Section section) {
+        return studentRepository.findBySection(section);
+    }
+
+    public long countBySection(Section section) {
+        return studentRepository.countBySection(section);
     }
 
     public Student save(Student student) {
