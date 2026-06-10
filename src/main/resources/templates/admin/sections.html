@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sections - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Section Management</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge admin">Administrator</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <div class="page-header-row">
+                <div class="page-title">
+                    <h3>Sections</h3>
+                    <p>Create sections and assign students based on their course.</p>
+                </div>
+                <button class="btn-primary" onclick="openModal('newSectionModal')">
+                    + New Section
+                </button>
+            </div>
+
+            <!-- Section cards -->
+            <div th:if="${#lists.isEmpty(sections)}" class="alert alert-error">
+                No sections found. Create one using the button above.
+            </div>
+
+            <div class="section-grid">
+                <div th:each="sec : ${sections}" class="section-card">
+
+                    <div class="section-card-header">
+                        <h4 class="section-card-name" th:text="${sec.sectionName}"></h4>
+                        <div class="section-card-icons">
+                            <a th:href="@{/admin/sections/{id}/edit(id=${sec.id})}"
+                               class="btn-icon" title="Edit">✏</a>
+                            <form th:action="@{/admin/sections/{id}/delete(id=${sec.id})}"
+                                  method="post" style="display:inline"
+                                  onsubmit="return confirm('Delete this section and unassign its students?')">
+                                <button type="submit" class="btn-icon" title="Delete">🗑</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <p class="section-card-meta">
+                        <span th:text="${sec.course != null ? sec.course.code : 'No course'}"></span>
+                        &nbsp;·&nbsp;
+                        <span th:with="yr=${sec.yearLevel}"
+                              th:text="${yr == null ? '-' :
+                                        yr == 1 ? '1st Year' :
+                                        yr == 2 ? '2nd Year' :
+                                        yr == 3 ? '3rd Year' : '4th Year'}">
+                        </span>
+                    </p>
+
+                    <p class="section-card-count">
+                        <span th:text="${studentCounts[sec.id] + ' student(s) enrolled'}"></span>
+                    </p>
+
+                    <a th:href="@{/admin/sections/{id}/assign(id=${sec.id})}"
+                       class="btn-assign">Assign Students</a>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- New Section Modal -->
+<div id="newSectionModal" class="modal-overlay" style="display:none">
+    <div class="modal-card">
+        <button class="modal-close" onclick="closeModal('newSectionModal')">✕</button>
+        <h2 class="modal-title">New Section</h2>
+        <form th:action="@{/admin/sections}" method="post">
+            <div class="modal-group">
+                <label class="modal-label">Section Name</label>
+                <input type="text" name="sectionName" class="modal-input"
+                       placeholder="e.g. BSIT-SP 2-1" required>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Course</label>
+                <select name="courseId" class="modal-select" required>
+                    <option value="">Select course</option>
+                    <option th:each="c : ${courses}"
+                            th:value="${c.id}"
+                            th:text="${c.code + ' - ' + c.name}"></option>
+                </select>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Year Level</label>
+                <select name="yearLevel" class="modal-select" required>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel"
+                        onclick="closeModal('newSectionModal')">Cancel</button>
+                <button type="submit" class="btn-modal-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Section Modal -->
+<div id="editSectionModal" class="modal-overlay"
+     th:style="${editSection != null ? 'display:flex' : 'display:none'}">
+    <div class="modal-card" th:if="${editSection != null}">
+        <a th:href="@{/admin/sections}" class="modal-close">✕</a>
+        <h2 class="modal-title">Edit Section</h2>
+        <form th:action="@{/admin/sections/{id}(id=${editSection.id})}" method="post">
+            <div class="modal-group">
+                <label class="modal-label">Section Name</label>
+                <input type="text" name="sectionName" class="modal-input"
+                       th:value="${editSection.sectionName}" required>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Course</label>
+                <select name="courseId" class="modal-select" required>
+                    <option value="">Select course</option>
+                    <option th:each="c : ${courses}"
+                            th:value="${c.id}"
+                            th:text="${c.code + ' - ' + c.name}"
+                            th:selected="${editSection.course != null
+                                          and editSection.course.id == c.id}">
+                    </option>
+                </select>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Year Level</label>
+                <select name="yearLevel" class="modal-select" required>
+                    <option value="1" th:selected="${editSection.yearLevel == 1}">1st Year</option>
+                    <option value="2" th:selected="${editSection.yearLevel == 2}">2nd Year</option>
+                    <option value="3" th:selected="${editSection.yearLevel == 3}">3rd Year</option>
+                    <option value="4" th:selected="${editSection.yearLevel == 4}">4th Year</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <a th:href="@{/admin/sections}" class="btn-modal-cancel">Cancel</a>
+                <button type="submit" class="btn-modal-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Assign Students Modal -->
+<div id="assignStudentsModal" class="modal-overlay"
+     th:style="${assignSection != null ? 'display:flex' : 'display:none'}">
+    <div class="modal-card" th:if="${assignSection != null}">
+        <a th:href="@{/admin/sections}" class="modal-close">✕</a>
+        <h2 class="modal-title"
+            th:text="'Assign Students - ' + ${assignSection.sectionName}"></h2>
+
+        <p class="modal-hint" th:if="${#lists.isEmpty(eligibleStudents)}">
+            No students found matching this section's course and year level.
+        </p>
+
+        <form th:if="${!#lists.isEmpty(eligibleStudents)}"
+              th:action="@{/admin/sections/{id}/assign(id=${assignSection.id})}"
+              method="post">
+
+            <div class="modal-student-list">
+                <label th:each="s : ${eligibleStudents}" class="modal-student-row">
+                    <input type="checkbox" name="studentIds" th:value="${s.id}"
+                           th:checked="${assignedStudentIds != null
+                                        and assignedStudentIds.contains(s.id)}">
+                    <span class="modal-student-name" th:text="${s.fullName}"></span>
+                    <span class="modal-student-num" th:text="${s.studentNumber}"></span>
+                </label>
+            </div>
+
+            <div class="modal-actions">
+                <a th:href="@{/admin/sections}" class="btn-modal-cancel">Cancel</a>
+                <button type="submit" class="btn-modal-save">Save</button>
+            </div>
+        </form>
+
+        <div th:if="${#lists.isEmpty(eligibleStudents)}" class="modal-actions">
+            <a th:href="@{/admin/sections}" class="btn-modal-cancel">Close</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+</script>
+
+</body>
+</html>

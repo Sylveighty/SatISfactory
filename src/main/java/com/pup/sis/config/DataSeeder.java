@@ -25,8 +25,9 @@ public class DataSeeder {
 
         return args -> {
 
-            // ── Courses ───────────────────────────────────────────────
+            // Initialize core course programs if not already seeded
             if (courseRepository.count() == 0) {
+                // Create the main computer science degree programs offered by the institution
                 courseRepository.save(new Course("BSIT",
                         "Bachelor of Science in Information Technology"));
                 courseRepository.save(new Course("BSCS",
@@ -36,18 +37,19 @@ public class DataSeeder {
                 System.out.println("✓ Courses seeded.");
             }
 
-            // ── Users, Students, Faculty ──────────────────────────────
+            // Initialize user accounts (admin, faculty, and students) if not already seeded
             if (userRepository.count() == 0) {
 
+                // Retrieve the BSIT course for student assignments
                 Course bsit = courseRepository.findByCode("BSIT")
                         .orElseThrow(() -> new RuntimeException("BSIT not found"));
 
-                // ── Admin ─────────────────────────────────────────────
+                // Create the admin user account with system-level permissions
                 userRepository.save(buildUser(
                         "ADM-0001", "admin123", "ADMIN USER",
                         "admin@pup.edu.ph", Role.ADMIN, passwordEncoder));
 
-                // ── Faculty (5) ───────────────────────────────────────
+                // Create 5 faculty members for the Information Technology department
                 seedFaculty(userRepository, facultyRepository, passwordEncoder,
                         "FAC-2024-001", "DELA CRUZ, JUAN BATUMBAKAL",
                         "Information Technology", "Full Time",
@@ -92,7 +94,7 @@ public class DataSeeder {
                         "2026-00003-SP-0", "TANAKA, KENJI",
                         bsit, 1, "Male", LocalDate.of(2007, 9, 30));
 
-                // Year 2 - enrolled 2025
+                // Create Year 2 students (enrolled in 2025)
                 seedStudent(userRepository, studentRepository, passwordEncoder,
                         "2025-00001-SP-0", "ZHOU, MEI-LING",
                         bsit, 2, "Female", LocalDate.of(2006, 11, 3));
@@ -109,7 +111,7 @@ public class DataSeeder {
                         "2025-00004-SP-0", "SILVA, MATEO",
                         bsit, 2, "Male", LocalDate.of(2006, 8, 25));
 
-                // Year 3 - enrolled 2024
+                // Create Year 3 students (enrolled in 2024)
                 seedStudent(userRepository, studentRepository, passwordEncoder,
                         "2024-00001-SP-0", "ORTEGA, RAFAEL",
                         bsit, 3, "Male", LocalDate.of(2005, 5, 18));
@@ -118,7 +120,7 @@ public class DataSeeder {
                         "2024-00002-SP-0", "HADDAD, ZARA",
                         bsit, 3, "Female", LocalDate.of(2005, 6, 9));
 
-                // Year 4 - enrolled 2023
+                // Create Year 4 students (enrolled in 2023 - final year)
                 seedStudent(userRepository, studentRepository, passwordEncoder,
                         "2023-00001-SP-0", "HAYES, GENEVIEVE",
                         bsit, 4, "Female", LocalDate.of(2004, 12, 14));
@@ -127,20 +129,21 @@ public class DataSeeder {
                 System.out.println("✓ Users seeded successfully.");
             }
 
-            // ── Subjects ──────────────────────────────────────────────
+            // Initialize curriculum subjects (courses) for all degree programs
             if (subjectRepository.count() == 0) {
 
+                // Retrieve the BSIT program to associate with subjects
                 Course bsit = courseRepository.findByCode("BSIT")
                         .orElseThrow(() -> new RuntimeException("BSIT not found"));
 
                 List<Course> bsitOnly = List.of(bsit);
 
-                // Year 1 subjects
+                // Define Year 1 subjects in the curriculum
                 subjectRepository.save(buildSubject("COMP 002",
                         "Computer Programming 1",
                         3, 2.0, 3.0, 5.0, bsitOnly));
 
-                // Year 2 subjects
+                // Define Year 2 subjects in the curriculum
                 subjectRepository.save(buildSubject("COMP 009",
                         "Object Oriented Programming",
                         3, 2.0, 3.0, 5.0, bsitOnly));
@@ -173,12 +176,12 @@ public class DataSeeder {
                         "Physical Activity Towards Health and Fitness 4",
                         2, 2.0, 0.0, 2.0, bsitOnly));
 
-                // Year 3 subjects
+                // Define Year 3 subjects in the curriculum
                 subjectRepository.save(buildSubject("COMP 018",
                         "Database Administration",
                         3, 2.0, 3.0, 5.0, bsitOnly));
 
-                // Year 4 subjects
+                // Define Year 4 subjects in the curriculum
                 subjectRepository.save(buildSubject("COMP 023",
                         "Social and Professional Issues in Computing",
                         3, 3.0, 0.0, 3.0, bsitOnly));
@@ -186,13 +189,14 @@ public class DataSeeder {
                 System.out.println("✓ Subjects seeded.");
             }
 
-            // ── Sections + Student Assignments ────────────────────────
+            // Initialize class sections and assign students to their respective sections
             if (sectionRepository.count() == 0) {
 
+                // Retrieve the BSIT course for section creation
                 Course bsit = courseRepository.findByCode("BSIT")
                         .orElseThrow(() -> new RuntimeException("BSIT not found"));
 
-                // Create 2 sections per year level for BSIT
+                // Create section groups for each year level (2 sections per year for load balancing)
                 Section bsit1_1 = sectionRepository.save(
                         buildSection("BSIT-SP 1-1", bsit, 1));
                 Section bsit1_2 = sectionRepository.save(
@@ -206,22 +210,22 @@ public class DataSeeder {
                 Section bsit4_1 = sectionRepository.save(
                         buildSection("BSIT-SP 4-1", bsit, 4));
 
-                // Assign Year 1 students
+                // Assign Year 1 students to their respective sections
                 assignSection(studentRepository, "2026-00001-SP-0", bsit1_1);
                 assignSection(studentRepository, "2026-00002-SP-0", bsit1_1);
                 assignSection(studentRepository, "2026-00003-SP-0", bsit1_2);
 
-                // Assign Year 2 students
+                // Assign Year 2 students to their respective sections
                 assignSection(studentRepository, "2025-00001-SP-0", bsit2_1);
                 assignSection(studentRepository, "2025-00002-SP-0", bsit2_1);
                 assignSection(studentRepository, "2025-00003-SP-0", bsit2_2);
                 assignSection(studentRepository, "2025-00004-SP-0", bsit2_2);
 
-                // Assign Year 3 students
+                // Assign Year 3 students to their respective sections
                 assignSection(studentRepository, "2024-00001-SP-0", bsit3_1);
                 assignSection(studentRepository, "2024-00002-SP-0", bsit3_1);
 
-                // Assign Year 4 student
+                // Assign Year 4 student to their section
                 assignSection(studentRepository, "2023-00001-SP-0", bsit4_1);
 
                 System.out.println("✓ Sections seeded and students assigned.");
@@ -230,56 +234,64 @@ public class DataSeeder {
         };
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    // Helper methods for building and seeding data
+    // These methods provide reusable logic for creating and saving entities
 
+    // Create a user account with the specified role and credentials
     private User buildUser(
             String username, String rawPassword, String fullName,
             String email, Role role, PasswordEncoder encoder) {
 
         User user = new User();
         user.setUsername(username);
-        user.setPassword(encoder.encode(rawPassword));
+        user.setPassword(encoder.encode(rawPassword)); // Passwords are encrypted for security
         user.setFullName(fullName);
         user.setEmail(email);
-        user.setRole(role);
-        user.setEnabled(true);
+        user.setRole(role); // Assign the user's access level
+        user.setEnabled(true); // Activate the account
         return user;
     }
 
+    // Create and save a faculty member profile with associated user account
     private void seedFaculty(
             UserRepository userRepo, FacultyRepository facultyRepo,
             PasswordEncoder encoder, String facultyId, String fullName,
             String department, String status, String mobile, String email) {
 
+        // Create the login account using the faculty ID as the username
         User user = buildUser(
                 facultyId, "changeme", fullName, email, Role.FACULTY, encoder);
         userRepo.save(user);
 
+        // Create the faculty profile linked to the user account
         Faculty f = new Faculty();
         f.setFacultyId(facultyId);
         f.setFullName(fullName);
         f.setDepartment(department);
-        f.setStatus(status);
+        f.setStatus(status); // Full Time or Part Time
         f.setMobileNumber(mobile);
         f.setEmail(email);
         f.setUser(user);
         facultyRepo.save(f);
     }
 
+    // Create and save a student profile with associated user account
     private void seedStudent(
             UserRepository userRepo, StudentRepository studentRepo,
             PasswordEncoder encoder, String studentNumber, String fullName,
             Course course, Integer yearLevel, String gender, LocalDate dob) {
 
+        // Create the login account using the student number as the username
         User user = buildUser(
                 studentNumber, "changeme", fullName, null, Role.STUDENT, encoder);
         userRepo.save(user);
 
+        // Create the student profile linked to the user account
         Student s = new Student();
         s.setStudentNumber(studentNumber);
         s.setFullName(fullName);
-        s.setCourse(course);
-        s.setYearLevel(yearLevel);
+        s.setCourse(course); // The student's degree program
+        s.setYearLevel(yearLevel); // Current academic year (1-4)
         s.setGender(gender);
         s.setDateOfBirth(dob);
         s.setUser(user);

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Curriculum - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Curriculum</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge admin">Administrator</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div class="page-title">
+                <h3>Curriculum</h3>
+                <p>Subjects offered per course. Manage subjects from the Subjects module.</p>
+            </div>
+
+            <!-- One block per course -->
+            <div th:each="entry : ${curriculumMap}" class="curriculum-block">
+
+                <div class="curriculum-course-header">
+                    <h4 th:text="${entry.key.code + ' - ' + entry.key.name}"></h4>
+                    <span th:text="${#lists.size(entry.value) + ' subject(s)'}"></span>
+                </div>
+
+                <div th:if="${#lists.isEmpty(entry.value)}"
+                     class="curriculum-empty">
+                    No subjects assigned to this course yet.
+                    <a th:href="@{/admin/subjects}">Go to Subjects →</a>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(entry.value)}" class="table-wrapper">
+                    <table class="sis-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Subject Name</th>
+                                <th>Units</th>
+                                <th>Lec Hours</th>
+                                <th>Lab Hours</th>
+                                <th>Tuition Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s : ${entry.value}">
+                                <td th:text="${s.code}"></td>
+                                <td th:text="${s.name}"></td>
+                                <td th:text="${s.units}"></td>
+                                <td th:text="${s.lecHours}"></td>
+                                <td th:text="${s.labHours}"></td>
+                                <td th:text="${s.tuitionHours}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>
