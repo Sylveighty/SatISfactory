@@ -121,6 +121,7 @@ cp src/main/resources/application.properties.example src/main/resources/applicat
 ```
 
 Then open `application.properties` and set `spring.datasource.password` to your MySQL root password.
+
 **4. Run the application**
 
 ```bash

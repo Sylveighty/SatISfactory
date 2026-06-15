@@ -1108,3 +1108,11 @@ body.has-topbar .sidebar {
     font-weight: 600;
     opacity: 0.9;
 }
+
+/* ── Enrollment page note ────────────────────────────────────────────── */
+.enrollment-note {
+    margin-top: 16px;
+    font-size: 12.5px;
+    font-style: italic;
+    color: var(--text-muted);
+}
