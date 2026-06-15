@@ -1116,3 +1116,232 @@ body.has-topbar .sidebar {
     font-style: italic;
     color: var(--text-muted);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION CARDS - Step 3
+   ══════════════════════════════════════════════════════════════ */
+
+.section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.section-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.section-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.section-card-icons {
+    display: flex;
+    gap: 8px;
+}
+
+.section-card-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--maroon);
+}
+
+.section-card-meta {
+    font-size: 12.5px;
+    color: var(--text-muted);
+}
+
+.section-card-count {
+    font-size: 12.5px;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.btn-assign {
+    display: inline-block;
+    text-align: center;
+    background: var(--maroon);
+    color: #fff;
+    border: none;
+    padding: 9px 0;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: auto;
+    transition: background 0.15s;
+}
+
+.btn-assign:hover {
+    background: var(--maroon-mid);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CURRICULUM PAGE - Step 3
+   ══════════════════════════════════════════════════════════════ */
+
+.curriculum-block {
+    margin-bottom: 30px;
+}
+
+.curriculum-course-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+.curriculum-course-header h4 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-variant: small-caps;
+    font-weight: normal;
+    font-size: 17px;
+    color: var(--maroon);
+}
+
+.curriculum-course-header span {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.curriculum-empty {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+}
+
+.curriculum-empty a {
+    font-style: normal;
+    color: var(--maroon);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    margin-left: 6px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL ADDITIONS - Step 3
+   ══════════════════════════════════════════════════════════════ */
+
+.modal-row-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.modal-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+}
+
+.modal-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+}
+
+.modal-checkbox-label input[type="checkbox"] {
+    accent-color: #fff;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+.modal-hint {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.modal-student-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 320px;
+    overflow-y: auto;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius);
+    padding: 6px 8px;
+}
+
+.modal-student-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.modal-student-row:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+.modal-student-row input[type="checkbox"] {
+    accent-color: #fff;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+.modal-student-name {
+    font-size: 13.5px;
+    color: #fff;
+    flex: 1;
+}
+
+.modal-student-num {
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    color: rgba(255,255,255,0.55);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FACULTY PROFILE - Step 3
+   ══════════════════════════════════════════════════════════════ */
+
+.faculty-status-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 11px;
+    border-radius: 20px;
+    background: #E8F0FE;
+    color: #1A4DB0;
+    border: 1px solid #A8C1F0;
+}
+
+.faculty-status-badge.part-time {
+    background: #FEF3E8;
+    color: #95380A;
+    border: 1px solid #F5C69A;
+}

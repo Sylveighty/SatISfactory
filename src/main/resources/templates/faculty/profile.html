@@ -60,8 +60,12 @@
 
                 <div class="profile-row">
                     <label class="profile-label">Status :</label>
-                    <span class="profile-value"
-                          th:text="${faculty.status != null ? faculty.status : '-'}"></span>
+                    <span th:if="${faculty.status != null}"
+                          class="faculty-status-badge"
+                          th:classappend="${faculty.status == 'Part Time' ? 'part-time' : ''}"
+                          th:text="${faculty.status}">
+                    </span>
+                    <span th:if="${faculty.status == null}" class="profile-value">-</span>
                 </div>
 
                 <div class="profile-row">
