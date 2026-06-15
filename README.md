@@ -112,8 +112,15 @@ Open `src/main/resources/application.properties` and update:
 ```properties
 spring.datasource.username=root
 spring.datasource.password=your_password_here
+
+```
+**3.5. Create your local config file**
+
+```bash
+cp src/main/resources/application.properties.example src/main/resources/application.properties
 ```
 
+Then open `application.properties` and set `spring.datasource.password` to your MySQL root password.
 **4. Run the application**
 
 ```bash
