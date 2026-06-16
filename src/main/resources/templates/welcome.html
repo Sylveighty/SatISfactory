@@ -18,25 +18,23 @@
         <p class="welcome-subtitle">Polytechnic University of the Philippines</p>
 
         <div class="welcome-cards">
-
-            <div class="welcome-card">
+            <a th:href="@{/login/admin}" class="welcome-card">
                 <div class="welcome-card-icon">🛡</div>
                 <h2 class="welcome-card-role">Admin</h2>
-                <a th:href="@{/login/admin}" class="welcome-card-link">Continue →</a>
-            </div>
+                <span class="welcome-card-link">Continue →</span>
+            </a>
 
-            <div class="welcome-card">
+            <a th:href="@{/login/faculty}" class="welcome-card">
                 <div class="welcome-card-icon">💼</div>
                 <h2 class="welcome-card-role">Faculty</h2>
-                <a th:href="@{/login/faculty}" class="welcome-card-link">Continue →</a>
-            </div>
+                <span class="welcome-card-link">Continue →</span>
+            </a>
 
-            <div class="welcome-card">
+            <a th:href="@{/login/student}" class="welcome-card">
                 <div class="welcome-card-icon">🎓</div>
                 <h2 class="welcome-card-role">Student</h2>
-                <a th:href="@{/login/student}" class="welcome-card-link">Continue →</a>
-            </div>
-
+                <span class="welcome-card-link">Continue →</span>
+            </a>
         </div>
     </div>
 

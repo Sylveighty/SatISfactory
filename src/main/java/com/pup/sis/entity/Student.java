@@ -54,6 +54,11 @@ public class Student {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    // Which section this student is assigned to (nullable - set by admin)
+    @ManyToOne
+    @JoinColumn(name = "section_id")
+    private Section section;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;

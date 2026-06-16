@@ -28,28 +28,29 @@ public class AdminFacultyController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ── List ──────────────────────────────────────────────────────────────────
-
+    // Retrieve and display all faculty members
     @GetMapping
     public String list(Model model) {
+        // Add all faculty members to the model for display
         model.addAttribute("facultyList", facultyService.findAll());
         return "admin/faculty";
     }
 
-    // ── Show edit modal ───────────────────────────────────────────────────────
-
+    // Display the edit form for a specific faculty record
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
+        // Retrieve the faculty by ID, throwing an exception if not found
         Faculty faculty = facultyService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Faculty not found: " + id));
 
+        // Populate the model with all necessary data for editing
         model.addAttribute("facultyList", facultyService.findAll());
+        // Mark this faculty member as the one being edited in the UI
         model.addAttribute("editFaculty", faculty);
         return "admin/faculty";
     }
 
-    // ── Create ────────────────────────────────────────────────────────────────
-
+    // Create a new faculty record with associated user account
     @PostMapping
     public String create(
             @RequestParam String facultyId,
@@ -60,23 +61,24 @@ public class AdminFacultyController {
             @RequestParam(required = false) String email,
             RedirectAttributes redirectAttributes) {
 
-        // Check for duplicate faculty ID
+        // Check if the faculty ID already exists to prevent duplicates
         if (facultyService.findByFacultyId(facultyId).isPresent()) {
             redirectAttributes.addFlashAttribute("error",
                     "Faculty ID " + facultyId + " already exists.");
             return "redirect:/admin/faculty";
         }
 
-        // Create login account - faculty ID is the username
+        // Create a new user account for the faculty member
+        // The faculty ID is used as the login username
         User user = new User();
         user.setUsername(facultyId);
-        user.setPassword(passwordEncoder.encode("changeme"));
+        user.setPassword(passwordEncoder.encode("changeme")); // Default password that must be changed
         user.setFullName(fullName);
         user.setRole(Role.FACULTY);
         user.setEnabled(true);
         userService.save(user);
 
-        // Create faculty profile
+        // Create the faculty profile linked to the user account
         Faculty faculty = new Faculty();
         faculty.setFacultyId(facultyId);
         faculty.setFullName(fullName);
@@ -87,13 +89,13 @@ public class AdminFacultyController {
         faculty.setUser(user);
         facultyService.save(faculty);
 
+        // Notify admin of successful creation with faculty details
         redirectAttributes.addFlashAttribute("success",
                 fullName + " added. Default password: changeme");
         return "redirect:/admin/faculty";
     }
 
-    // ── Update ────────────────────────────────────────────────────────────────
-
+    // Update an existing faculty record and associated user account
     @PostMapping("/{id}")
     public String update(
             @PathVariable Long id,
@@ -104,9 +106,11 @@ public class AdminFacultyController {
             @RequestParam(required = false) String email,
             RedirectAttributes redirectAttributes) {
 
+        // Retrieve the faculty by ID, throwing an exception if not found
         Faculty faculty = facultyService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Faculty not found: " + id));
 
+        // Update the faculty's profile information
         faculty.setFullName(fullName);
         faculty.setDepartment(department);
         faculty.setStatus(status);
@@ -114,33 +118,40 @@ public class AdminFacultyController {
         faculty.setEmail(email);
         facultyService.save(faculty);
 
+        // Keep the user account's display name synchronized with the faculty record
         if (faculty.getUser() != null) {
             faculty.getUser().setFullName(fullName);
             userService.save(faculty.getUser());
         }
 
+        // Notify admin of successful update
         redirectAttributes.addFlashAttribute("success", "Faculty record updated.");
         return "redirect:/admin/faculty";
     }
 
-    // ── Delete ────────────────────────────────────────────────────────────────
-
+    // Delete a faculty record and their associated user account
     @PostMapping("/{id}/delete")
     public String delete(
             @PathVariable Long id,
             RedirectAttributes redirectAttributes) {
 
+        // Retrieve the faculty by ID, throwing an exception if not found
         Faculty faculty = facultyService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Faculty not found: " + id));
 
+        // Extract the user ID before deleting the faculty record
+        // This is necessary because deleting the faculty will break the foreign key relationship
         Long userId = faculty.getUser() != null ? faculty.getUser().getId() : null;
 
+        // Delete the faculty record from the database
         facultyService.delete(id);
 
+        // Delete the associated user account to maintain data consistency
         if (userId != null) {
             userService.delete(userId);
         }
 
+        // Notify admin of successful deletion
         redirectAttributes.addFlashAttribute("success", "Faculty record deleted.");
         return "redirect:/admin/faculty";
     }

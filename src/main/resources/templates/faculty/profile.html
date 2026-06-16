@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Profile - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Faculty Portal</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge faculty">Faculty</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div class="page-title">
+                <h3>Faculty Profile</h3>
+            </div>
+
+            <!-- No profile linked to this account -->
+            <div th:if="${faculty == null}" class="alert alert-error">
+                No faculty profile found. Please contact the administrator.
+            </div>
+
+            <!-- Profile card -->
+            <div th:if="${faculty != null}" class="profile-card">
+
+                <h3 class="profile-name"
+                    th:text="${faculty.fullName + ' (' + faculty.facultyId + ')'}">
+                </h3>
+
+                <div class="profile-row">
+                    <label class="profile-label">Faculty ID :</label>
+                    <span class="profile-value" th:text="${faculty.facultyId}"></span>
+                </div>
+
+                <div class="profile-row">
+                    <label class="profile-label">Full Name :</label>
+                    <span class="profile-value" th:text="${faculty.fullName}"></span>
+                </div>
+
+                <div class="profile-row">
+                    <label class="profile-label">Department :</label>
+                    <span class="profile-value"
+                          th:text="${faculty.department != null ? faculty.department : '-'}"></span>
+                </div>
+
+                <div class="profile-row">
+                    <label class="profile-label">Status :</label>
+                    <span th:if="${faculty.status != null}"
+                          class="faculty-status-badge"
+                          th:classappend="${faculty.status == 'Part Time' ? 'part-time' : ''}"
+                          th:text="${faculty.status}">
+                    </span>
+                    <span th:if="${faculty.status == null}" class="profile-value">-</span>
+                </div>
+
+                <div class="profile-row">
+                    <label class="profile-label">Mobile Number :</label>
+                    <span class="profile-value"
+                          th:text="${faculty.mobileNumber != null ? faculty.mobileNumber : '-'}"></span>
+                </div>
+
+                <div class="profile-row">
+                    <label class="profile-label">Email :</label>
+                    <span class="profile-value"
+                          th:text="${faculty.email != null ? faculty.email : '-'}"></span>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

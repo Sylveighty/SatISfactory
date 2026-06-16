@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subjects - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Subject Management</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge admin">Administrator</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <div class="page-header-row">
+                <div class="page-title">
+                    <h3>Subjects</h3>
+                    <p>Manage the subject catalog and course availability.</p>
+                </div>
+                <button class="btn-primary" onclick="openModal('newSubjectModal')">
+                    + New Subject
+                </button>
+            </div>
+
+            <form method="get" th:action="@{/admin/subjects}" class="search-form">
+                <input type="text" name="search" th:value="${search}"
+                       placeholder="Search by code or name...">
+                <button type="submit">Search</button>
+                <a th:if="${search != null and !search.isEmpty()}"
+                   th:href="@{/admin/subjects}" class="clear-link">Clear</a>
+            </form>
+
+            <div class="table-wrapper">
+                <table class="sis-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Units</th>
+                            <th>Lec</th>
+                            <th>Lab</th>
+                            <th>Tuition</th>
+                            <th>Courses</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(subjects)}">
+                            <td colspan="8" class="table-empty">No subjects found.</td>
+                        </tr>
+                        <tr th:each="s : ${subjects}">
+                            <td th:text="${s.code}"></td>
+                            <td th:text="${s.name}"></td>
+                            <td th:text="${s.units}"></td>
+                            <td th:text="${s.lecHours}"></td>
+                            <td th:text="${s.labHours}"></td>
+                            <td th:text="${s.tuitionHours}"></td>
+                            <td>
+                                <th:block th:if="${s.courses.isEmpty()}">-</th:block>
+                                <th:block th:each="c,iter : ${s.courses}">
+                                    <span th:text="${c.code}"></span>
+                                    <span th:if="${!iter.last}">, </span>
+                                </th:block>
+                            </td>
+                            <td class="table-actions">
+                                <a th:href="@{/admin/subjects/{id}/edit(id=${s.id})}"
+                                   class="btn-icon" title="Edit">✏</a>
+                                <form th:action="@{/admin/subjects/{id}/delete(id=${s.id})}"
+                                      method="post" style="display:inline"
+                                      onsubmit="return confirm('Delete this subject?')">
+                                    <button type="submit" class="btn-icon" title="Delete">🗑</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- New Subject Modal -->
+<div id="newSubjectModal" class="modal-overlay" style="display:none">
+    <div class="modal-card">
+        <button class="modal-close" onclick="closeModal('newSubjectModal')">✕</button>
+        <h2 class="modal-title">New Subject</h2>
+        <form th:action="@{/admin/subjects}" method="post">
+
+            <div class="modal-group">
+                <label class="modal-label">Subject Code</label>
+                <input type="text" name="code" class="modal-input"
+                       placeholder="e.g. COMP 009" required>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Subject Name</label>
+                <input type="text" name="name" class="modal-input"
+                       placeholder="e.g. Object Oriented Programming" required>
+            </div>
+
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">Units</label>
+                    <input type="number" name="units" class="modal-input"
+                           min="1" max="6" step="1" value="3" required>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">Lec Hours</label>
+                    <input type="number" name="lecHours" class="modal-input"
+                           min="0" max="6" step="0.5" value="2.0" required>
+                </div>
+            </div>
+
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">Lab Hours</label>
+                    <input type="number" name="labHours" class="modal-input"
+                           min="0" max="6" step="0.5" value="3.0" required>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">Tuition Hours</label>
+                    <input type="number" name="tuitionHours" class="modal-input"
+                           min="0" max="12" step="0.5" value="5.0" required>
+                </div>
+            </div>
+
+            <div class="modal-group">
+                <label class="modal-label">Available to Courses</label>
+                <div class="modal-checkboxes">
+                    <label th:each="c : ${courses}" class="modal-checkbox-label">
+                        <input type="checkbox" name="courseIds" th:value="${c.id}">
+                        <span th:text="${c.code + ' - ' + c.name}"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel"
+                        onclick="closeModal('newSubjectModal')">Cancel</button>
+                <button type="submit" class="btn-modal-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Subject Modal -->
+<div id="editSubjectModal" class="modal-overlay"
+     th:style="${editSubject != null ? 'display:flex' : 'display:none'}">
+    <div class="modal-card" th:if="${editSubject != null}">
+        <a th:href="@{/admin/subjects}" class="modal-close">✕</a>
+        <h2 class="modal-title">Edit Subject</h2>
+        <form th:action="@{/admin/subjects/{id}(id=${editSubject.id})}" method="post">
+
+            <div class="modal-group">
+                <label class="modal-label">Subject Code</label>
+                <input type="text" class="modal-input"
+                       th:value="${editSubject.code}" disabled>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Subject Name</label>
+                <input type="text" name="name" class="modal-input"
+                       th:value="${editSubject.name}" required>
+            </div>
+
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">Units</label>
+                    <input type="number" name="units" class="modal-input"
+                           th:value="${editSubject.units}"
+                           min="1" max="6" step="1" required>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">Lec Hours</label>
+                    <input type="number" name="lecHours" class="modal-input"
+                           th:value="${editSubject.lecHours}"
+                           min="0" max="6" step="0.5" required>
+                </div>
+            </div>
+
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">Lab Hours</label>
+                    <input type="number" name="labHours" class="modal-input"
+                           th:value="${editSubject.labHours}"
+                           min="0" max="6" step="0.5" required>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">Tuition Hours</label>
+                    <input type="number" name="tuitionHours" class="modal-input"
+                           th:value="${editSubject.tuitionHours}"
+                           min="0" max="12" step="0.5" required>
+                </div>
+            </div>
+
+            <div class="modal-group">
+                <label class="modal-label">Available to Courses</label>
+                <div class="modal-checkboxes">
+                    <label th:each="c : ${courses}" class="modal-checkbox-label">
+                        <input type="checkbox" name="courseIds" th:value="${c.id}"
+                               th:checked="${selectedCourseIds != null
+                                            and selectedCourseIds.contains(c.id)}">
+                        <span th:text="${c.code + ' - ' + c.name}"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <a th:href="@{/admin/subjects}" class="btn-modal-cancel">Cancel</a>
+                <button type="submit" class="btn-modal-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+</script>
+
+</body>
+</html>

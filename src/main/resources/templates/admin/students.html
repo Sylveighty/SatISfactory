@@ -101,10 +101,32 @@
         <h2 class="modal-title">New Student</h2>
         <form th:action="@{/admin/students}" method="post">
             <div class="modal-group">
-                <label class="modal-label">Student Number</label>
-                <input type="text" name="studentNumber" class="modal-input"
-                       placeholder="e.g. 2024-00011-MN-0" required>
+                <label class="modal-label">Year Enrolled</label>
+                <input type="number" id="snYear" name="studentYear" class="modal-input"
+                       th:value="${currentYear}" min="2000" max="2099"
+                       oninput="updatePreview()">
             </div>
+            <div class="modal-group">
+                <label class="modal-label">Student Sequence No.</label>
+                <input type="number" id="snSeq" name="studentSeq" class="modal-input"
+                       placeholder="e.g. 1" min="1" max="99999" required
+                       oninput="updatePreview()">
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Student Type</label>
+                <select id="snType" name="studentType" class="modal-select"
+                        onchange="updatePreview()">
+                    <option value="0">Regular</option>
+                    <option value="1">Irregular</option>
+                </select>
+            </div>
+
+            <!-- Live preview of the generated student number -->
+            <div class="modal-group">
+                <label class="modal-label">Generated Student Number</label>
+                <div id="snPreview" class="modal-preview">----</div>
+            </div>
+
             <div class="modal-group">
                 <label class="modal-label">Full Name</label>
                 <input type="text" name="fullName" class="modal-input"
@@ -128,6 +150,7 @@
                     <option value="4">4th Year</option>
                 </select>
             </div>
+
             <div class="modal-actions">
                 <button type="button" class="btn-modal-cancel"
                         onclick="closeModal('newStudentModal')">Cancel</button>
@@ -186,9 +209,18 @@
 <script>
     function openModal(id) {
         document.getElementById(id).style.display = 'flex';
+        if (id === 'newStudentModal') updatePreview();
     }
     function closeModal(id) {
         document.getElementById(id).style.display = 'none';
+    }
+    function updatePreview() {
+        const year  = document.getElementById('snYear').value  || '----';
+        const seq   = document.getElementById('snSeq').value;
+        const type  = document.getElementById('snType').value;
+        const seqPadded = seq ? String(seq).padStart(5, '0') : '-----';
+        document.getElementById('snPreview').textContent =
+            year + '-' + seqPadded + '-SP-' + type;
     }
 </script>
 

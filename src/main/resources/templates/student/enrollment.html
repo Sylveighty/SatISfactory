@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enrollment - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Student Portal</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge student">Student</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div class="page-title">
+                <h3>Enrollment</h3>
+            </div>
+
+            <!-- No profile linked to this account -->
+            <div th:if="${student == null}" class="alert alert-error">
+                No student profile found. Please contact the administrator.
+            </div>
+
+            <div th:if="${student != null}">
+
+                <!-- Section info header -->
+                <div class="grades-header-box">
+                    <div class="grades-header-name" th:text="${student.fullName}"></div>
+                    <div class="grades-header-id"
+                         th:text="${'(' + student.studentNumber + ')'}"></div>
+                    <div class="grades-header-meta" style="margin-top: 10px">Section</div>
+                    <div class="grades-header-sy"
+                         th:text="${student.section != null
+                                    ? student.section.sectionName
+                                    : 'No section assigned yet'}">
+                    </div>
+                </div>
+
+                <!-- Subjects table -->
+                <div class="table-wrapper" style="margin-top: 18px">
+                    <table class="sis-table">
+                        <thead>
+                            <tr>
+                                <th>Subject Code</th>
+                                <th>Description</th>
+                                <th>Units</th>
+                                <th>Lec Hours</th>
+                                <th>Lab Hours</th>
+                                <th>Tuition Hours</th>
+                                <th>Schedule</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(subjects)}">
+                                <td colspan="7" class="table-empty">
+                                    No subjects available for your course yet.
+                                </td>
+                            </tr>
+                            <tr th:each="sub : ${subjects}">
+                                <td th:text="${sub.code}"></td>
+                                <td th:text="${sub.name}"></td>
+                                <td th:text="${sub.units}"></td>
+                                <td th:text="${sub.lecHours}"></td>
+                                <td th:text="${sub.labHours}"></td>
+                                <td th:text="${sub.tuitionHours}"></td>
+                                <td>To be scheduled</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="enrollment-note">
+                    This is a preview of subjects offered for your course.
+                    Interactive enrollment with schedule selection and the
+                    Save &amp; Assess flow will be available once Schedule
+                    Management is implemented.
+                </p>
+
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>
