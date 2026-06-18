@@ -1,6 +1,5 @@
-package com.pup.sis.controller.admin;
+package com.pup.sis.controller;
 
-import com.pup.sis.entity.Schedule;
 import com.pup.sis.entity.Section;
 import com.pup.sis.entity.Subject;
 import com.pup.sis.service.FacultyService;
@@ -10,6 +9,8 @@ import com.pup.sis.service.SubjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/schedules")
@@ -48,5 +49,18 @@ public class AdminScheduleController {
                 facultyService.findAll());
 
         return "admin/schedules";
+    }
+
+    @GetMapping("/subjects")
+    @ResponseBody
+    public List<Subject> getSubjectsBySection(
+            @RequestParam Long sectionId) {
+
+        Section section =
+                sectionService.findById(sectionId)
+                        .orElseThrow();
+
+        return subjectService.findByCourse(
+                section.getCourse());
     }
 }
