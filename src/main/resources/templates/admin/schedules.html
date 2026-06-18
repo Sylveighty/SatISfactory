@@ -1,0 +1,25 @@
+<table>
+    <thead>
+    <tr>
+        <th>Section</th>
+        <th>Subject</th>
+        <th>Day</th>
+        <th>Time</th>
+        <th>Room</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="s : ${schedules}">
+        <td th:text="${s.section.sectionName}"></td>
+        <td th:text="${s.subject.name}"></td>
+        <td th:text="${s.day}"></td>
+        <td>
+            <span th:text="${s.startTime}"></span>
+            -
+            <span th:text="${s.endTime}"></span>
+        </td>
+        <td th:text="${s.room}"></td>
+    </tr>
+    </tbody>
+</table>
