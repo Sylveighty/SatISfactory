@@ -1,63 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
 <head>
-    <title>Class Lists</title>
     <meta charset="UTF-8">
-
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <title>Class Lists - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
-<body>
+<body class="has-topbar">
 
-<div class="container mt-4">
+<div th:replace="~{fragments/topbar :: topbar}"></div>
 
-    <h2>Class Lists</h2>
-    <p class="text-muted">
-        Sections currently assigned to you.
-    </p>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <div class="row">
+    <div class="main-content">
 
-        <div class="col-md-4 mb-3"
-             th:each="schedule : ${schedules}">
+        <header class="top-header">
+            <h2>Faculty Portal</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge faculty">Faculty</span>
+            </div>
+        </header>
 
-            <div class="card shadow-sm h-100">
+        <main class="content-area">
 
-                <div class="card-body">
-
-                    <h5 class="card-title"
-                        th:text="${schedule.section.sectionName}">
-                        BSIT 3-1
-                    </h5>
-
-                    <p class="card-text">
-                        <strong>Subject:</strong>
-                        <span th:text="${schedule.subject.name}">
-                            Web Development
-                        </span>
-                    </p>
-
-                    <a class="btn btn-maroon btn-sm"
-                       th:href="@{/faculty/classes/{id}(id=${schedule.section.id})}">
-                        View Class List →
-                    </a>
-
-                </div>
-
+            <div class="page-title">
+                <h3>Class Lists</h3>
+                <p>Select a section to view its student roster.</p>
             </div>
 
-        </div>
+            <div th:if="${#lists.isEmpty(schedules)}" class="alert alert-error">
+                No classes assigned yet.
+            </div>
 
+            <div class="section-grid">
+                <a th:each="sc : ${schedules}"
+                   th:href="@{/faculty/classes/{id}(id=${sc.section.id})}"
+                   class="class-card">
+                    <div class="class-card-header">
+                        <h4 th:text="${sc.section.sectionName}"></h4>
+                        <span class="class-card-arrow">›</span>
+                    </div>
+                    <p class="section-card-meta" th:text="${sc.subject.code + ' - ' + sc.subject.name}"></p>
+                </a>
+            </div>
+
+        </main>
     </div>
-
-    <div class="alert alert-info"
-         th:if="${#lists.isEmpty(schedules)}">
-
-        No assigned classes yet.
-
-    </div>
-
 </div>
 
 </body>
