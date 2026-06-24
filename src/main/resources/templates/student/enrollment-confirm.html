@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enrollment Confirmation - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Student Portal</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge student">Student</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div class="page-title">
+                <h3>Registration (S.Y. 2025-2026 · Second Semester)</h3>
+            </div>
+
+            <div th:if="${student != null}">
+
+                <div th:text="${'Status: Regular   Section: ' + (student.section != null ? student.section.sectionName : '-')}"
+                     style="font-size:13px; color: var(--text-muted); margin-bottom: 12px"></div>
+
+                <div class="free-he-banner">
+                    👍 You are qualified to Free Higher Education Act
+                </div>
+
+                <div class="enrollment-confirm-card">
+                    <div class="enrollment-success-icon">✓</div>
+                    <div class="enrollment-success-text">You are officially enrolled.</div>
+                    <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 18px">
+                        S.Y. 2025-2026 — Second Semester
+                    </div>
+                    <button class="btn-cor" type="button">📄 Certificate of Registration</button>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>
