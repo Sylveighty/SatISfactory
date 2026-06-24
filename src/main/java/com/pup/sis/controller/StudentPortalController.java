@@ -1,17 +1,16 @@
 package com.pup.sis.controller;
 
+import com.pup.sis.entity.Grade;
 import com.pup.sis.entity.Student;
 import com.pup.sis.entity.User;
+import com.pup.sis.service.GradeService;
 import com.pup.sis.service.StudentService;
 import com.pup.sis.service.SubjectService;
 import com.pup.sis.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -24,14 +23,17 @@ public class StudentPortalController {
     private final StudentService studentService;
     private final UserService userService;
     private final SubjectService subjectService;
+    private final GradeService gradeService;
 
     public StudentPortalController(
             StudentService studentService,
             UserService userService,
-            SubjectService subjectService) {
+            SubjectService subjectService,
+            GradeService gradeService) {
         this.studentService = studentService;
         this.userService = userService;
         this.subjectService = subjectService;
+        this.gradeService = gradeService;
     }
 
     // Looks up the Student profile linked to whoever is logged in
@@ -94,7 +96,19 @@ public class StudentPortalController {
 
     @GetMapping("/grades")
     public String viewGrades(Authentication auth, Model model) {
-        model.addAttribute("student", getStudentForUser(auth.getName()));
+        Student student = getStudentForUser(auth.getName());
+        model.addAttribute("student", student);
+
+        if (student != null) {
+            List<Grade> grades = gradeService.findByStudentAndTerm(
+                    student, "2024-2025", "First Semester");
+            model.addAttribute("grades", grades);
+            model.addAttribute("gpa", gradeService.calculateGPA(grades));
+            model.addAttribute("schoolYear", "2024-2025");
+            model.addAttribute("semester", "First Semester");
+        } else {
+            model.addAttribute("grades", List.of());
+        }
         return "student/grades";
     }
 
@@ -116,5 +130,30 @@ public class StudentPortalController {
         }
 
         return "student/enrollment";
+    }
+
+    @PostMapping("/enrollment")
+    public String saveEnrollment(
+            Authentication auth,
+            @RequestParam(required = false) List<Long> subjectIds,
+            RedirectAttributes redirectAttributes) {
+
+        Student student = getStudentForUser(auth.getName());
+        if (student == null) {
+            redirectAttributes.addFlashAttribute("error", "No student profile found.");
+            return "redirect:/student/enrollment";
+        }
+
+        // For Step 4, enrollment selection is acknowledged but not yet
+        // persisted to a dedicated Enrollment entity - that comes in Step 5
+        // alongside the assessment and confirmation slip generation.
+        redirectAttributes.addFlashAttribute("enrolledSubjectIds", subjectIds);
+        return "redirect:/student/enrollment/confirm";
+    }
+
+    @GetMapping("/enrollment/confirm")
+    public String confirmEnrollment(Authentication auth, Model model) {
+        model.addAttribute("student", getStudentForUser(auth.getName()));
+        return "student/enrollment-confirm";
     }
 }
