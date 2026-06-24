@@ -30,25 +30,21 @@
                 <h3>Grades</h3>
             </div>
 
-            <!-- No profile linked to this account -->
             <div th:if="${student == null}" class="alert alert-error">
                 No student profile found. Please contact the administrator.
             </div>
 
             <div th:if="${student != null}">
 
-                <!-- Student info + GPA header box -->
                 <div class="grades-header-box">
                     <div class="grades-header-meta">School Year</div>
-                    <div class="grades-header-sy">-- Not yet enrolled --</div>
-                    <div class="grades-header-name"
-                         th:text="${student.fullName}"></div>
-                    <div class="grades-header-id"
-                         th:text="${'(' + student.studentNumber + ')'}"></div>
-                    <div class="grades-header-gpa">GPA: --</div>
+                    <div class="grades-header-sy" th:text="${schoolYear + ' - ' + semester}"></div>
+                    <div class="grades-header-name" th:text="${student.fullName}"></div>
+                    <div class="grades-header-id" th:text="${'(' + student.studentNumber + ')'}"></div>
+                    <div class="grades-header-gpa"
+                         th:text="${'GPA: ' + (gpa != null ? #numbers.formatDecimal(gpa, 1, 2) : '--')}"></div>
                 </div>
 
-                <!-- Grades table -->
                 <div class="table-wrapper" style="margin-top: 18px">
                     <table class="sis-table">
                         <thead>
@@ -63,11 +59,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td colspan="7" class="table-empty">
-                                    No grade records yet.
-                                    Enrollment opens at the start of the next semester.
-                                </td>
+                            <tr th:if="${#lists.isEmpty(grades)}">
+                                <td colspan="7" class="table-empty">No grade records for this term.</td>
+                            </tr>
+                            <tr th:each="g : ${grades}">
+                                <td th:text="${g.subject.code}"></td>
+                                <td th:text="${g.subject.name}"></td>
+                                <td th:text="${g.faculty != null ? g.faculty.fullName : '-'}"></td>
+                                <td th:text="${g.subject.units}"></td>
+                                <td th:text="${g.section.sectionName}"></td>
+                                <td th:text="${g.finalGrade != null ? g.finalGrade : '-'}"></td>
+                                <td th:text="${g.gradeStatus != null ? g.gradeStatus : '-'}"></td>
                             </tr>
                         </tbody>
                     </table>
