@@ -35,6 +35,14 @@ public class Subject {
 
     private Double tuitionHours;
 
+    // Year level this subject is typically offered (1, 2, 3, or 4)
+    // Nullable - allows subjects not tied to a specific year
+    private Integer yearLevel;
+
+    // Semester this subject is offered (1 or 2)
+    // Nullable - allows subjects not tied to a specific semester
+    private Integer semester;
+
     // Which courses offer this subject - Subject owns this relationship
     @ManyToMany
     @JoinTable(

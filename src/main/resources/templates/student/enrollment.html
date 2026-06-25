@@ -27,74 +27,103 @@
         <main class="content-area">
 
             <div class="page-title">
-                <h3>Enrollment</h3>
+                <h3>Registration (S.Y. 2025-2026 · Second Semester)</h3>
             </div>
 
-            <!-- No profile linked to this account -->
             <div th:if="${student == null}" class="alert alert-error">
                 No student profile found. Please contact the administrator.
             </div>
 
             <div th:if="${student != null}">
 
-                <!-- Section info header -->
-                <div class="grades-header-box">
+                <div class="enrollment-procedure">
+                    <strong>Enrollment Procedure:</strong>
+                    <ol>
+                        <li>Check all the subjects to enroll</li>
+                        <li>Click Save &amp; Assess</li>
+                        <li>Review the Assessment</li>
+                        <li>Print Confirmation Slip</li>
+                    </ol>
+                </div>
+
+                <div class="grades-header-box" style="margin-top: 16px">
                     <div class="grades-header-name" th:text="${student.fullName}"></div>
-                    <div class="grades-header-id"
-                         th:text="${'(' + student.studentNumber + ')'}"></div>
-                    <div class="grades-header-meta" style="margin-top: 10px">Section</div>
-                    <div class="grades-header-sy"
-                         th:text="${student.section != null
-                                    ? student.section.sectionName
-                                    : 'No section assigned yet'}">
+                    <div class="grades-header-id" th:text="${'(' + student.studentNumber + ')'}"></div>
+                    <div style="margin-top:10px; display:flex; gap:24px; align-items:center">
+                        <span class="enrollment-status-badge">Status: Warning (23 Units Allowed)</span>
+                        <span style="color:rgba(255,255,255,0.85); font-size:13px"
+                              th:text="${'Section: ' + (student.section != null ? student.section.sectionName : 'Not assigned')}"></span>
                     </div>
                 </div>
 
-                <!-- Subjects table -->
-                <div class="table-wrapper" style="margin-top: 18px">
-                    <table class="sis-table">
-                        <thead>
-                            <tr>
-                                <th>Subject Code</th>
-                                <th>Description</th>
-                                <th>Units</th>
-                                <th>Lec Hours</th>
-                                <th>Lab Hours</th>
-                                <th>Tuition Hours</th>
-                                <th>Schedule</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:if="${#lists.isEmpty(subjects)}">
-                                <td colspan="7" class="table-empty">
-                                    No subjects available for your course yet.
-                                </td>
-                            </tr>
-                            <tr th:each="sub : ${subjects}">
-                                <td th:text="${sub.code}"></td>
-                                <td th:text="${sub.name}"></td>
-                                <td th:text="${sub.units}"></td>
-                                <td th:text="${sub.lecHours}"></td>
-                                <td th:text="${sub.labHours}"></td>
-                                <td th:text="${sub.tuitionHours}"></td>
-                                <td>To be scheduled</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <form th:action="@{/student/enrollment}" method="post" id="enrollForm">
+                    <div class="table-wrapper" style="margin-top: 18px">
+                        <table class="sis-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Subject Code</th>
+                                    <th>Description</th>
+                                    <th>Units</th>
+                                    <th>Lec</th>
+                                    <th>Lab</th>
+                                    <th>Tuition</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="${#lists.isEmpty(subjects)}">
+                                    <td colspan="7" class="table-empty">
+                                        No subjects available for your course and year level.
+                                    </td>
+                                </tr>
+                                <tr th:each="sub : ${subjects}" class="enrollment-checkbox-row">
+                                    <td>
+                                        <input type="checkbox" name="subjectIds" th:value="${sub.id}"
+                                               th:attr="data-units=${sub.units}" class="enroll-check">
+                                    </td>
+                                    <td th:text="${sub.code}"></td>
+                                    <td th:text="${sub.name}"></td>
+                                    <td th:text="${sub.units}"></td>
+                                    <td th:text="${sub.lecHours}"></td>
+                                    <td th:text="${sub.labHours}"></td>
+                                    <td th:text="${sub.tuitionHours}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <p class="enrollment-note">
-                    This is a preview of subjects offered for your course.
-                    Interactive enrollment with schedule selection and the
-                    Save &amp; Assess flow will be available once Schedule
-                    Management is implemented.
-                </p>
+                    <div class="unit-counter">
+                        Total Units Selected: <span id="unitTotal">0</span> / 23
+                        <span id="unitWarning" class="unit-warning" style="display:none">
+                            — exceeds allowed units
+                        </span>
+                    </div>
+
+                    <div class="modal-actions" style="justify-content: flex-end; margin-top: 14px">
+                        <button type="submit" class="btn-modal-save"
+                                style="background: var(--maroon); color: white;">Save &amp; Assess</button>
+                    </div>
+                </form>
 
             </div>
 
         </main>
     </div>
 </div>
+
+<div th:replace="~{fragments/scripts :: jquery}"></div>
+
+<script>
+    function updateUnitTotal() {
+        let total = 0;
+        $('.enroll-check:checked').each(function() {
+            total += parseInt($(this).data('units')) || 0;
+        });
+        $('#unitTotal').text(total);
+        $('#unitWarning').toggle(total > 23);
+    }
+    $('.enroll-check').on('change', updateUnitTotal);
+</script>
 
 </body>
 </html>

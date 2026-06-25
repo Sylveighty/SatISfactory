@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Class Lists - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Faculty Portal</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge faculty">Faculty</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div class="page-title">
+                <h3>Class Lists</h3>
+                <p>Select a section to view its student roster.</p>
+            </div>
+
+            <div th:if="${#lists.isEmpty(schedules)}" class="alert alert-error">
+                No classes assigned yet.
+            </div>
+
+            <div class="section-grid">
+                <a th:each="sc : ${schedules}"
+                   th:href="@{/faculty/classes/{id}(id=${sc.section.id})}"
+                   class="class-card">
+                    <div class="class-card-header">
+                        <h4 th:text="${sc.section.sectionName}"></h4>
+                        <span class="class-card-arrow">›</span>
+                    </div>
+                    <p class="section-card-meta" th:text="${sc.subject.code + ' - ' + sc.subject.name}"></p>
+                </a>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

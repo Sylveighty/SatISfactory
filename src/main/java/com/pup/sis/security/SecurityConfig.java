@@ -59,6 +59,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             .requestMatchers(
                 "/", "/welcome",
                 "/login/student", "/login/faculty", "/login/admin",
+                "/api/**",
                 "/css/**", "/js/**", "/images/**"
             ).permitAll()
             // Role-locked sections

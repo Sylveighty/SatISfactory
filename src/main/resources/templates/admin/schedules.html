@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedules - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Schedule Management</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge admin">Administrator</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${warning}" class="alert alert-error" th:text="${warning}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <div class="page-header-row">
+                <div class="page-title">
+                    <h3>Schedules</h3>
+                    <p>Assign faculty and time slots to section subjects.</p>
+                </div>
+                <button class="btn-primary" onclick="openModal('newScheduleModal')">
+                    + New Schedule
+                </button>
+            </div>
+
+            <!-- Filter bar -->
+            <form method="get" th:action="@{/admin/schedules}" class="schedule-filter-bar">
+                <select name="sectionId" class="filter-select" onchange="this.form.submit()">
+                    <option value="">All Sections</option>
+                    <option th:each="s : ${sections}" th:value="${s.id}"
+                            th:text="${s.sectionName}"
+                            th:selected="${selectedSectionId == s.id}"></option>
+                </select>
+                <select name="facultyId" class="filter-select" onchange="this.form.submit()">
+                    <option value="">All Faculty</option>
+                    <option th:each="f : ${faculty}" th:value="${f.id}"
+                            th:text="${f.fullName}"
+                            th:selected="${selectedFacultyId == f.id}"></option>
+                </select>
+                <a th:href="@{/admin/schedules}" class="clear-link">Clear filters</a>
+            </form>
+
+            <div class="table-wrapper">
+                <table class="sis-table">
+                    <thead>
+                        <tr>
+                            <th>Section</th>
+                            <th>Subject</th>
+                            <th>Faculty</th>
+                            <th>Day</th>
+                            <th>Time</th>
+                            <th>Room</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(schedules)}">
+                            <td colspan="7" class="table-empty">No schedules found.</td>
+                        </tr>
+                        <tr th:each="sc : ${schedules}">
+                            <td th:text="${sc.section.sectionName}"></td>
+                            <td th:text="${sc.subject.code}"></td>
+                            <td th:text="${sc.faculty.fullName}"></td>
+                            <td th:text="${sc.day}"></td>
+                            <td th:text="${#temporals.format(sc.startTime, 'hh:mm a') + ' - ' + #temporals.format(sc.endTime, 'hh:mm a')}"></td>
+                            <td th:text="${sc.room != null ? sc.room : '-'}"></td>
+                            <td class="table-actions">
+                                <a th:href="@{/admin/schedules/{id}/edit(id=${sc.id})}"
+                                   class="btn-icon" title="Edit">✏</a>
+                                <form th:action="@{/admin/schedules/{id}/delete(id=${sc.id})}"
+                                      method="post" style="display:inline"
+                                      onsubmit="return confirm('Delete this schedule?')">
+                                    <button type="submit" class="btn-icon" title="Delete">🗑</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- New Schedule Modal -->
+<div id="newScheduleModal" class="modal-overlay" style="display:none">
+    <div class="modal-card">
+        <button class="modal-close" onclick="closeModal('newScheduleModal')">✕</button>
+        <h2 class="modal-title">New Schedule</h2>
+        <form th:action="@{/admin/schedules}" method="post">
+
+            <div class="modal-group">
+                <label class="modal-label">Section</label>
+                <select name="sectionId" id="newSectionSelect" class="modal-select" required>
+                    <option value="">Select section</option>
+                    <option th:each="s : ${sections}" th:value="${s.id}"
+                            th:text="${s.sectionName}"
+                            th:attr="data-course-id=${s.course != null ? s.course.id : ''}"></option>
+                </select>
+            </div>
+
+            <div class="modal-group">
+                <label class="modal-label">Subject</label>
+                <select name="subjectId" id="newSubjectSelect" class="modal-select" required>
+                    <option value="">Select section first</option>
+                </select>
+            </div>
+
+            <div class="modal-group">
+                <label class="modal-label">Faculty</label>
+                <select name="facultyId" class="modal-select" required>
+                    <option value="">Select faculty</option>
+                    <option th:each="f : ${faculty}" th:value="${f.id}"
+                            th:text="${f.fullName}"></option>
+                </select>
+            </div>
+
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">Day</label>
+                    <select name="day" class="modal-select" required>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                    </select>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">Room</label>
+                    <input type="text" name="room" class="modal-input" placeholder="e.g. Room 301">
+                </div>
+            </div>
+
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">Start Time</label>
+                    <input type="time" name="startTime" class="modal-input" required>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">End Time</label>
+                    <input type="time" name="endTime" class="modal-input" required>
+                </div>
+            </div>
+
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">School Year</label>
+                    <input type="text" name="schoolYear" class="modal-input"
+                           value="2025-2026" required>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">Semester</label>
+                    <select name="semester" class="modal-select" required>
+                        <option value="First Semester">First Semester</option>
+                        <option value="Second Semester" selected>Second Semester</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel"
+                        onclick="closeModal('newScheduleModal')">Cancel</button>
+                <button type="submit" class="btn-modal-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Schedule Modal -->
+<div id="editScheduleModal" class="modal-overlay"
+     th:style="${editSchedule != null ? 'display:flex' : 'display:none'}">
+    <div class="modal-card" th:if="${editSchedule != null}">
+        <a th:href="@{/admin/schedules}" class="modal-close">✕</a>
+        <h2 class="modal-title">Edit Schedule</h2>
+        <form th:action="@{/admin/schedules/{id}(id=${editSchedule.id})}" method="post">
+
+            <div class="modal-group">
+                <label class="modal-label">Section</label>
+                <select name="sectionId" class="modal-select" required>
+                    <option th:each="s : ${sections}" th:value="${s.id}"
+                            th:text="${s.sectionName}"
+                            th:selected="${editSchedule.section.id == s.id}"></option>
+                </select>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Subject</label>
+                <select name="subjectId" class="modal-select" required>
+                    <option th:each="sub : ${subjects}" th:value="${sub.id}"
+                            th:text="${sub.code + ' - ' + sub.name}"
+                            th:selected="${editSchedule.subject.id == sub.id}"></option>
+                </select>
+            </div>
+            <div class="modal-group">
+                <label class="modal-label">Faculty</label>
+                <select name="facultyId" class="modal-select" required>
+                    <option th:each="f : ${faculty}" th:value="${f.id}"
+                            th:text="${f.fullName}"
+                            th:selected="${editSchedule.faculty.id == f.id}"></option>
+                </select>
+            </div>
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">Day</label>
+                    <select name="day" class="modal-select" required>
+                        <option th:each="d : ${ {'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'} }"
+                                th:value="${d}" th:text="${d}"
+                                th:selected="${editSchedule.day == d}"></option>
+                    </select>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">Room</label>
+                    <input type="text" name="room" class="modal-input" th:value="${editSchedule.room}">
+                </div>
+            </div>
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">Start Time</label>
+                    <input type="time" name="startTime" class="modal-input"
+                           th:value="${editSchedule.startTime}" required>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">End Time</label>
+                    <input type="time" name="endTime" class="modal-input"
+                           th:value="${editSchedule.endTime}" required>
+                </div>
+            </div>
+            <div class="modal-row-two">
+                <div class="modal-group">
+                    <label class="modal-label">School Year</label>
+                    <input type="text" name="schoolYear" class="modal-input"
+                           th:value="${editSchedule.schoolYear}" required>
+                </div>
+                <div class="modal-group">
+                    <label class="modal-label">Semester</label>
+                    <select name="semester" class="modal-select" required>
+                        <option value="First Semester" th:selected="${editSchedule.semester == 'First Semester'}">First Semester</option>
+                        <option value="Second Semester" th:selected="${editSchedule.semester == 'Second Semester'}">Second Semester</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <a th:href="@{/admin/schedules}" class="btn-modal-cancel">Cancel</a>
+                <button type="submit" class="btn-modal-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/scripts :: jquery}"></div>
+
+<script>
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    $('#newSectionSelect').on('change', function() {
+        const courseId = $(this).find(':selected').data('course-id');
+        const $subjectSelect = $('#newSubjectSelect');
+        $subjectSelect.empty();
+        if (!courseId) {
+            $subjectSelect.append('<option value="">Select section first</option>');
+            return;
+        }
+        $subjectSelect.append('<option value="">Loading...</option>');
+        $.get('/api/subjects?courseId=' + courseId, function(data) {
+            $subjectSelect.empty();
+            $subjectSelect.append('<option value="">Select subject</option>');
+            $.each(data, function(i, sub) {
+                $subjectSelect.append(
+                    $('<option>', { value: sub.id, text: sub.code + ' - ' + sub.name })
+                );
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

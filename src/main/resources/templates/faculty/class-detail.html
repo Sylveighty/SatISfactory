@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Class List Detail - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Faculty Portal</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge faculty">Faculty</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div class="page-title">
+                <h3>Class Lists</h3>
+                <p th:if="${section != null}"
+                   th:text="${'Students enrolled in ' + section.sectionName + '.'}"></p>
+            </div>
+
+            <a th:href="@{/faculty/classes}" class="back-link-inline">← Back to sections</a>
+
+            <div th:if="${section == null}" class="alert alert-error">
+                Class not found or you are not assigned to this section.
+            </div>
+
+            <div th:if="${section != null}" class="table-wrapper" style="margin-top: 14px">
+                <table class="sis-table">
+                    <thead>
+                        <tr>
+                            <th th:text="${section.sectionName + ' — Class List'}" colspan="2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(students)}">
+                            <td colspan="2" class="table-empty">No students assigned to this section.</td>
+                        </tr>
+                        <tr th:each="st, iter : ${students}">
+                            <td th:text="${iter.count}" style="width: 40px"></td>
+                            <td th:text="${st.fullName}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>
