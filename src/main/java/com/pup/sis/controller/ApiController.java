@@ -1,9 +1,9 @@
 package com.pup.sis.controller;
 
 import com.pup.sis.entity.Course;
-import com.pup.sis.entity.Faculty;
+// import com.pup.sis.entity.Faculty;
 import com.pup.sis.entity.Schedule;
-import com.pup.sis.entity.Subject;
+// import com.pup.sis.entity.Subject;
 import com.pup.sis.service.CourseService;
 import com.pup.sis.service.ScheduleService;
 import com.pup.sis.service.SubjectService;
