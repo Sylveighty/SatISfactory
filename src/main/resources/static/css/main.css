@@ -1332,3 +1332,21 @@ color: var(--maroon);
 text-decoration: underline;
 margin-bottom: 6px;
 }
+
+.login-footer {
+    padding: 0 28px 20px;
+    text-align: left;
+}
+
+.change-password-link {
+    font-size: 13px;
+    color: #4DA6FF;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease;
+}
+
+.change-password-link:hover {
+    color: #1E88E5;
+    text-decoration: underline;
+}
