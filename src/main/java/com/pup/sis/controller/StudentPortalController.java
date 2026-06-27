@@ -43,7 +43,7 @@ public class StudentPortalController {
         return studentService.findByUser(user).orElse(null);
     }
 
-    // ── Profile ───────────────────────────────────────────────────────────────
+    // -- Profile ----------------------------------------------------------
 
     @GetMapping("/profile")
     public String viewProfile(Authentication auth, Model model) {
@@ -92,7 +92,36 @@ public class StudentPortalController {
         return "redirect:/student/profile";
     }
 
-    // ── Grades ────────────────────────────────────────────────────────────────
+    // -- Change Password --------------------------------------------------
+
+    @GetMapping("/change-password")
+    public String showChangePassword() {
+        return "student/change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(
+            Authentication auth,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            RedirectAttributes redirectAttributes) {
+
+        User user = userService.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found: " + auth.getName()));
+
+        String error = userService.changePassword(user, currentPassword, newPassword, confirmPassword);
+
+        if (error != null) {
+            redirectAttributes.addFlashAttribute("error", error);
+            return "redirect:/student/change-password";
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Password changed successfully.");
+        return "redirect:/student/change-password";
+    }
+
+    // -- Grades -----------------------------------------------------------
 
     @GetMapping("/grades")
     public String viewGrades(Authentication auth, Model model) {
@@ -112,17 +141,13 @@ public class StudentPortalController {
         return "student/grades";
     }
 
-    // ── Enrollment ────────────────────────────────────────────────────────────
+    // -- Enrollment -------------------------------------------------------
 
     @GetMapping("/enrollment")
     public String viewEnrollment(Authentication auth, Model model) {
         Student student = getStudentForUser(auth.getName());
         model.addAttribute("student", student);
 
-        // Subjects available to the student's course.
-        // NOTE: Subject has no yearLevel field yet, so this currently shows
-        // all subjects linked to the student's course regardless of year.
-        // Proper year-level curriculum filtering is a future enhancement.
         if (student != null && student.getCourse() != null) {
             model.addAttribute("subjects", subjectService.findByCourse(student.getCourse()));
         } else {
@@ -144,9 +169,6 @@ public class StudentPortalController {
             return "redirect:/student/enrollment";
         }
 
-        // For Step 4, enrollment selection is acknowledged but not yet
-        // persisted to a dedicated Enrollment entity - that comes in Step 5
-        // alongside the assessment and confirmation slip generation.
         redirectAttributes.addFlashAttribute("enrolledSubjectIds", subjectIds);
         return "redirect:/student/enrollment/confirm";
     }

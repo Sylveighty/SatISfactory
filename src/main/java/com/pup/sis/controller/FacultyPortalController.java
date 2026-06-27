@@ -50,11 +50,44 @@ public class FacultyPortalController {
         return facultyService.findByUser(user).orElse(null);
     }
 
+    // -- Profile ----------------------------------------------------------
+
     @GetMapping("/profile")
     public String viewProfile(Authentication auth, Model model) {
         model.addAttribute("faculty", getFacultyForUser(auth.getName()));
         return "faculty/profile";
     }
+
+    // -- Change Password --------------------------------------------------
+
+    @GetMapping("/change-password")
+    public String showChangePassword() {
+        return "faculty/change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(
+            Authentication auth,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            RedirectAttributes redirectAttributes) {
+
+        User user = userService.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found: " + auth.getName()));
+
+        String error = userService.changePassword(user, currentPassword, newPassword, confirmPassword);
+
+        if (error != null) {
+            redirectAttributes.addFlashAttribute("error", error);
+            return "redirect:/faculty/change-password";
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Password changed successfully.");
+        return "redirect:/faculty/change-password";
+    }
+
+    // -- Schedules --------------------------------------------------------
 
     @GetMapping("/schedules")
     public String viewSchedule(Authentication auth, Model model) {
@@ -69,6 +102,8 @@ public class FacultyPortalController {
         }
         return "faculty/schedules";
     }
+
+    // -- Classes ----------------------------------------------------------
 
     @GetMapping("/classes")
     public String viewClasses(Authentication auth, Model model) {
@@ -108,6 +143,8 @@ public class FacultyPortalController {
         return "faculty/class-detail";
     }
 
+    // -- Grades -----------------------------------------------------------
+
     @GetMapping("/grades")
     public String gradeForm(
             Authentication auth,
@@ -122,7 +159,6 @@ public class FacultyPortalController {
                 ? scheduleService.findByFacultyAndTerm(faculty, CURRENT_YEAR, CURRENT_SEM)
                 : List.of();
 
-        // Distinct subjects this faculty teaches
         model.addAttribute("subjects", schedules.stream()
                 .map(Schedule::getSubject).distinct().toList());
 
@@ -144,7 +180,6 @@ public class FacultyPortalController {
                 model.addAttribute("subject", subject);
                 model.addAttribute("students", students);
 
-                // Map existing grades by student ID for pre-filling the form
                 List<Grade> existing = gradeService.findBySectionSubjectAndTerm(
                         section, subject, CURRENT_YEAR, CURRENT_SEM);
                 model.addAttribute("existingGrades", existing.stream()

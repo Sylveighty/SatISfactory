@@ -1,5 +1,5 @@
 # ── Database ──────────────────────────────────────────────────────────────────
-# Copy this file to application.properties and set your own password.
+# Copy this file to application.properties and set your own values.
 # application.properties is gitignored - it will not be committed.
 spring.datasource.url=jdbc:mysql://localhost:3306/pup_sis?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
 spring.datasource.username=root
@@ -17,3 +17,18 @@ spring.thymeleaf.cache=false
 
 # ── Server ────────────────────────────────────────────────────────────────────
 server.port=8080
+
+# ── Mail (password reset) ─────────────────────────────────────────────────────
+# For local demo: use Gmail App Password or Mailtrap.io
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=your_email@gmail.com
+spring.mail.password=your_app_password_here
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Base URL used in reset email links - change if not running on port 8080
+app.base-url=http://localhost:8080
+
+# How long reset tokens stay valid (in minutes)
+app.password-reset.token-expiry-minutes=30
