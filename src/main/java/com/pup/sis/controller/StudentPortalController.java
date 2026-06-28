@@ -153,10 +153,27 @@ public class StudentPortalController {
         model.addAttribute("student", student);
 
         if (student != null && student.getSection() != null) {
-            model.addAttribute("schedule", scheduleService.findBySectionAndTerm(
+            // Get subjects the student is enrolled in this term
+            List<Grade> enrolledGrades = gradeService.findByStudentAndTerm(
+                    student,
+                    FacultyPortalController.CURRENT_YEAR,
+                    FacultyPortalController.CURRENT_SEM);
+
+            // Get all schedules for the section, then filter to only enrolled subjects
+            List<com.pup.sis.entity.Schedule> fullSchedule = scheduleService.findBySectionAndTerm(
                     student.getSection(),
                     FacultyPortalController.CURRENT_YEAR,
-                    FacultyPortalController.CURRENT_SEM));
+                    FacultyPortalController.CURRENT_SEM);
+
+            var enrolledSubjectIds = enrolledGrades.stream()
+                    .map(g -> g.getSubject().getId())
+                    .toList();
+
+            var filteredSchedule = fullSchedule.stream()
+                    .filter(sc -> enrolledSubjectIds.contains(sc.getSubject().getId()))
+                    .toList();
+
+            model.addAttribute("schedule", filteredSchedule);
         } else {
             model.addAttribute("schedule", List.of());
         }
@@ -194,13 +211,62 @@ public class StudentPortalController {
             return "redirect:/student/enrollment";
         }
 
-        redirectAttributes.addFlashAttribute("enrolledSubjectIds", subjectIds);
+        if (subjectIds == null || subjectIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Please select at least one subject.");
+            return "redirect:/student/enrollment";
+        }
+
+        if (student.getSection() == null) {
+            redirectAttributes.addFlashAttribute("error",
+                    "You have not been assigned to a section yet. Please contact the administrator.");
+            return "redirect:/student/enrollment";
+        }
+
+        // Create a Grade placeholder for each selected subject (no grade yet)
+        for (Long subjectId : subjectIds) {
+            subjectService.findById(subjectId).ifPresent(subject -> {
+                // Skip if already enrolled in this subject this term
+                boolean alreadyEnrolled = gradeService.findByStudentSubjectAndTerm(
+                        student, subject,
+                        FacultyPortalController.CURRENT_YEAR,
+                        FacultyPortalController.CURRENT_SEM).isPresent();
+
+                if (!alreadyEnrolled) {
+                    Grade grade = new Grade();
+                    grade.setStudent(student);
+                    grade.setSubject(subject);
+                    grade.setSection(student.getSection());
+                    grade.setSchoolYear(FacultyPortalController.CURRENT_YEAR);
+                    grade.setSemester(FacultyPortalController.CURRENT_SEM);
+                    gradeService.save(grade);
+                }
+            });
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Enrollment saved successfully.");
         return "redirect:/student/enrollment/confirm";
     }
 
     @GetMapping("/enrollment/confirm")
     public String confirmEnrollment(Authentication auth, Model model) {
-        model.addAttribute("student", getStudentForUser(auth.getName()));
+        Student student = getStudentForUser(auth.getName());
+        model.addAttribute("student", student);
+
+        if (student != null) {
+            List<Grade> enrolled = gradeService.findByStudentAndTerm(
+                    student,
+                    FacultyPortalController.CURRENT_YEAR,
+                    FacultyPortalController.CURRENT_SEM);
+            model.addAttribute("enrolledGrades", enrolled);
+
+            int totalUnits = enrolled.stream()
+                    .mapToInt(g -> g.getSubject().getUnits() != null ? g.getSubject().getUnits() : 0)
+                    .sum();
+            model.addAttribute("totalUnits", totalUnits);
+        }
+
+        model.addAttribute("schoolYear", FacultyPortalController.CURRENT_YEAR);
+        model.addAttribute("semester", FacultyPortalController.CURRENT_SEM);
         return "student/enrollment-confirm";
     }
 }

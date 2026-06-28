@@ -101,10 +101,16 @@ public class DashboardController {
             model.addAttribute("gpa", gradeService.calculateGPA(grades));
 
             if (student.getSection() != null) {
-                model.addAttribute("schedule", scheduleService.findBySectionAndTerm(
+                var enrolledSubjectIds = grades.stream()
+                        .map(g -> g.getSubject().getId())
+                        .toList();
+                var filteredSchedule = scheduleService.findBySectionAndTerm(
                         student.getSection(),
                         FacultyPortalController.CURRENT_YEAR,
-                        FacultyPortalController.CURRENT_SEM));
+                        FacultyPortalController.CURRENT_SEM).stream()
+                        .filter(sc -> enrolledSubjectIds.contains(sc.getSubject().getId()))
+                        .toList();
+                model.addAttribute("schedule", filteredSchedule);
             } else {
                 model.addAttribute("schedule", List.of());
             }
