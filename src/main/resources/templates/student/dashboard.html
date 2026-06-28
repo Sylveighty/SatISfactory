@@ -4,35 +4,125 @@
       lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Dashboard — PUP SIS</title>
+    <title>Student Dashboard - PUP SIS</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
-<body>
 <body class="has-topbar">
 <div th:replace="~{fragments/topbar :: topbar}"></div>
 <div class="app-layout">
-
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-
     <div class="main-content">
 
         <header class="top-header">
             <h2>Student Dashboard</h2>
             <div class="header-right">
-                <span>Welcome, <strong th:text="${username}">student1</strong></span>
+                <span>Welcome, <strong th:text="${student != null ? student.fullName : username}">student1</strong></span>
                 <span class="role-badge student">Student</span>
             </div>
         </header>
 
         <main class="content-area">
+
             <div class="page-title">
                 <h3>Student Portal</h3>
-                <p>Select a module from the sidebar to get started.</p>
+                <p th:text="${schoolYear + ' . ' + semester}">2025-2026 . Second Semester</p>
             </div>
-            <div class="dashboard-welcome">
-                <p>Signed in as <strong th:text="${username}">student1</strong> &nbsp;·&nbsp;
-                <span class="role-badge student">Student</span></p>
+
+            <div th:if="${student == null}" class="alert alert-error">
+                No student profile is linked to your account. Please contact the administrator.
             </div>
+
+            <div th:if="${student != null}">
+
+                <!-- Stat cards -->
+                <div class="dash-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎓</div>
+                        <div class="stat-body">
+                            <div class="stat-value" th:text="${student.studentNumber}">-</div>
+                            <div class="stat-label">Student Number</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-body">
+                            <div class="stat-value" th:text="${student.course != null ? student.course.code : '-'}">-</div>
+                            <div class="stat-label">Course</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏫</div>
+                        <div class="stat-body">
+                            <div class="stat-value" th:text="${student.section != null ? student.section.sectionName : 'Not assigned'}">-</div>
+                            <div class="stat-label">Section</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-body">
+                            <div class="stat-value" th:text="${gpa != null ? #numbers.formatDecimal(gpa,1,2) : '-'}">-</div>
+                            <div class="stat-label">Current GPA</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule summary -->
+                <div class="page-title" style="margin-top: 32px;">
+                    <h3>My Schedule</h3>
+                </div>
+
+                <div th:if="${student.section == null}" class="dash-empty">
+                    You have not been assigned to a section yet.
+                </div>
+
+                <div th:if="${student.section != null && #lists.isEmpty(schedule)}" class="dash-empty">
+                    No schedule found for your section this semester.
+                </div>
+
+                <div th:if="${student.section != null && !#lists.isEmpty(schedule)}" class="table-wrapper">
+                    <table class="sis-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Faculty</th>
+                                <th>Day</th>
+                                <th>Time</th>
+                                <th>Room</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="sc : ${schedule}">
+                                <td th:text="${sc.subject.code + ' - ' + sc.subject.name}"></td>
+                                <td th:text="${sc.faculty.fullName}"></td>
+                                <td th:text="${sc.day}"></td>
+                                <td th:text="${sc.startTime + ' - ' + sc.endTime}"></td>
+                                <td th:text="${sc.room != null ? sc.room : '-'}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Quick actions -->
+                <div class="page-title" style="margin-top: 32px;">
+                    <h3>Quick Actions</h3>
+                </div>
+                <div class="quick-actions">
+                    <a th:href="@{/student/grades}" class="qa-card">
+                        <span class="qa-icon">📊</span>
+                        <span class="qa-label">View Grades</span>
+                    </a>
+                    <a th:href="@{/student/enrollment}" class="qa-card">
+                        <span class="qa-icon">📋</span>
+                        <span class="qa-label">Enrollment</span>
+                    </a>
+                    <a th:href="@{/student/profile}" class="qa-card">
+                        <span class="qa-icon">👤</span>
+                        <span class="qa-label">My Profile</span>
+                    </a>
+                </div>
+
+            </div>
+
         </main>
     </div>
 </div>

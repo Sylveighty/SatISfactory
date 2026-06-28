@@ -54,7 +54,7 @@
                             <td th:text="${sc.section.sectionName}"></td>
                             <td th:text="${sc.subject.code + ' - ' + sc.subject.name}"></td>
                             <td th:text="${sc.day}"></td>
-                            <td th:text="${#temporals.format(sc.startTime, 'hh:mm a') + ' - ' + #temporals.format(sc.endTime, 'hh:mm a')}"></td>
+                            <td th:text="${sc.startTime + ' - ' + sc.endTime}"></td>
                             <td th:text="${sc.room != null ? sc.room : '-'}"></td>
                         </tr>
                     </tbody>

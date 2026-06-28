@@ -4,6 +4,7 @@ import com.pup.sis.entity.Grade;
 import com.pup.sis.entity.Student;
 import com.pup.sis.entity.User;
 import com.pup.sis.service.GradeService;
+import com.pup.sis.service.ScheduleService;
 import com.pup.sis.service.StudentService;
 import com.pup.sis.service.SubjectService;
 import com.pup.sis.service.UserService;
@@ -24,16 +25,19 @@ public class StudentPortalController {
     private final UserService userService;
     private final SubjectService subjectService;
     private final GradeService gradeService;
+    private final ScheduleService scheduleService;
 
     public StudentPortalController(
             StudentService studentService,
             UserService userService,
             SubjectService subjectService,
-            GradeService gradeService) {
+            GradeService gradeService,
+            ScheduleService scheduleService) {
         this.studentService = studentService;
         this.userService = userService;
         this.subjectService = subjectService;
         this.gradeService = gradeService;
+        this.scheduleService = scheduleService;
     }
 
     // Looks up the Student profile linked to whoever is logged in
@@ -130,15 +134,36 @@ public class StudentPortalController {
 
         if (student != null) {
             List<Grade> grades = gradeService.findByStudentAndTerm(
-                    student, "2024-2025", "First Semester");
+                    student, FacultyPortalController.CURRENT_YEAR, FacultyPortalController.CURRENT_SEM);
             model.addAttribute("grades", grades);
             model.addAttribute("gpa", gradeService.calculateGPA(grades));
-            model.addAttribute("schoolYear", "2024-2025");
-            model.addAttribute("semester", "First Semester");
+            model.addAttribute("schoolYear", FacultyPortalController.CURRENT_YEAR);
+            model.addAttribute("semester", FacultyPortalController.CURRENT_SEM);
         } else {
             model.addAttribute("grades", List.of());
         }
         return "student/grades";
+    }
+
+    // -- Schedule ---------------------------------------------------------
+
+    @GetMapping("/schedule")
+    public String viewSchedule(Authentication auth, Model model) {
+        Student student = getStudentForUser(auth.getName());
+        model.addAttribute("student", student);
+
+        if (student != null && student.getSection() != null) {
+            model.addAttribute("schedule", scheduleService.findBySectionAndTerm(
+                    student.getSection(),
+                    FacultyPortalController.CURRENT_YEAR,
+                    FacultyPortalController.CURRENT_SEM));
+        } else {
+            model.addAttribute("schedule", List.of());
+        }
+
+        model.addAttribute("schoolYear", FacultyPortalController.CURRENT_YEAR);
+        model.addAttribute("semester", FacultyPortalController.CURRENT_SEM);
+        return "student/schedule";
     }
 
     // -- Enrollment -------------------------------------------------------

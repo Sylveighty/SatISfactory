@@ -16,8 +16,8 @@ import java.util.Map;
 @RequestMapping("/faculty")
 public class FacultyPortalController {
 
-    static final String CURRENT_YEAR = "2025-2026";
-    static final String CURRENT_SEM  = "Second Semester";
+    public static final String CURRENT_YEAR = "2025-2026";
+    public static final String CURRENT_SEM  = "Second Semester";
 
     private final FacultyService facultyService;
     private final UserService userService;

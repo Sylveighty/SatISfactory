@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome — PUP SIS</title>
+    <title>Welcome - PUP SIS</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body class="welcome-page">
@@ -14,28 +14,36 @@
             <div class="seal-placeholder">PUP</div>
         </div>
 
-        <h1 class="welcome-title">Welcome to SIS</h1>
-        <p class="welcome-subtitle">Polytechnic University of the Philippines</p>
+        <p class="welcome-eyebrow">Polytechnic University of the Philippines</p>
+        <p class="welcome-campus">San Pedro Campus</p>
+        <h1 class="welcome-title">SatISfactory</h1>
+        <p class="welcome-subtitle">Student Information System . Academic Year 2025-2026</p>
 
         <div class="welcome-cards">
             <a th:href="@{/login/admin}" class="welcome-card">
                 <div class="welcome-card-icon">🛡</div>
                 <h2 class="welcome-card-role">Admin</h2>
-                <span class="welcome-card-link">Continue →</span>
+                <p class="welcome-card-desc">System administration and records management</p>
+                <span class="welcome-card-link">Sign in →</span>
             </a>
 
             <a th:href="@{/login/faculty}" class="welcome-card">
                 <div class="welcome-card-icon">💼</div>
                 <h2 class="welcome-card-role">Faculty</h2>
-                <span class="welcome-card-link">Continue →</span>
+                <p class="welcome-card-desc">Class management and grade encoding</p>
+                <span class="welcome-card-link">Sign in →</span>
             </a>
 
             <a th:href="@{/login/student}" class="welcome-card">
                 <div class="welcome-card-icon">🎓</div>
                 <h2 class="welcome-card-role">Student</h2>
-                <span class="welcome-card-link">Continue →</span>
+                <p class="welcome-card-desc">Enrollment, grades, and academic records</p>
+                <span class="welcome-card-link">Sign in →</span>
             </a>
         </div>
+
+        <p class="welcome-footer">For account issues, contact the Registrar's Office.</p>
+
     </div>
 
 </body>

@@ -4,18 +4,13 @@
       lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard — PUP SIS</title>
+    <title>Admin Dashboard - PUP SIS</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
-<body>
 <body class="has-topbar">
 <div th:replace="~{fragments/topbar :: topbar}"></div>
 <div class="app-layout">
-
-    <!-- Sidebar fragment -->
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-
-    <!-- Main content -->
     <div class="main-content">
 
         <header class="top-header">
@@ -27,15 +22,72 @@
         </header>
 
         <main class="content-area">
+
             <div class="page-title">
                 <h3>System Overview</h3>
-                <p>Select a module from the sidebar to get started.</p>
+                <p th:text="'S.Y. ' + ${#dates.format(#dates.createNow(), 'yyyy')} + ' . Academic Records'">S.Y. 2025-2026 . Academic Records</p>
             </div>
-            <div class="dashboard-welcome">
-                <p>Signed in as <strong th:text="${username}">admin</strong> &nbsp;·&nbsp;
-                <span class="role-badge admin">Administrator</span></p>
+
+            <!-- Stat cards -->
+            <div class="dash-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-body">
+                        <div class="stat-value" th:text="${totalStudents}">0</div>
+                        <div class="stat-label">Students</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👤</div>
+                    <div class="stat-body">
+                        <div class="stat-value" th:text="${totalFaculty}">0</div>
+                        <div class="stat-label">Faculty</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📖</div>
+                    <div class="stat-body">
+                        <div class="stat-value" th:text="${totalSubjects}">0</div>
+                        <div class="stat-label">Subjects</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏫</div>
+                    <div class="stat-body">
+                        <div class="stat-value" th:text="${totalSections}">0</div>
+                        <div class="stat-label">Sections</div>
+                    </div>
+                </div>
             </div>
-        </main> 
+
+            <!-- Quick actions -->
+            <div class="page-title" style="margin-top: 32px;">
+                <h3>Quick Actions</h3>
+            </div>
+            <div class="quick-actions">
+                <a th:href="@{/admin/students}" class="qa-card">
+                    <span class="qa-icon">➕</span>
+                    <span class="qa-label">Add Student</span>
+                </a>
+                <a th:href="@{/admin/faculty}" class="qa-card">
+                    <span class="qa-icon">➕</span>
+                    <span class="qa-label">Add Faculty</span>
+                </a>
+                <a th:href="@{/admin/sections}" class="qa-card">
+                    <span class="qa-icon">🏫</span>
+                    <span class="qa-label">Manage Sections</span>
+                </a>
+                <a th:href="@{/admin/schedules}" class="qa-card">
+                    <span class="qa-icon">📅</span>
+                    <span class="qa-label">Manage Schedules</span>
+                </a>
+                <a th:href="@{/admin/curriculum}" class="qa-card">
+                    <span class="qa-icon">📚</span>
+                    <span class="qa-label">Curriculum</span>
+                </a>
+            </div>
+
+        </main>
     </div>
 </div>
 </body>
