@@ -686,12 +686,33 @@ background: linear-gradient(
 display: flex;
 align-items: center;
 justify-content: center;
+}html, body {
+    height: 100%;
+    margin: 0;
 }
+
+body.welcome-page {
+    position: relative;
+    min-height: 100vh;
+    background: url("/images/pylon2022.jpg") center/cover no-repeat;
+    overflow: hidden;   
+}
+
+body.welcome-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(75, 86, 148, 0.6);
+    z-index: 1;
+}
+
 .welcome-wrapper {
 text-align: center;
 padding: 40px 20px;
 width: 100%;
 max-width: 860px;
+position: relative;
+z-index: 2;
 }
 .welcome-seal {
 margin-bottom: 24px;
@@ -816,6 +837,37 @@ align-items: center;
 justify-content: center;
 position: relative;
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body.role-login-page {
+    position: relative;
+    min-height: 100vh;
+    background: url("/images/pylon2022.jpg") center/cover no-repeat;
+    overflow: hidden;   
+}
+
+body.role-login-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(75, 86, 148, 0.6);
+    z-index: 1;
+}
+
+
+.role-login-wrapper {
+text-align: center;
+padding: 40px 20px;
+width: 100%;
+max-width: 860px;
+position: relative;
+z-index: 2;
+}
+
 .back-link {
 position: absolute;
 top: 22px;
@@ -840,6 +892,12 @@ border-radius: var(--radius-lg);
 overflow: hidden;
 box-shadow: 0 12px 40px rgba(0,0,0,0.35);
 }
+
+.role-login-card {
+    position: relative;
+    z-index: 3;
+}
+
 .role-login-header {
 display: flex;
 align-items: center;
