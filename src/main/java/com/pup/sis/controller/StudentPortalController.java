@@ -4,6 +4,7 @@ import com.pup.sis.entity.Grade;
 import com.pup.sis.entity.Student;
 import com.pup.sis.entity.User;
 import com.pup.sis.service.GradeService;
+import com.pup.sis.service.MessageService;
 import com.pup.sis.service.ScheduleService;
 import com.pup.sis.service.StudentService;
 import com.pup.sis.service.SubjectService;
@@ -26,18 +27,21 @@ public class StudentPortalController {
     private final SubjectService subjectService;
     private final GradeService gradeService;
     private final ScheduleService scheduleService;
+    private final MessageService messageService;
 
     public StudentPortalController(
             StudentService studentService,
             UserService userService,
             SubjectService subjectService,
             GradeService gradeService,
-            ScheduleService scheduleService) {
+            ScheduleService scheduleService,
+            MessageService messageService) {
         this.studentService = studentService;
         this.userService = userService;
         this.subjectService = subjectService;
         this.gradeService = gradeService;
         this.scheduleService = scheduleService;
+        this.messageService = messageService;
     }
 
     // Looks up the Student profile linked to whoever is logged in
@@ -268,5 +272,26 @@ public class StudentPortalController {
         model.addAttribute("schoolYear", FacultyPortalController.CURRENT_YEAR);
         model.addAttribute("semester", FacultyPortalController.CURRENT_SEM);
         return "student/enrollment-confirm";
+    }
+
+    // -- Inbox ------------------------------------------------------------
+
+    @GetMapping("/inbox")
+    public String inbox(Authentication auth, Model model) {
+        User user = userService.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        model.addAttribute("messages", messageService.findByRecipient(user));
+        model.addAttribute("unreadCount", messageService.countUnread(user));
+        return "student/inbox";
+    }
+
+    @PostMapping("/inbox/{id}/read")
+    public String markRead(@PathVariable Long id, Authentication auth) {
+        messageService.findById(id).ifPresent(m -> {
+            if (m.getRecipient().getUsername().equals(auth.getName())) {
+                messageService.markAsRead(id);
+            }
+        });
+        return "redirect:/student/inbox";
     }
 }

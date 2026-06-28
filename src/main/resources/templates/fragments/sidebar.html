@@ -61,6 +61,16 @@
                 <i class="nav-icon">📅</i> Schedules
             </a>
         </li>
+        <li>
+            <a th:href="@{/admin/announcements}" class="nav-link">
+                <i class="nav-icon">📢</i> Announcements
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/messages}" class="nav-link">
+                <i class="nav-icon">✉</i> Send Message
+            </a>
+        </li>
     </ul>
 
     <!-- ── Faculty Navigation ───────────────────────────────────────── -->
@@ -96,6 +106,11 @@
             <i class="nav-icon">🔑</i> Change Password
         </a>
     </li>
+    <li>
+        <a th:href="@{/faculty/inbox}" class="nav-link">
+            <i class="nav-icon">✉</i> Inbox
+        </a>
+    </li>
 </ul>
 
     <!-- ── Student Navigation ───────────────────────────────────────── -->
@@ -129,6 +144,11 @@
     <li>
         <a th:href="@{/student/change-password}" class="nav-link">
             <i class="nav-icon">🔑</i> Change Password
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/student/inbox}" class="nav-link">
+            <i class="nav-icon">✉</i> Inbox
         </a>
     </li>
 </ul>

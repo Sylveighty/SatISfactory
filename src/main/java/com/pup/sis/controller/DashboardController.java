@@ -21,6 +21,8 @@ public class DashboardController {
     private final ScheduleService scheduleService;
     private final GradeService gradeService;
     private final UserService userService;
+    private final AnnouncementService announcementService;
+    private final MessageService messageService;
 
     public DashboardController(
             StudentService studentService,
@@ -29,7 +31,9 @@ public class DashboardController {
             SectionService sectionService,
             ScheduleService scheduleService,
             GradeService gradeService,
-            UserService userService) {
+            UserService userService,
+            AnnouncementService announcementService,
+            MessageService messageService) {
         this.studentService = studentService;
         this.facultyService = facultyService;
         this.subjectService = subjectService;
@@ -37,6 +41,8 @@ public class DashboardController {
         this.scheduleService = scheduleService;
         this.gradeService = gradeService;
         this.userService = userService;
+        this.announcementService = announcementService;
+        this.messageService = messageService;
     }
 
     @GetMapping("/admin/dashboard")
@@ -46,6 +52,7 @@ public class DashboardController {
         model.addAttribute("totalFaculty",  facultyService.findAll().size());
         model.addAttribute("totalSubjects", subjectService.findAll().size());
         model.addAttribute("totalSections", sectionService.findAll().size());
+        model.addAttribute("announcements", announcementService.findAllActive());
         return "admin/dashboard";
     }
 
@@ -81,6 +88,14 @@ public class DashboardController {
 
         model.addAttribute("schoolYear", FacultyPortalController.CURRENT_YEAR);
         model.addAttribute("semester",   FacultyPortalController.CURRENT_SEM);
+        model.addAttribute("announcements", announcementService.findAllActive());
+        if (user != null) {
+            model.addAttribute("unreadCount", messageService.countUnread(user));
+            model.addAttribute("messages", messageService.findByRecipient(user));
+        } else {
+            model.addAttribute("unreadCount", 0);
+            model.addAttribute("messages", java.util.List.of());
+        }
         return "faculty/dashboard";
     }
 
@@ -122,6 +137,14 @@ public class DashboardController {
 
         model.addAttribute("schoolYear", FacultyPortalController.CURRENT_YEAR);
         model.addAttribute("semester",   FacultyPortalController.CURRENT_SEM);
+        model.addAttribute("announcements", announcementService.findAllActive());
+        if (user != null) {
+            model.addAttribute("unreadCount", messageService.countUnread(user));
+            model.addAttribute("messages", messageService.findByRecipient(user));
+        } else {
+            model.addAttribute("unreadCount", 0);
+            model.addAttribute("messages", java.util.List.of());
+        }
         return "student/dashboard";
     }
 }

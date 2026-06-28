@@ -60,31 +60,17 @@
                 </div>
             </div>
 
-            <!-- Quick actions -->
+            <!-- Announcements -->
             <div class="page-title" style="margin-top: 32px;">
-                <h3>Quick Actions</h3>
+                <h3>Active Announcements</h3>
             </div>
-            <div class="quick-actions">
-                <a th:href="@{/admin/students}" class="qa-card">
-                    <span class="qa-icon">➕</span>
-                    <span class="qa-label">Add Student</span>
-                </a>
-                <a th:href="@{/admin/faculty}" class="qa-card">
-                    <span class="qa-icon">➕</span>
-                    <span class="qa-label">Add Faculty</span>
-                </a>
-                <a th:href="@{/admin/sections}" class="qa-card">
-                    <span class="qa-icon">🏫</span>
-                    <span class="qa-label">Manage Sections</span>
-                </a>
-                <a th:href="@{/admin/schedules}" class="qa-card">
-                    <span class="qa-icon">📅</span>
-                    <span class="qa-label">Manage Schedules</span>
-                </a>
-                <a th:href="@{/admin/curriculum}" class="qa-card">
-                    <span class="qa-icon">📚</span>
-                    <span class="qa-label">Curriculum</span>
-                </a>
+            <div th:if="${#lists.isEmpty(announcements)}" class="dash-empty">
+                No active announcements. <a th:href="@{/admin/announcements}" style="color:var(--maroon);">Post one</a>.
+            </div>
+            <div th:each="a : ${announcements}" class="announcement-card">
+                <div class="announcement-title" th:text="${a.title}"></div>
+                <div class="announcement-date" th:text="${a.publishDate}"></div>
+                <div class="announcement-body" th:text="${a.content}"></div>
             </div>
 
         </main>

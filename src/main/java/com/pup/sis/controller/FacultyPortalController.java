@@ -26,6 +26,7 @@ public class FacultyPortalController {
     private final SectionService sectionService;
     private final SubjectService subjectService;
     private final GradeService gradeService;
+    private final MessageService messageService;
 
     public FacultyPortalController(
             FacultyService facultyService,
@@ -34,7 +35,8 @@ public class FacultyPortalController {
             StudentService studentService,
             SectionService sectionService,
             SubjectService subjectService,
-            GradeService gradeService) {
+            GradeService gradeService,
+            MessageService messageService) {
         this.facultyService = facultyService;
         this.userService = userService;
         this.scheduleService = scheduleService;
@@ -42,6 +44,7 @@ public class FacultyPortalController {
         this.sectionService = sectionService;
         this.subjectService = subjectService;
         this.gradeService = gradeService;
+        this.messageService = messageService;
     }
 
     private Faculty getFacultyForUser(String username) {
@@ -227,5 +230,26 @@ public class FacultyPortalController {
         }
 
         return "redirect:/faculty/grades?subjectId=" + subjectId + "&sectionId=" + sectionId;
+    }
+
+    // -- Inbox ------------------------------------------------------------
+
+    @GetMapping("/inbox")
+    public String inbox(Authentication auth, Model model) {
+        User user = userService.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        model.addAttribute("messages", messageService.findByRecipient(user));
+        model.addAttribute("unreadCount", messageService.countUnread(user));
+        return "faculty/inbox";
+    }
+
+    @PostMapping("/inbox/{id}/read")
+    public String markRead(@PathVariable Long id, Authentication auth) {
+        messageService.findById(id).ifPresent(m -> {
+            if (m.getRecipient().getUsername().equals(auth.getName())) {
+                messageService.markAsRead(id);
+            }
+        });
+        return "redirect:/faculty/inbox";
     }
 }

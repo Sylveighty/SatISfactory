@@ -78,31 +78,65 @@
                 </table>
             </div>
 
-            <!-- Quick actions -->
-            <div class="page-title" style="margin-top: 32px;">
-                <h3>Quick Actions</h3>
-            </div>
-            <div class="quick-actions">
-                <a th:href="@{/faculty/classes}" class="qa-card">
-                    <span class="qa-icon">👥</span>
-                    <span class="qa-label">View Classes</span>
-                </a>
-                <a th:href="@{/faculty/grades}" class="qa-card">
-                    <span class="qa-icon">📝</span>
-                    <span class="qa-label">Encode Grades</span>
-                </a>
-                <a th:href="@{/faculty/schedules}" class="qa-card">
-                    <span class="qa-icon">📅</span>
-                    <span class="qa-label">My Schedules</span>
-                </a>
-                <a th:href="@{/faculty/profile}" class="qa-card">
-                    <span class="qa-icon">👤</span>
-                    <span class="qa-label">My Profile</span>
-                </a>
+            <!-- Announcements + Inbox -->
+            <div class="dash-two-col" style="margin-top: 32px;">
+
+                <div>
+                    <div class="page-title"><h3>Announcements</h3></div>
+                    <div th:if="${#lists.isEmpty(announcements)}" class="dash-empty">
+                        No announcements at this time.
+                    </div>
+                    <div th:each="a : ${announcements}" class="announcement-card">
+                        <div class="announcement-title" th:text="${a.title}"></div>
+                        <div class="announcement-date" th:text="${a.publishDate}"></div>
+                        <div class="announcement-body" th:text="${a.content}"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="page-title">
+                        <h3>Inbox
+                            <span th:if="${unreadCount > 0}" class="unread-badge"
+                                  th:text="${unreadCount}"></span>
+                        </h3>
+                    </div>
+                    <div th:if="${#lists.isEmpty(messages)}" class="dash-empty">
+                        Your inbox is empty.
+                    </div>
+                    <div th:each="m : ${messages}" class="inbox-item"
+                         th:classappend="${!m.read} ? ' inbox-item-unread' : ''">
+                        <div class="inbox-item-header" onclick="toggleMessage(this)">
+                            <div>
+                                <span class="inbox-item-subject" th:text="${m.subject}"></span>
+                                <span th:if="${!m.read}" class="unread-dot"></span>
+                            </div>
+                            <span class="inbox-item-date" th:text="${m.sentAt.toLocalDate()}"></span>
+                        </div>
+                        <div class="inbox-item-body" style="display:none;">
+                            <div class="inbox-item-from" th:text="'From: ' + ${m.sender.username}"></div>
+                            <div class="inbox-item-content" th:text="${m.body}"></div>
+                            <form th:if="${!m.read}"
+                                  th:action="@{/faculty/inbox/{id}/read(id=${m.id})}" method="post"
+                                  style="margin-top:8px;">
+                                <button type="submit" class="btn-table-edit">Mark as Read</button>
+                            </form>
+                        </div>
+                    </div>
+                    <a th:href="@{/faculty/inbox}" style="font-size:12px; color:var(--maroon); display:block; margin-top:8px;">
+                        View all messages
+                    </a>
+                </div>
+
             </div>
 
         </main>
     </div>
 </div>
+<script>
+    function toggleMessage(el) {
+        const body = el.nextElementSibling;
+        body.style.display = body.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
 </body>
 </html>
