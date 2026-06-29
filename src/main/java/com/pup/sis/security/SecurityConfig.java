@@ -13,7 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.core.AuthenticationException;
 
 @Configuration
 @EnableWebSecurity
@@ -63,23 +65,22 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-    .loginPage("/welcome")
-    .loginProcessingUrl("/login")
-    .successHandler(roleBasedSuccessHandler())
-    .failureUrl("/login/student?error=true")
-    .permitAll()
-)
-.exceptionHandling(ex -> ex
-    .authenticationEntryPoint((request, response, authException) -> {
-        String uri = request.getRequestURI();
-        if (uri.startsWith("/reset-password") || uri.startsWith("/forgot-password")) {
-            response.sendRedirect(uri + (request.getQueryString() != null ? "?" + request.getQueryString() : ""));
-        } else {
-            response.sendRedirect("/welcome");
-        }
-    })
-)
-        
+                .loginPage("/welcome")
+                .loginProcessingUrl("/login")
+                .successHandler(roleBasedSuccessHandler())
+                .failureHandler(roleBasedFailureHandler())
+                .permitAll()
+            )
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) -> {
+                    String uri = request.getRequestURI();
+                    if (uri.startsWith("/reset-password") || uri.startsWith("/forgot-password")) {
+                        response.sendRedirect(uri + (request.getQueryString() != null ? "?" + request.getQueryString() : ""));
+                    } else {
+                        response.sendRedirect("/welcome");
+                    }
+                })
+            )
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/welcome")
@@ -97,12 +98,43 @@ public class SecurityConfig {
                 .map(a -> a.getAuthority())
                 .orElse("");
 
+            // Check if the user logged in from the correct portal
+            String loginPage = req.getParameter("loginPage");
+
+            boolean wrongPortal = switch (loginPage) {
+                case "admin"   -> !role.equals("ROLE_ADMIN");
+                case "faculty" -> !role.equals("ROLE_FACULTY");
+                case "student" -> !role.equals("ROLE_STUDENT");
+                default -> false;
+            };
+
+            if (wrongPortal) {
+                // Immediately log them out and redirect back with error
+                req.getSession().invalidate();
+                res.sendRedirect("/login/" + loginPage + "?error=wrong_role");
+                return;
+            }
+
             switch (role) {
                 case "ROLE_ADMIN"   -> res.sendRedirect("/admin/dashboard");
                 case "ROLE_FACULTY" -> res.sendRedirect("/faculty/dashboard");
                 case "ROLE_STUDENT" -> res.sendRedirect("/student/dashboard");
                 default             -> res.sendRedirect("/welcome");
             }
+        };
+    }
+
+    @Bean
+    public AuthenticationFailureHandler roleBasedFailureHandler() {
+        return (HttpServletRequest req, HttpServletResponse res, AuthenticationException exception) -> {
+            // Redirect back to whichever login page they came from
+            String loginPage = req.getParameter("loginPage");
+            String redirect = switch (loginPage != null ? loginPage : "") {
+                case "admin"   -> "/login/admin?error=true";
+                case "faculty" -> "/login/faculty?error=true";
+                default        -> "/login/student?error=true";
+            };
+            res.sendRedirect(redirect);
         };
     }
 }

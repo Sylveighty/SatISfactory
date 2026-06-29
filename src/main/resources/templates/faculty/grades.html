@@ -36,7 +36,7 @@
             <form method="get" th:action="@{/faculty/grades}" class="modal-row-two" style="max-width: 600px; margin-bottom: 20px">
                 <div class="modal-group">
                     <label class="modal-label" style="color: var(--text-muted)">Course</label>
-                    <select name="subjectId" id="gradeSubjectSelect" class="filter-select" onchange="this.form.submit()">
+                    <select name="subjectId" id="gradeSubjectSelect" class="filter-select">
                         <option value="">Select Course</option>
                         <option th:each="sub : ${subjects}" th:value="${sub.id}"
                                 th:text="${sub.code + ' - ' + sub.name}"
@@ -107,20 +107,27 @@
 <div th:replace="~{fragments/scripts :: jquery}"></div>
 
 <script th:inline="javascript">
+$(document).ready(function() {
     const facultyId = /*[[${faculty != null ? faculty.id : ''}]]*/ '';
 
-    $('#gradeSubjectSelect').on('change', function() {
-        const subjectId = $(this).val();
-        const $sectionSelect = $('#gradeSectionSelect');
-        $sectionSelect.empty().append('<option value="">Select Section</option>');
+    document.getElementById('gradeSubjectSelect').addEventListener('change', function() {
+        const subjectId = this.value;
+        const sectionSelect = document.getElementById('gradeSectionSelect');
+        sectionSelect.innerHTML = '<option value="">Select Section</option>';
         if (!subjectId || !facultyId) return;
 
-        $.get('/api/sections?facultyId=' + facultyId + '&subjectId=' + subjectId, function(data) {
-            $.each(data, function(i, sec) {
-                $sectionSelect.append($('<option>', { value: sec.id, text: sec.name }));
+        fetch('/api/sections?facultyId=' + facultyId + '&subjectId=' + subjectId)
+            .then(r => r.json())
+            .then(data => {
+                data.forEach(sec => {
+                    const opt = document.createElement('option');
+                    opt.value = sec.id;
+                    opt.text = sec.name;
+                    sectionSelect.appendChild(opt);
+                });
             });
-        });
     });
+});
 </script>
 
 </body>

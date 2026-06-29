@@ -200,7 +200,7 @@ public class FacultyPortalController {
             @RequestParam Long sectionId,
             @RequestParam Long subjectId,
             @RequestParam List<Long> studentIds,
-            @RequestParam Map<Long, String> grades,
+            @RequestParam Map<String, String> grades,
             RedirectAttributes redirectAttributes) {
 
         Faculty faculty = getFacultyForUser(auth.getName());
@@ -210,7 +210,7 @@ public class FacultyPortalController {
         if (faculty != null && section != null && subject != null) {
             for (Long studentId : studentIds) {
                 Student student = studentService.findById(studentId).orElse(null);
-                String finalGrade = grades.get(studentId);
+                String finalGrade = grades.get("grades[" + studentId + "]");
                 if (student == null || finalGrade == null || finalGrade.isBlank()) continue;
 
                 Grade grade = gradeService.findByStudentSubjectAndTerm(

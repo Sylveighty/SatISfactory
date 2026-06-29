@@ -20,9 +20,13 @@
                 </div>
             </div>
 
-            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            <div th:if="${param.error}" class="alert alert-error">
+                    <span th:if="${param.error[0] == 'wrong_role'}">This account does not have access to this portal.</span>
+                    <span th:unless="${param.error[0] == 'wrong_role'}">Invalid username or password.</span>
+                </div>
 
             <form th:action="@{/login}" method="post" class="role-login-form">
+                <input type="hidden" name="loginPage" value="admin">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username"

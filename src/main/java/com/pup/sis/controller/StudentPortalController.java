@@ -190,12 +190,27 @@ public class StudentPortalController {
     // -- Enrollment -------------------------------------------------------
 
     @GetMapping("/enrollment")
-    public String viewEnrollment(Authentication auth, Model model) {
+    public String viewEnrollment(Authentication auth, Model model, RedirectAttributes redirectAttributes) {
         Student student = getStudentForUser(auth.getName());
         model.addAttribute("student", student);
 
-        if (student != null && student.getCourse() != null) {
-            model.addAttribute("subjects", subjectService.findByCourse(student.getCourse()));
+        if (student != null) {
+            // If already enrolled this term, redirect to confirm page
+            List<Grade> existing = gradeService.findByStudentAndTerm(
+                    student,
+                    FacultyPortalController.CURRENT_YEAR,
+                    FacultyPortalController.CURRENT_SEM);
+            if (!existing.isEmpty()) {
+                redirectAttributes.addFlashAttribute("info",
+                        "You are already enrolled for this semester. Contact the registrar to make changes.");
+                return "redirect:/student/enrollment/confirm";
+            }
+
+            if (student.getCourse() != null) {
+                model.addAttribute("subjects", subjectService.findByCourse(student.getCourse()));
+            } else {
+                model.addAttribute("subjects", List.of());
+            }
         } else {
             model.addAttribute("subjects", List.of());
         }

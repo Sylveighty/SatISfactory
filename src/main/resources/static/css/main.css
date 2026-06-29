@@ -877,6 +877,7 @@ font-size: 13px;
 text-decoration: underline;
 text-underline-offset: 3px;
 transition: color 0.15s;
+z-index: 10;
 }
 .back-link:hover {
 color: #fff;
@@ -954,6 +955,11 @@ border: 1px solid #FFCDD2;
 background: #E8F5E9;
 color: #2E7D32;
 border: 1px solid #C8E6C9;
+}
+.alert-info {
+background: #E3F2FD;
+color: #1565C0;
+border: 1px solid #BBDEFB;
 }
 /* Form fields - shared between login forms and future module forms */
 .form-group {
