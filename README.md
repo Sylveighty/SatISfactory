@@ -1,227 +1,360 @@
 # SatISfactory
 
-A web-based Student Information System (SIS) built with Spring Boot, Thymeleaf, and MySQL.
-Developed as a proof-of-concept finals project for the Polytechnic University of the Philippines - San Pedro Campus.
+A modern, web-based Student Information System (SIS) built with **Spring Boot**, **Thymeleaf**, **Spring Security**, and **MySQL**.
+
+Developed for the Polytechnic University of the Philippines San Pedro Campus, SatISfactory reimagines the traditional Student Information System by prioritizing a clean, responsive, and intuitive user experience without sacrificing essential administrative functionality.
+
+Unlike many existing school portals that can feel cluttered or difficult to navigate, SatISfactory focuses on simplicity, accessibility, and efficient workflows for administrators, faculty members, and students.
 
 ---
 
-## Features 
+# Why SatISfactory?
 
-- Role-based login system (Admin, Faculty, Student)
-- Automatic dashboard routing after login based on role
-- Persistent sidebar navigation scoped to each role
-- PUP maroon branded UI, no external CSS frameworks
-- BCrypt password hashing via Spring Security
-- Database seeding with default test accounts
+Many academic information systems are powerful but often feel outdated, visually overwhelming, and difficult to use.
 
-## Planned Modules
+SatISfactory was designed around three guiding principles:
 
-| Module | Role | Status |
-|---|---|---|
-| Login & role routing | All | ✅ Done |
-| Role dashboards | All | ✅ Done |
-| Student CRUD | Admin | 🔲 Step 2 |
-| Faculty CRUD | Admin | 🔲 Step 2 |
-| Curriculum management | Admin | 🔲 Step 2 |
-| Subject management | Admin | 🔲 Step 3 |
-| Section management | Admin | 🔲 Step 3 |
-| Schedule management | Admin | 🔲 Step 4 |
-| Grade encoding | Faculty | 🔲 Step 4 |
-| Student enrollment | Student | 🔲 Step 5 |
+- **Simple** - clean interfaces that reduce unnecessary complexity
+- **Responsive** - optimized for desktop and mobile devices
+- **Intuitive** - users can quickly find what they need with minimal clicks
+
+By combining modern UI design with a robust backend architecture, the platform delivers a familiar yet significantly improved user experience.
 
 ---
 
-## Tech Stack
+# Features
+
+## Authentication & Security
+
+- Secure role-based login
+- Spring Security authentication
+- BCrypt password hashing
+- Automatic dashboard routing after login
+- Password reset via email
+- Session-based authentication
+- Protected routes and authorization
+
+---
+
+## Administrator Portal
+
+Administrators have complete control over academic records and system management.
+
+### Student Management
+
+- Create student accounts
+- Edit student information
+- Delete students
+- Search student records
+
+### Faculty Management
+
+- Add faculty members
+- Edit faculty information
+- Remove faculty accounts
+
+### Academic Management
+
+- Curriculum Management
+- Subject Management
+- Section Management
+- Schedule Management
+
+### Communication
+
+- Announcement management
+- Internal messaging
+
+---
+
+## Faculty Portal
+
+Faculty members can:
+
+- Access their dashboard
+- View assigned schedules
+- View class information
+- Manage grades
+- Read announcements
+- Send and receive messages
+
+---
+
+## Student Portal
+
+Students can:
+
+- Access their personal dashboard
+- View enrolled subjects
+- View schedules
+- View grades
+- Read announcements
+- Access messages
+
+---
+
+# Tech Stack
 
 | Layer | Technology |
-|---|---|
-| Language | Java 17 (OpenJDK 17) |
-| Framework | Spring Boot 3.5.14 |
-| Build | Maven |
+|--------|------------|
+| Language | Java 17 |
+| Framework | Spring Boot 3.5 |
 | Security | Spring Security 6 |
-| Persistence | Spring Data JPA / Hibernate |
+| ORM | Spring Data JPA (Hibernate) |
 | Database | MySQL 8 |
-| Templates | Thymeleaf 3 |
-| Frontend | Plain HTML/CSS (no JS frameworks currently) |
-| Editor | VS Code |
+| Template Engine | Thymeleaf |
+| Build Tool | Maven |
+| Email | Spring Boot Mail |
+| Utility | Lombok |
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
-src/main/
-├── java/com/pup/sis/
-│   ├── SisApplication.java       # Entry point
-│   ├── config/
-│   │   └── DataSeeder.java       # Seeds default users on startup
-│   ├── controller/
-│   │   ├── AuthController.java   # /login, /
-│   │   └── DashboardController.java
-│   ├── entity/
-│   │   ├── Role.java             # ADMIN | FACULTY | STUDENT
-│   │   └── User.java             # Core user account entity
-│   ├── repository/
-│   │   └── UserRepository.java
-│   ├── security/
-│   │   ├── CustomUserDetailsService.java
-│   │   └── SecurityConfig.java   # Filter chain, success handler
-│   └── service/
-│       └── UserService.java
-└── resources/
-├── application.properties
-├── static/css/main.css
-└── templates/
-├── login.html
-├── fragments/sidebar.html
-├── admin/dashboard.html
-├── faculty/dashboard.html
-└── student/dashboard.html
+src/main/java/com/pup/sis
+│
+├── config
+│   └── Application configuration
+│
+├── controller
+│   ├── Authentication
+│   ├── Dashboard
+│   ├── Password Reset
+│   ├── API Endpoints
+│   ├── Administrator Controllers
+│   ├── Faculty Portal
+│   └── Student Portal
+│
+├── entity
+│   ├── User
+│   ├── Student
+│   ├── Faculty
+│   ├── Course
+│   ├── Subject
+│   ├── Section
+│   ├── Schedule
+│   ├── Grade
+│   ├── Announcement
+│   ├── Message
+│   └── PasswordResetToken
+│
+├── repository
+│
+├── security
+│
+└── service
 ```
 
 ---
 
-## Getting Started
+# Core Domain Model
 
-### Prerequisites
+The application is built around several interconnected entities:
 
-- Java 17 or higher
-- Maven 3.8+
-- MySQL 8.0+
-- VS Code (recommended) or any IDE
+- **User** – Authentication and role management
+- **Student** – Student profile and academic information
+- **Faculty** – Faculty profile and teaching assignments
+- **Course** – Academic programs
+- **Subject** – Individual courses offered
+- **Section** – Student grouping
+- **Schedule** – Class schedules
+- **Grade** – Student academic performance
+- **Announcement** – System-wide announcements
+- **Message** – Internal communication
+- **PasswordResetToken** – Secure password recovery
 
-### Installation
+---
 
-**1. Clone the repository**
+# Architecture
+
+SatISfactory follows a layered Spring Boot architecture.
+
+```text
+Browser
+      │
+      ▼
+Controllers
+      │
+      ▼
+Services
+      │
+      ▼
+Repositories
+      │
+      ▼
+MySQL Database
+```
+
+Each layer has a clearly defined responsibility:
+
+- **Controllers** handle HTTP requests and responses.
+- **Services** contain business logic.
+- **Repositories** provide database access using Spring Data JPA.
+- **Entities** represent database tables and relationships.
+
+Spring Security intercepts incoming requests before they reach the controller layer, ensuring only authorized users can access protected resources.
+
+---
+
+# Getting Started
+
+## Prerequisites
+
+- Java 17+
+- Maven
+- MySQL 8
+- VS Code or IntelliJ IDEA
+
+---
+
+## Installation
+
+### Clone the repository
 
 ```bash
 git clone https://github.com/Sylveighty/SatISfactory.git
 cd SatISfactory
 ```
 
-**2. Create the database**
+### Create the database
 
-```bash
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS pup_sis;"
+```sql
+CREATE DATABASE pup_sis;
 ```
 
-**3. Configure your database credentials**
+### Configure the database
 
-Open `src/main/resources/application.properties` and update:
+Update:
+
+```
+src/main/resources/application.properties
+```
+
+with your MySQL credentials.
+
+Example:
 
 ```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/pup_sis
 spring.datasource.username=root
-spring.datasource.password=your_password_here
-
-```
-**3.5. Create your local config file**
-
-```bash
-cp src/main/resources/application.properties.example src/main/resources/application.properties
+spring.datasource.password=your_password
 ```
 
-Then open `application.properties` and set `spring.datasource.password` to your MySQL root password.
+### Run the application
 
-**4. Run the application**
+Linux / macOS
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-On Windows:
+Windows
 
-```bash
+```cmd
 mvnw.cmd spring-boot:run
 ```
 
-**5. Open in your browser**
+Then open:
 
+```
 http://localhost:8080
+```
 
 ---
 
-## Default Test Accounts
+# Default Test Accounts
 
-These are seeded automatically on the first run. Passwords are BCrypt-hashed in the database.
+The application automatically seeds several accounts for development.
 
 | Role | Username | Password |
-|---|---|---|
-| Administrator | `admin` | `admin123` |
-| Faculty | `faculty1` | `faculty123` |
-| Student | `student1` | `student123` |
+|------|----------|----------|
+| Administrator | admin | admin123 |
+| Faculty | faculty1 | faculty123 |
+| Student | student1 | student123 |
 
-> Change these in `DataSeeder.java` before any production use.
+These accounts are intended for development and demonstration purposes only.
 
 ---
 
-## Architecture
+# Design Philosophy
 
-The project follows a standard layered Spring Boot architecture:
+SatISfactory was built with user experience as a primary consideration.
 
-```text
-Browser
-└── Controller          (handles HTTP requests)
-└── Service       (business logic, orchestration)
-└── Repository (data access via JPA)
-└── Entity (maps to database tables)
+Rather than replicating the complexity of many existing academic portals, the project emphasizes:
+
+- Clear navigation
+- Consistent interface design
+- Responsive layouts
+- Role-focused workflows
+- Maintainable backend architecture
+
+The result is an information system that is easier to learn, easier to maintain, and more pleasant to use.
+
+---
+
+# Branching Strategy
+
 ```
-Security layer intercepts all requests before they reach controllers.
-Thymeleaf templates render server-side HTML returned by controllers.
-
-**Key design decisions:**
-
-- One `User` entity covers all roles. Role-specific profile data (student number, department) will be added as separate linked entities in later steps.
-- The sidebar is a single Thymeleaf fragment. `sec:authorize` hides/shows nav items per role — no duplicate HTML.
-- `AuthenticationSuccessHandler` handles role routing after login, keeping URL mapping clean and explicit.
-- `DataSeeder` checks `userRepository.count() > 0` before inserting, making it safe to restart the app.
-
----
-
-## Branching Strategy
-
-main          production-ready, tagged releases
-dev           integration branch - PRs merge here first
-feat/<name>   feature branches, branched from dev
-
-**Example flow:**
-
-```bash
-git checkout dev
-git checkout -b feat/student-crud
-# ... do work ...
-git push origin feat/student-crud
-# open PR to dev
+main
+│
+├── dev
+│
+└── feature/<feature-name>
 ```
 
+Feature branches are merged into **dev** before being promoted to **main**.
+
 ---
 
-## Commit Convention
+# Commit Convention
 
-```text
-feat(scope): short description of what was added
-fix(scope): short description of what was fixed
-chore(scope): tooling, config, non-feature work
-docs(scope): documentation only
-refactor(scope): code change with no behaviour change
 ```
-Examples from this project:
-
-```text
-feat(entity): add User entity and Role enum
-feat(security): configure SecurityFilterChain with role-based access
-feat(ui): add sidebar fragment with role-based navigation
-chore(config): configure MySQL datasource and JPA properties
-docs: add README with setup and architecture sections
+feat(scope): add new feature
+fix(scope): bug fixes
+docs(scope): documentation
+refactor(scope): code improvements
+style(scope): formatting changes
+test(scope): testing
+chore(scope): maintenance
 ```
+
+Example:
+
+```
+feat(student): implement student CRUD
+feat(schedule): add schedule management
+fix(auth): resolve login redirect issue
+docs(readme): update project documentation
+```
+
 ---
 
-## Contributing
+# Future Improvements
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full development workflow, branch naming rules, and PR checklist.
+Potential future enhancements include:
+
+- GPA computation
+- Student enrollment workflow
+- Faculty grade submission approval
+- Audit logs
+- File uploads
+- SMS/email notifications
+- Analytics dashboard
+- REST API expansion
+- Docker deployment
+- CI/CD pipeline
 
 ---
 
-## License
+# Contributing
 
-This project is for academic and educational purposes.
-Polytechnic University of the Philippines - San Pedro Campus.
+Contributions, suggestions, and improvements are welcome.
+
+Please see **CONTRIBUTING.md** for the project's development workflow and pull request guidelines.
+
+---
+
+# License
+
+This project was developed for academic and educational purposes as part of the Polytechnic University of the Philippines San Pedro Campus Final Exam for Object Oriented Programming Subject.
