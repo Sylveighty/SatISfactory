@@ -67,8 +67,8 @@
                                    class="btn-icon" title="Edit">✏</a>
                                 <form th:action="@{/admin/faculty/{id}/delete(id=${f.id})}"
                                       method="post" style="display:inline"
-                                      onsubmit="return confirm('Delete this faculty record?')">
-                                    <button type="submit" class="btn-icon" title="Delete">🗑</button>
+                                      onsubmit="return confirm('Deactivate this faculty member? Their records and grade assignments will be preserved.')">
+                                    <button type="submit" class="btn-icon" title="Deactivate">🗑</button>
                                 </form>
                             </td>
                         </tr>

@@ -28,10 +28,10 @@ public class AdminFacultyController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Retrieve and display all faculty members
+    // Retrieve and display all active faculty members
     @GetMapping
     public String list(Model model) {
-        // Add all faculty members to the model for display
+        // Add all active faculty members to the model for display
         model.addAttribute("facultyList", facultyService.findAll());
         return "admin/faculty";
     }
@@ -129,7 +129,8 @@ public class AdminFacultyController {
         return "redirect:/admin/faculty";
     }
 
-    // Delete a faculty record and their associated user account
+    // Soft delete: deactivates the faculty's login account while preserving all records.
+    // Their schedule assignments and grade records remain intact in the database.
     @PostMapping("/{id}/delete")
     public String delete(
             @PathVariable Long id,
@@ -139,20 +140,13 @@ public class AdminFacultyController {
         Faculty faculty = facultyService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Faculty not found: " + id));
 
-        // Extract the user ID before deleting the faculty record
-        // This is necessary because deleting the faculty will break the foreign key relationship
-        Long userId = faculty.getUser() != null ? faculty.getUser().getId() : null;
+        String name = faculty.getFullName();
 
-        // Delete the faculty record from the database
-        facultyService.delete(id);
+        // Disable the faculty's login account — records are preserved
+        facultyService.deactivate(id);
 
-        // Delete the associated user account to maintain data consistency
-        if (userId != null) {
-            userService.delete(userId);
-        }
-
-        // Notify admin of successful deletion
-        redirectAttributes.addFlashAttribute("success", "Faculty record deleted.");
+        redirectAttributes.addFlashAttribute("success",
+                name + "'s account has been deactivated. Their records are preserved.");
         return "redirect:/admin/faculty";
     }
 }

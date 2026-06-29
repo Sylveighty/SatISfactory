@@ -4,6 +4,7 @@ import com.pup.sis.entity.Faculty;
 import com.pup.sis.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FacultyRepository extends JpaRepository<Faculty, Long> {
@@ -13,4 +14,7 @@ public interface FacultyRepository extends JpaRepository<Faculty, Long> {
     // Used by FacultyPortalController to load the profile
     // of whoever is currently logged in
     Optional<Faculty> findByUser(User user);
+
+    // Used to filter only active (non-deactivated) faculty
+    List<Faculty> findByUserEnabled(boolean enabled);
 }

@@ -20,8 +20,9 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+    // Only returns active (enabled) students — deactivated ones are excluded from the list
     public List<Student> findAll() {
-        return studentRepository.findAll();
+        return studentRepository.findByUserEnabled(true);
     }
 
     public Optional<Student> findById(Long id) {
@@ -31,8 +32,9 @@ public class StudentService {
     public Optional<Student> findByUser(User user) {
         return studentRepository.findByUser(user);
     }
+
     public Optional<Student> findByStudentNumber(String studentNumber) {
-    return studentRepository.findByStudentNumber(studentNumber);
+        return studentRepository.findByStudentNumber(studentNumber);
     }
 
     public List<Student> search(String query) {
@@ -56,6 +58,19 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
+    // Soft delete: disables the student's login account without removing any records.
+    // Grade history, enrollment data, and the student record itself are all preserved.
+    @Transactional
+    public void deactivate(Long id) {
+        studentRepository.findById(id).ifPresent(student -> {
+            if (student.getUser() != null) {
+                student.getUser().setEnabled(false);
+                studentRepository.save(student);
+            }
+        });
+    }
+
+    // Hard delete: kept for emergencies (e.g. duplicate/test records with no grades)
     public void delete(Long id) {
         studentRepository.deleteById(id);
     }

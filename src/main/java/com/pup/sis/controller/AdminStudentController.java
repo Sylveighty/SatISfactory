@@ -32,13 +32,13 @@ public class AdminStudentController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Retrieve and display all students with optional search filtering
+    // Retrieve and display all active students with optional search filtering
     @GetMapping
     public String list(
             @RequestParam(required = false) String search,
             Model model) {
 
-        // Search students if a search term is provided, otherwise retrieve all students
+        // Search students if a search term is provided, otherwise retrieve all active students
         var students = (search != null && !search.isBlank())
                 ? studentService.search(search)
                 : studentService.findAll();
@@ -148,7 +148,8 @@ public class AdminStudentController {
         return "redirect:/admin/students";
     }
 
-    // Delete a student record and their associated user account
+    // Soft delete: deactivates the student's login account while preserving all records.
+    // Their grades and enrollment history remain intact in the database.
     @PostMapping("/{id}/delete")
     public String delete(
             @PathVariable Long id,
@@ -158,20 +159,13 @@ public class AdminStudentController {
         Student student = studentService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found: " + id));
 
-        // Extract the user ID before deleting the student record
-        // This is necessary because deleting the student will break the foreign key relationship
-        Long userId = student.getUser() != null ? student.getUser().getId() : null;
+        String name = student.getFullName();
 
-        // Delete the student record from the database
-        studentService.delete(id);
+        // Disable the student's login account — records and grades are preserved
+        studentService.deactivate(id);
 
-        // Delete the associated user account to maintain data consistency
-        if (userId != null) {
-            userService.delete(userId);
-        }
-
-        // Notify admin of successful deletion
-        redirectAttributes.addFlashAttribute("success", "Student record deleted.");
+        redirectAttributes.addFlashAttribute("success",
+                name + "'s account has been deactivated. Their records and grades are preserved.");
         return "redirect:/admin/students";
     }
 }

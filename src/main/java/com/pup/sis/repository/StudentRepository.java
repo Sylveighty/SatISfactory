@@ -28,4 +28,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     // Used by section cards to show student count
     long countBySection(Section section);
+
+    // Used to filter only active (non-deactivated) students
+    List<Student> findByUserEnabled(boolean enabled);
 }
