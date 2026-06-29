@@ -6,6 +6,7 @@ import com.pup.sis.entity.Student;
 import com.pup.sis.entity.User;
 import com.pup.sis.repository.StudentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +51,7 @@ public class StudentService {
         return studentRepository.countBySection(section);
     }
 
+    @Transactional
     public Student save(Student student) {
         return studentRepository.save(student);
     }

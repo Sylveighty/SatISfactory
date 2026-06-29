@@ -27,25 +27,81 @@
         <main class="content-area">
 
             <div class="page-title">
-                <h3>Registration (S.Y. 2025-2026 · Second Semester)</h3>
+                <h3>Registration Confirmation</h3>
+                <p th:text="${schoolYear + ' . ' + semester}">2025-2026 . Second Semester</p>
             </div>
+
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            <div th:if="${info}" class="alert alert-info" th:text="${info}"></div>
 
             <div th:if="${student != null}">
 
-                <div th:text="${'Status: Regular   Section: ' + (student.section != null ? student.section.sectionName : '-')}"
-                     style="font-size:13px; color: var(--text-muted); margin-bottom: 12px"></div>
-
-                <div class="free-he-banner">
-                    👍 You are qualified to Free Higher Education Act
+                <div class="grades-header-box" style="margin-bottom: 18px;">
+                    <div class="grades-header-name" th:text="${student.fullName}"></div>
+                    <div class="grades-header-id" th:text="'(' + ${student.studentNumber} + ')'"></div>
+                    <div style="margin-top:8px; font-size:13px; color:rgba(255,255,255,0.8);"
+                         th:text="'Section: ' + (${student.section != null ? student.section.sectionName : 'Not assigned'})"></div>
                 </div>
 
-                <div class="enrollment-confirm-card">
-                    <div class="enrollment-success-icon">✓</div>
-                    <div class="enrollment-success-text">You are officially enrolled.</div>
-                    <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 18px">
-                        S.Y. 2025-2026 — Second Semester
+                <div th:if="${#lists.isEmpty(enrolledGrades)}" class="dash-empty">
+                    No subjects enrolled for this semester yet.
+                    <a th:href="@{/student/enrollment}" style="color: var(--maroon); margin-left: 8px;">Go to Enrollment</a>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(enrolledGrades)}">
+
+                    <div class="free-he-banner">
+                        You are officially enrolled for S.Y.
+                        <span th:text="${schoolYear}"></span> -
+                        <span th:text="${semester}"></span>
                     </div>
-                    <button class="btn-cor" type="button">📄 Certificate of Registration</button>
+
+                    <div class="table-wrapper" style="margin-top: 16px;">
+                        <table class="sis-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject Code</th>
+                                    <th>Description</th>
+                                    <th>Units</th>
+                                    <th>Lec</th>
+                                    <th>Lab</th>
+                                    <th>Grade</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="g : ${enrolledGrades}">
+                                    <td th:text="${g.subject.code}"></td>
+                                    <td th:text="${g.subject.name}"></td>
+                                    <td th:text="${g.subject.units}"></td>
+                                    <td th:text="${g.subject.lecHours}"></td>
+                                    <td th:text="${g.subject.labHours}"></td>
+                                    <td th:text="${g.finalGrade != null ? g.finalGrade : '-'}"></td>
+                                    <td th:text="${g.gradeStatus != null ? g.gradeStatus : 'Enrolled'}"></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2" style="text-align:right; font-weight:600;">Total Units:</td>
+                                    <td th:text="${totalUnits}" style="font-weight:600;"></td>
+                                    <td colspan="4"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="enrollment-confirm-card" style="margin-top: 24px;">
+                        <div class="enrollment-success-icon">✓</div>
+                        <div class="enrollment-success-text">Enrollment recorded successfully.</div>
+                        <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 18px;"
+                             th:text="${schoolYear + ' - ' + semester}"></div>
+                        <a th:href="@{/student/enrollment}" class="btn-cor" style="text-decoration:none; margin-right: 8px;">
+                            Modify Enrollment
+                        </a>
+                        <button class="btn-cor" type="button">Print Confirmation Slip</button>
+                    </div>
+
                 </div>
 
             </div>

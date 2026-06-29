@@ -7,6 +7,7 @@ import com.pup.sis.entity.Student;
 import com.pup.sis.entity.Subject;
 import com.pup.sis.repository.GradeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -80,10 +81,12 @@ public class GradeService {
         };
     }
 
+    @Transactional
     public Grade save(Grade grade) {
         return gradeRepository.save(grade);
     }
 
+    @Transactional
     public void saveAll(List<Grade> grades) {
         gradeRepository.saveAll(grades);
     }

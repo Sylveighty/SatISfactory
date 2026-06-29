@@ -16,8 +16,8 @@ import java.util.Map;
 @RequestMapping("/faculty")
 public class FacultyPortalController {
 
-    static final String CURRENT_YEAR = "2025-2026";
-    static final String CURRENT_SEM  = "Second Semester";
+    public static final String CURRENT_YEAR = "2025-2026";
+    public static final String CURRENT_SEM  = "Second Semester";
 
     private final FacultyService facultyService;
     private final UserService userService;
@@ -26,6 +26,7 @@ public class FacultyPortalController {
     private final SectionService sectionService;
     private final SubjectService subjectService;
     private final GradeService gradeService;
+    private final MessageService messageService;
 
     public FacultyPortalController(
             FacultyService facultyService,
@@ -34,7 +35,8 @@ public class FacultyPortalController {
             StudentService studentService,
             SectionService sectionService,
             SubjectService subjectService,
-            GradeService gradeService) {
+            GradeService gradeService,
+            MessageService messageService) {
         this.facultyService = facultyService;
         this.userService = userService;
         this.scheduleService = scheduleService;
@@ -42,6 +44,7 @@ public class FacultyPortalController {
         this.sectionService = sectionService;
         this.subjectService = subjectService;
         this.gradeService = gradeService;
+        this.messageService = messageService;
     }
 
     private Faculty getFacultyForUser(String username) {
@@ -50,11 +53,44 @@ public class FacultyPortalController {
         return facultyService.findByUser(user).orElse(null);
     }
 
+    // -- Profile ----------------------------------------------------------
+
     @GetMapping("/profile")
     public String viewProfile(Authentication auth, Model model) {
         model.addAttribute("faculty", getFacultyForUser(auth.getName()));
         return "faculty/profile";
     }
+
+    // -- Change Password --------------------------------------------------
+
+    @GetMapping("/change-password")
+    public String showChangePassword() {
+        return "faculty/change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(
+            Authentication auth,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            RedirectAttributes redirectAttributes) {
+
+        User user = userService.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found: " + auth.getName()));
+
+        String error = userService.changePassword(user, currentPassword, newPassword, confirmPassword);
+
+        if (error != null) {
+            redirectAttributes.addFlashAttribute("error", error);
+            return "redirect:/faculty/change-password";
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Password changed successfully.");
+        return "redirect:/faculty/change-password";
+    }
+
+    // -- Schedules --------------------------------------------------------
 
     @GetMapping("/schedules")
     public String viewSchedule(Authentication auth, Model model) {
@@ -69,6 +105,8 @@ public class FacultyPortalController {
         }
         return "faculty/schedules";
     }
+
+    // -- Classes ----------------------------------------------------------
 
     @GetMapping("/classes")
     public String viewClasses(Authentication auth, Model model) {
@@ -108,6 +146,8 @@ public class FacultyPortalController {
         return "faculty/class-detail";
     }
 
+    // -- Grades -----------------------------------------------------------
+
     @GetMapping("/grades")
     public String gradeForm(
             Authentication auth,
@@ -122,7 +162,6 @@ public class FacultyPortalController {
                 ? scheduleService.findByFacultyAndTerm(faculty, CURRENT_YEAR, CURRENT_SEM)
                 : List.of();
 
-        // Distinct subjects this faculty teaches
         model.addAttribute("subjects", schedules.stream()
                 .map(Schedule::getSubject).distinct().toList());
 
@@ -144,7 +183,6 @@ public class FacultyPortalController {
                 model.addAttribute("subject", subject);
                 model.addAttribute("students", students);
 
-                // Map existing grades by student ID for pre-filling the form
                 List<Grade> existing = gradeService.findBySectionSubjectAndTerm(
                         section, subject, CURRENT_YEAR, CURRENT_SEM);
                 model.addAttribute("existingGrades", existing.stream()
@@ -162,7 +200,7 @@ public class FacultyPortalController {
             @RequestParam Long sectionId,
             @RequestParam Long subjectId,
             @RequestParam List<Long> studentIds,
-            @RequestParam Map<Long, String> grades,
+            @RequestParam Map<String, String> grades,
             RedirectAttributes redirectAttributes) {
 
         Faculty faculty = getFacultyForUser(auth.getName());
@@ -172,7 +210,7 @@ public class FacultyPortalController {
         if (faculty != null && section != null && subject != null) {
             for (Long studentId : studentIds) {
                 Student student = studentService.findById(studentId).orElse(null);
-                String finalGrade = grades.get(studentId);
+                String finalGrade = grades.get("grades[" + studentId + "]");
                 if (student == null || finalGrade == null || finalGrade.isBlank()) continue;
 
                 Grade grade = gradeService.findByStudentSubjectAndTerm(
@@ -192,5 +230,26 @@ public class FacultyPortalController {
         }
 
         return "redirect:/faculty/grades?subjectId=" + subjectId + "&sectionId=" + sectionId;
+    }
+
+    // -- Inbox ------------------------------------------------------------
+
+    @GetMapping("/inbox")
+    public String inbox(Authentication auth, Model model) {
+        User user = userService.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        model.addAttribute("messages", messageService.findByRecipient(user));
+        model.addAttribute("unreadCount", messageService.countUnread(user));
+        return "faculty/inbox";
+    }
+
+    @PostMapping("/inbox/{id}/read")
+    public String markRead(@PathVariable Long id, Authentication auth) {
+        messageService.findById(id).ifPresent(m -> {
+            if (m.getRecipient().getUsername().equals(auth.getName())) {
+                messageService.markAsRead(id);
+            }
+        });
+        return "redirect:/faculty/inbox";
     }
 }

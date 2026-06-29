@@ -79,7 +79,7 @@
                             <td th:text="${sc.subject.code}"></td>
                             <td th:text="${sc.faculty.fullName}"></td>
                             <td th:text="${sc.day}"></td>
-                            <td th:text="${#temporals.format(sc.startTime, 'hh:mm a') + ' - ' + #temporals.format(sc.endTime, 'hh:mm a')}"></td>
+                            <td th:text="${sc.startTime + ' - ' + sc.endTime}"></td>
                             <td th:text="${sc.room != null ? sc.room : '-'}"></td>
                             <td class="table-actions">
                                 <a th:href="@{/admin/schedules/{id}/edit(id=${sc.id})}"

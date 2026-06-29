@@ -13,31 +13,42 @@
         <div class="role-login-card">
 
             <div class="role-login-header">
-                <div class="role-login-seal">PUP</div>
+                <img th:src="@{/images/pup-seal.png}" alt="PUP" class="role-login-seal">
                 <div class="role-login-brand">
                     <span class="role-login-sis">SIS</span>
                     <span class="role-login-subtitle">STUDENT SIGN IN</span>
                 </div>
             </div>
 
-            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            <div th:if="${param.error}" class="alert alert-error">
+                    <span th:if="${param.error[0] == 'wrong_role'}">This account does not have access to this portal.</span>
+                    <span th:unless="${param.error[0] == 'wrong_role'}">Invalid username or password.</span>
+                </div>
 
             <form th:action="@{/login}" method="post" class="role-login-form">
-                <div class="form-group">
-                    <label for="username">Student Number</label>
-                    <input type="text" id="username" name="username"
-                           placeholder="e.g. 2024-00123-SP-0" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password"
-                           placeholder="••••••••••" required>
-                </div>
-                <button type="submit" class="btn-login">Sign in</button>
-            </form>
+                <input type="hidden" name="loginPage" value="student">
+    <div class="form-group">
+        <label for="username">Student Number</label>
+        <input type="text" id="username" name="username"
+               placeholder="e.g. 2024-00123-SP-0" required>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="••••••••••" required>
+    </div>
+
+    <button type="submit" class="btn-login">Sign in</button>
+</form>
+
+            <div class="login-links">
+                <a th:href="@{/forgot-password}">Forgot password?</a>
+            </div>
 
         </div>
     </div>
+
 
 </body>
 </html>

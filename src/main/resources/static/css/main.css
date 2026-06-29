@@ -61,19 +61,13 @@ z-index: 300;
 border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 .top-bar-seal {
-background: var(--accent-gold);
-color: var(--maroon-dark);
-font-weight: 900;
-font-size: 11px;
-letter-spacing: 1px;
 width: 32px;
 height: 32px;
 border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
+object-fit: cover;
 flex-shrink: 0;
 }
+
 .top-bar-title {
 color: rgba(255,255,255,0.85);
 font-size: 13px;
@@ -290,7 +284,7 @@ text-underline-offset: 4px;
 font-size: 13px;
 color: var(--text-muted);
 }
-/* Dashboard welcome strip */
+/* Dashboard welcome strip (legacy, kept for compat) */
 .dashboard-welcome {
 background: var(--bg-card);
 border: 1px solid var(--border);
@@ -301,6 +295,202 @@ color: var(--text-muted);
 display: inline-flex;
 align-items: center;
 gap: 10px;
+}
+/* ── Dashboard stat cards ──────────────────────────────────── */
+.dash-stats {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+gap: 16px;
+margin-bottom: 8px;
+}
+.stat-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+border-top: 3px solid var(--accent-gold);
+padding: 18px 20px;
+display: flex;
+align-items: center;
+gap: 16px;
+box-shadow: var(--shadow-sm);
+}
+.stat-icon {
+font-size: 26px;
+flex-shrink: 0;
+}
+.stat-value {
+font-size: 24px;
+font-weight: 700;
+color: var(--maroon);
+line-height: 1.1;
+}
+.stat-label {
+font-size: 12px;
+color: var(--text-muted);
+margin-top: 2px;
+}
+/* ── Quick action cards ────────────────────────────────────── */
+.quick-actions {
+display: flex;
+flex-wrap: wrap;
+gap: 12px;
+}
+.qa-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 14px 20px;
+display: flex;
+align-items: center;
+gap: 10px;
+text-decoration: none;
+color: var(--text-main);
+font-size: 13.5px;
+font-weight: 500;
+box-shadow: var(--shadow-sm);
+transition: background 0.15s, box-shadow 0.15s;
+}
+.qa-card:hover {
+background: rgba(var(--maroon-rgb), 0.05);
+box-shadow: var(--shadow-md);
+}
+.qa-icon {
+font-size: 18px;
+}
+/* ── Dashboard empty state ─────────────────────────────────── */
+.dash-empty {
+font-size: 13.5px;
+color: var(--text-muted);
+background: var(--bg-card);
+border: 1px dashed var(--border);
+border-radius: var(--radius);
+padding: 20px 24px;
+margin-bottom: 8px;
+}
+/* Two-column layout for dashboard panes */
+.dash-two-col {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 24px;
+}
+/* Announcement card */
+.announcement-card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-left: 3px solid var(--accent-gold);
+border-radius: var(--radius);
+padding: 14px 16px;
+margin-bottom: 10px;
+}
+.announcement-title {
+font-size: 14px;
+font-weight: 600;
+color: var(--text-primary);
+}
+.announcement-date {
+font-size: 11px;
+color: var(--text-muted);
+margin: 2px 0 6px;
+}
+.announcement-body {
+font-size: 13px;
+color: var(--text-secondary);
+line-height: 1.5;
+}
+/* Badge styles for announcement status */
+.badge-active {
+background: var(--bg-success);
+color: var(--text-success);
+font-size: 11px;
+padding: 2px 8px;
+border-radius: 10px;
+font-weight: 500;
+}
+.badge-inactive {
+background: var(--bg-danger);
+color: var(--text-danger);
+font-size: 11px;
+padding: 2px 8px;
+border-radius: 10px;
+font-weight: 500;
+}
+/* Inbox items */
+.inbox-item {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+margin-bottom: 8px;
+overflow: hidden;
+}
+.inbox-item-unread {
+border-left: 3px solid var(--maroon);
+}
+.inbox-item-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 12px 14px;
+cursor: pointer;
+user-select: none;
+}
+.inbox-item-header:hover {
+background: var(--surface-1);
+}
+.inbox-item-subject {
+font-size: 13.5px;
+font-weight: 500;
+color: var(--text-primary);
+}
+.inbox-item-date {
+font-size: 11px;
+color: var(--text-muted);
+flex-shrink: 0;
+margin-left: 12px;
+}
+.inbox-item-body {
+padding: 12px 14px;
+border-top: 1px solid var(--border);
+background: var(--surface-2);
+}
+.inbox-item-from {
+font-size: 12px;
+color: var(--text-muted);
+margin-bottom: 6px;
+}
+.inbox-item-content {
+font-size: 13px;
+color: var(--text-secondary);
+line-height: 1.6;
+white-space: pre-wrap;
+}
+/* Unread dot and badge */
+.unread-dot {
+display: inline-block;
+width: 7px;
+height: 7px;
+background: var(--maroon);
+border-radius: 50%;
+margin-left: 6px;
+vertical-align: middle;
+}
+.unread-badge {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+background: var(--maroon);
+color: #fff;
+font-size: 11px;
+font-weight: 600;
+min-width: 18px;
+height: 18px;
+border-radius: 9px;
+padding: 0 5px;
+margin-left: 6px;
+vertical-align: middle;
+}
+/* Inbox table unread row */
+.inbox-unread td {
+font-weight: 600;
 }
 /* ══════════════════════════════════════════════════════════════
 TABLES (foundation for Step 2 modules)
@@ -496,12 +686,33 @@ background: linear-gradient(
 display: flex;
 align-items: center;
 justify-content: center;
+}html, body {
+    height: 100%;
+    margin: 0;
 }
+
+body.welcome-page {
+    position: relative;
+    min-height: 100vh;
+    background: url("/images/pylon2022.jpg") center/cover no-repeat;
+    overflow: hidden;   
+}
+
+body.welcome-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(75, 86, 148, 0.6);
+    z-index: 1;
+}
+
 .welcome-wrapper {
 text-align: center;
 padding: 40px 20px;
 width: 100%;
 max-width: 860px;
+position: relative;
+z-index: 2;
 }
 .welcome-seal {
 margin-bottom: 24px;
@@ -510,15 +721,7 @@ margin-bottom: 24px;
 width: 90px;
 height: 90px;
 border-radius: 50%;
-border: 3px solid rgba(255,255,255,0.5);
-background: rgba(255,255,255,0.08);
-color: rgba(255,255,255,0.7);
-font-weight: 900;
-font-size: 16px;
-letter-spacing: 2px;
-display: inline-flex;
-align-items: center;
-justify-content: center;
+object-fit: cover;
 }
 .welcome-title {
 font-family: Georgia, 'Times New Roman', serif;
@@ -532,10 +735,36 @@ text-underline-offset: 8px;
 margin-bottom: 8px;
 }
 .welcome-subtitle {
-font-size: 13px;
-color: rgba(255,255,255,0.55);
+font-size: 12px;
+color: rgba(255,255,255,0.45);
 letter-spacing: 0.5px;
 margin-bottom: 52px;
+}
+.welcome-eyebrow {
+font-size: 13px;
+color: rgba(255,255,255,0.75);
+letter-spacing: 1px;
+margin-bottom: 2px;
+text-transform: uppercase;
+font-weight: 500;
+}
+.welcome-campus {
+font-size: 12px;
+color: rgba(255,255,255,0.5);
+letter-spacing: 0.5px;
+margin-bottom: 16px;
+}
+.welcome-card-desc {
+font-size: 12px;
+color: rgba(255,255,255,0.5);
+line-height: 1.5;
+margin: 0;
+}
+.welcome-footer {
+margin-top: 40px;
+font-size: 11.5px;
+color: rgba(255,255,255,0.3);
+letter-spacing: 0.3px;
 }
 .welcome-cards {
 display: flex;
@@ -608,6 +837,37 @@ align-items: center;
 justify-content: center;
 position: relative;
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body.role-login-page {
+    position: relative;
+    min-height: 100vh;
+    background: url("/images/pylon2022.jpg") center/cover no-repeat;
+    overflow: hidden;   
+}
+
+body.role-login-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(75, 86, 148, 0.6);
+    z-index: 1;
+}
+
+
+.role-login-wrapper {
+text-align: center;
+padding: 40px 20px;
+width: 100%;
+max-width: 860px;
+position: relative;
+z-index: 2;
+}
+
 .back-link {
 position: absolute;
 top: 22px;
@@ -617,6 +877,7 @@ font-size: 13px;
 text-decoration: underline;
 text-underline-offset: 3px;
 transition: color 0.15s;
+z-index: 10;
 }
 .back-link:hover {
 color: #fff;
@@ -632,6 +893,12 @@ border-radius: var(--radius-lg);
 overflow: hidden;
 box-shadow: 0 12px 40px rgba(0,0,0,0.35);
 }
+
+.role-login-card {
+    position: relative;
+    z-index: 3;
+}
+
 .role-login-header {
 display: flex;
 align-items: center;
@@ -640,18 +907,10 @@ padding: 22px 28px;
 border-bottom: 1px solid var(--border);
 }
 .role-login-seal {
-width: 46px;
-height: 46px;
+width: 56px;
+height: 56px;
 border-radius: 50%;
-border: 2px solid var(--maroon);
-background: #f5e8e8;
-color: var(--maroon);
-font-weight: 900;
-font-size: 11px;
-letter-spacing: 1px;
-display: flex;
-align-items: center;
-justify-content: center;
+object-fit: cover;
 flex-shrink: 0;
 }
 .role-login-brand {
@@ -696,6 +955,11 @@ border: 1px solid #FFCDD2;
 background: #E8F5E9;
 color: #2E7D32;
 border: 1px solid #C8E6C9;
+}
+.alert-info {
+background: #E3F2FD;
+color: #1565C0;
+border: 1px solid #BBDEFB;
 }
 /* Form fields - shared between login forms and future module forms */
 .form-group {
@@ -947,6 +1211,45 @@ transition: background 0.15s;
 }
 .btn-save:hover {
 background: var(--maroon-dark);
+}
+/* ══════════════════════════════════════════════════════════════
+CHANGE PASSWORD PAGE - Step 5
+══════════════════════════════════════════════════════════════ */
+/* Constrained card for the change-password page */
+.chpw-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    border-top: 4px solid var(--accent-gold);
+    padding: 28px 32px;
+    box-shadow: var(--shadow-sm);
+    width: 100%;
+    max-width: 680px;
+}
+.password-rules {
+    margin: 4px 0 20px 0;
+    padding: 12px 16px;
+    background: #f9f4f4;
+    border: 1px solid #e8d5d5;
+    border-radius: var(--radius);
+}
+.rules-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--maroon);
+    margin: 0 0 6px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.password-rules ul {
+    margin: 0;
+    padding-left: 18px;
+}
+.password-rules li {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 3px;
+    transition: color 0.2s, font-weight 0.2s;
 }
 /* ══════════════════════════════════════════════════════════════
 STUDENT GRADES PAGE - Step 2
@@ -1332,3 +1635,27 @@ color: var(--maroon);
 text-decoration: underline;
 margin-bottom: 6px;
 }
+/* ══════════════════════════════════════════════════════════════
+FORGOT / RESET PASSWORD PAGES - Step 5
+══════════════════════════════════════════════════════════════ */
+.login-hint {
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    margin: 0 0 18px 0;
+    line-height: 1.5;
+}
+.login-links {
+    text-align: center;
+    margin-top: 16px;
+}
+.login-links a {
+    font-size: 13px;
+    color: var(--maroon);
+    text-decoration: none;
+}
+.login-links a:hover {
+    text-decoration: underline;
+}
+
+/* password-rules reused here from change-password page */

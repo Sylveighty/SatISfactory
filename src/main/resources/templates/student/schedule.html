@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Schedule - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Student Portal</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge student">Student</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div class="page-title">
+                <h3>My Schedule</h3>
+                <p th:text="${schoolYear + ' . ' + semester}">2025-2026 . Second Semester</p>
+            </div>
+
+            <div th:if="${student == null}" class="alert alert-error">
+                No student profile found. Please contact the administrator.
+            </div>
+
+            <div th:if="${student != null}">
+
+                <div class="grades-header-box" style="margin-bottom: 18px;">
+                    <div class="grades-header-name" th:text="${student.fullName}"></div>
+                    <div class="grades-header-id" th:text="'(' + ${student.studentNumber} + ')'"></div>
+                    <div style="margin-top:8px; font-size:13px; color:rgba(255,255,255,0.8);"
+                         th:text="'Section: ' + (${student.section != null ? student.section.sectionName : 'Not assigned'})"></div>
+                </div>
+
+                <div th:if="${student.section == null}" class="dash-empty">
+                    You have not been assigned to a section yet. Please contact the administrator.
+                </div>
+
+                <div th:if="${student.section != null && #lists.isEmpty(schedule)}" class="dash-empty">
+                    No schedule has been set for your section this semester yet.
+                </div>
+
+                <div th:if="${student.section != null && !#lists.isEmpty(schedule)}" class="table-wrapper">
+                    <table class="sis-table">
+                        <thead>
+                            <tr>
+                                <th>Subject Code</th>
+                                <th>Description</th>
+                                <th>Faculty</th>
+                                <th>Day</th>
+                                <th>Time</th>
+                                <th>Room</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="sc : ${schedule}">
+                                <td th:text="${sc.subject.code}"></td>
+                                <td th:text="${sc.subject.name}"></td>
+                                <td th:text="${sc.faculty.fullName}"></td>
+                                <td th:text="${sc.day}"></td>
+                                <td th:text="${sc.startTime + ' - ' + sc.endTime}"></td>
+                                <td th:text="${sc.room != null ? sc.room : '-'}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

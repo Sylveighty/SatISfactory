@@ -61,62 +61,97 @@
                 <i class="nav-icon">📅</i> Schedules
             </a>
         </li>
+        <li>
+            <a th:href="@{/admin/announcements}" class="nav-link">
+                <i class="nav-icon">📢</i> Announcements
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/messages}" class="nav-link">
+                <i class="nav-icon">✉</i> Send Message
+            </a>
+        </li>
     </ul>
 
     <!-- ── Faculty Navigation ───────────────────────────────────────── -->
-    <ul sec:authorize="hasRole('FACULTY')" class="sidebar-nav">
-        <li class="nav-label">Faculty Portal</li>
-        <li>
-            <a th:href="@{/faculty/dashboard}" class="nav-link">
-                <i class="nav-icon">⊞</i> Dashboard
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/faculty/profile}" class="nav-link">
-                <i class="nav-icon">👤</i> My Profile
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/faculty/schedules}" class="nav-link">
-                <i class="nav-icon">📅</i> My Schedules
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/faculty/classes}" class="nav-link">
-                <i class="nav-icon">👥</i> Class Lists
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/faculty/grades}" class="nav-link">
-                <i class="nav-icon">📝</i> Encode Grades
-            </a>
-        </li>
-    </ul>
+<ul sec:authorize="hasRole('FACULTY')" class="sidebar-nav">
+    <li class="nav-label">Faculty Portal</li>
+    <li>
+        <a th:href="@{/faculty/dashboard}" class="nav-link">
+            <i class="nav-icon">⊞</i> Dashboard
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/faculty/profile}" class="nav-link">
+            <i class="nav-icon">👤</i> My Profile
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/faculty/schedules}" class="nav-link">
+            <i class="nav-icon">📅</i> My Schedules
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/faculty/classes}" class="nav-link">
+            <i class="nav-icon">👥</i> Class Lists
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/faculty/grades}" class="nav-link">
+            <i class="nav-icon">📝</i> Encode Grades
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/faculty/change-password}" class="nav-link">
+            <i class="nav-icon">🔑</i> Change Password
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/faculty/inbox}" class="nav-link">
+            <i class="nav-icon">✉</i> Inbox
+        </a>
+    </li>
+</ul>
 
     <!-- ── Student Navigation ───────────────────────────────────────── -->
     <ul sec:authorize="hasRole('STUDENT')" class="sidebar-nav">
-        <li class="nav-label">Student Portal</li>
-        <li>
-            <a th:href="@{/student/dashboard}" class="nav-link">
-                <i class="nav-icon">⊞</i> Dashboard
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/student/profile}" class="nav-link">
-                <i class="nav-icon">👤</i> My Profile
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/student/grades}" class="nav-link">
-                <i class="nav-icon">📊</i> My Grades
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/student/enrollment}" class="nav-link">
-                <i class="nav-icon">📋</i> Enrollment
-            </a>
-        </li>
-    </ul>
+    <li class="nav-label">Student Portal</li>
+    <li>
+        <a th:href="@{/student/dashboard}" class="nav-link">
+            <i class="nav-icon">⊞</i> Dashboard
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/student/profile}" class="nav-link">
+            <i class="nav-icon">👤</i> My Profile
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/student/grades}" class="nav-link">
+            <i class="nav-icon">📊</i> My Grades
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/student/schedule}" class="nav-link">
+            <i class="nav-icon">📅</i> My Schedule
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/student/enrollment}" class="nav-link">
+            <i class="nav-icon">📋</i> Enrollment
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/student/change-password}" class="nav-link">
+            <i class="nav-icon">🔑</i> Change Password
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/student/inbox}" class="nav-link">
+            <i class="nav-icon">✉</i> Inbox
+        </a>
+    </li>
+</ul>
 
     <!-- Logout at the bottom -->
     <div class="sidebar-footer">

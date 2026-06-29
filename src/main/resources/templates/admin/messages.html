@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send Message - PUP SIS</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="has-topbar">
+
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+
+        <header class="top-header">
+            <h2>Admin Panel</h2>
+            <div class="header-right">
+                <span sec:authentication="name"></span>
+                <span class="role-badge admin">Administrator</span>
+            </div>
+        </header>
+
+        <main class="content-area">
+
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <div class="page-title">
+                <h3>Send Message</h3>
+                <p>Send a school webmail message to a specific user or broadcast to a role.</p>
+            </div>
+
+            <div class="chpw-card">
+                <form th:action="@{/admin/messages/send}" method="post" class="profile-form">
+
+                    <div class="profile-row">
+                        <label class="profile-label">Send To :</label>
+                        <select name="recipientType" class="profile-input" id="recipientType"
+                                onchange="toggleRecipient(this.value)">
+                            <option value="specific">Specific User</option>
+                            <option value="student">All Students</option>
+                            <option value="faculty">All Faculty</option>
+                        </select>
+                    </div>
+
+                    <div class="profile-row" id="specificRow">
+                        <label class="profile-label">Recipient :</label>
+                        <select name="recipientId" class="profile-input">
+                            <option value="">-- Select User --</option>
+                            <option th:each="u : ${users}"
+                                    th:value="${u.id}"
+                                    th:text="${u.username + ' (' + u.role + ')'}"></option>
+                        </select>
+                    </div>
+
+                    <div class="profile-row">
+                        <label class="profile-label">Subject :</label>
+                        <input type="text" name="subject" class="profile-input"
+                               placeholder="Message subject" required maxlength="200">
+                    </div>
+
+                    <div class="profile-row profile-row-tall">
+                        <label class="profile-label">Message :</label>
+                        <textarea name="body" class="profile-textarea" rows="6"
+                                  placeholder="Write your message here..." required></textarea>
+                    </div>
+
+                    <div class="profile-save-row">
+                        <button type="submit" class="btn-save">Send Message</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script>
+    function toggleRecipient(val) {
+        document.getElementById('specificRow').style.display =
+            val === 'specific' ? 'grid' : 'none';
+    }
+</script>
+
+</body>
+</html>
