@@ -60,6 +60,32 @@ public class FacultyPortalController {
         model.addAttribute("faculty", getFacultyForUser(auth.getName()));
         return "faculty/profile";
     }
+    @PostMapping("/profile")
+public String updateProfile(
+        Authentication auth,
+        @RequestParam String fullName,
+        @RequestParam(required = false) String email,
+        @RequestParam(required = false) String mobileNumber,
+        RedirectAttributes redirectAttributes) {
+
+    Faculty faculty = getFacultyForUser(auth.getName());
+
+    if (faculty == null) {
+        redirectAttributes.addFlashAttribute("error", "Faculty profile not found.");
+        return "redirect:/faculty/profile";
+    }
+
+    faculty.setFullName(fullName);
+    faculty.setEmail(email);
+    faculty.setMobileNumber(mobileNumber);
+
+    facultyService.save(faculty);
+
+    redirectAttributes.addFlashAttribute("success",
+            "Profile updated successfully.");
+
+    return "redirect:/faculty/profile";
+}
 
     // -- Change Password --------------------------------------------------
 

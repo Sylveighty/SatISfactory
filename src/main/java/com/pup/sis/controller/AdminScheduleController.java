@@ -93,14 +93,16 @@ public class AdminScheduleController {
         schedule.setSemester(semester);
 
         String conflict = scheduleService.checkConflict(schedule);
-        scheduleService.save(schedule);
 
-        if (conflict != null) {
-            redirectAttributes.addFlashAttribute("warning", conflict);
-        } else {
-            redirectAttributes.addFlashAttribute("success", "Schedule added.");
-        }
-        return "redirect:/admin/schedules";
+    if (conflict != null) {
+    redirectAttributes.addFlashAttribute("error", conflict);
+    return "redirect:/admin/schedules";
+    }
+
+    scheduleService.save(schedule);
+
+    redirectAttributes.addFlashAttribute("success", "Schedule added successfully.");
+    return "redirect:/admin/schedules";
     }
 
     @PostMapping("/{id}")
@@ -131,14 +133,16 @@ public class AdminScheduleController {
         schedule.setSemester(semester);
 
         String conflict = scheduleService.checkConflict(schedule);
-        scheduleService.save(schedule);
 
-        if (conflict != null) {
-            redirectAttributes.addFlashAttribute("warning", conflict);
-        } else {
-            redirectAttributes.addFlashAttribute("success", "Schedule updated.");
-        }
-        return "redirect:/admin/schedules";
+if (conflict != null) {
+    redirectAttributes.addFlashAttribute("error", conflict);
+    return "redirect:/admin/schedules";
+}
+
+scheduleService.save(schedule);
+
+redirectAttributes.addFlashAttribute("success", "Schedule updated.");
+return "redirect:/admin/schedules";
     }
 
     @PostMapping("/{id}/delete")

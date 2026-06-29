@@ -24,7 +24,20 @@ public class CourseService {
         return courseRepository.findById(id);
     }
 
+    public boolean courseCodeExists(String code) {
+    return courseRepository.existsByCode(code);
+    }
+
+public boolean courseCodeExistsForAnotherCourse(Long id, String code) {
+    Optional<Course> existing = courseRepository.findByCode(code);
+
+    return existing.isPresent() && !existing.get().getId().equals(id);
+    }
+
     public Course save(Course course) {
         return courseRepository.save(course);
+    }
+    public void deleteById(Long id) {
+    courseRepository.deleteById(id);
     }
 }

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Course</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<h2 th:text="${course.id == null ? 'Add Course' : 'Edit Course'}"></h2>
+
+<form th:action="${course.id == null} ? @{/admin/curriculum} : @{/admin/curriculum/{id}(id=${course.id})}"
+      th:object="${course}"
+      method="post">
+
+    <label>Course Code</label><br>
+    <input type="text" th:field="*{code}" required><br><br>
+
+    <label>Course Name</label><br>
+    <input type="text" th:field="*{name}" required><br><br>
+
+    <button type="submit">
+        Save
+    </button>
+
+    <a th:href="@{/admin/curriculum}">
+        Cancel
+    </a>
+
+</form>
+
+</body>
+</html>
