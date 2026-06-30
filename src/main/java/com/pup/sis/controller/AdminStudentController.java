@@ -84,8 +84,9 @@ public class AdminStudentController {
         String studentNumber = String.format("%d-%05d-SP-%s",
                 studentYear, studentSeq, studentType);
 
-        // Check if the student number already exists to prevent duplicates
-        if (studentService.findByStudentNumber(studentNumber).isPresent()) {
+        // Check if the student number is already held by an ACTIVE student.
+        // A deactivated student (e.g. a corrected mis-encode) does not block reuse.
+        if (studentService.isStudentNumberActive(studentNumber)) {
             redirectAttributes.addFlashAttribute("error",
                     "Student number " + studentNumber + " already exists.");
             return "redirect:/admin/students";

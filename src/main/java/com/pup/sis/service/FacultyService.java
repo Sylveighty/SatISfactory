@@ -35,12 +35,21 @@ public class FacultyService {
         return facultyRepository.findByFacultyId(facultyId);
     }
 
+    // Returns true only if the given faculty ID is currently held by an
+    // ACTIVE faculty member. A deactivated faculty member (e.g. a mis-encode
+    // that was soft-deleted) does not block the ID from being reused.
+    public boolean isFacultyIdActive(String facultyId) {
+        return facultyRepository.findActiveByFacultyId(facultyId).isPresent();
+    }
+
     public Faculty save(Faculty faculty) {
         return facultyRepository.save(faculty);
     }
 
     // Soft delete: disables the faculty's login account without removing any records.
     // Their schedule assignments and grade records are all preserved.
+    // Their old facultyId becomes reusable by a new faculty member, since
+    // duplicate checks only consider ACTIVE faculty (see isFacultyIdActive above).
     @Transactional
     public void deactivate(Long id) {
         facultyRepository.findById(id).ifPresent(faculty -> {
@@ -51,7 +60,9 @@ public class FacultyService {
         });
     }
 
-    // Hard delete — kept for emergencies (e.g. duplicate/test records)
+    // Hard delete — not exposed in the UI. Reserved for direct database
+    // administration (e.g. via Workbench) for genuine mis-encodes with no
+    // associated records. Kept here only as a service-layer capability.
     public void delete(Long id) {
         facultyRepository.deleteById(id);
     }

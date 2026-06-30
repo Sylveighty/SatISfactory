@@ -21,8 +21,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Used for login — must be unique
-    @Column(unique = true, nullable = false, length = 50)
+    // NOTE: unique constraint intentionally removed.
+    // A deactivated student/faculty account may keep its old username
+    // (their student/faculty number) on a disabled record, while a new
+    // account reuses the same username after a mis-encode correction.
+    // Login resolves to the ENABLED row only — see
+    // UserRepository.findEnabledByUsername / CustomUserDetailsService.
+    @Column(nullable = false, length = 50)
     private String username;
 
     // BCrypt-encoded password stored here

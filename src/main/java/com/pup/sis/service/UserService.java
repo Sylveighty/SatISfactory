@@ -18,8 +18,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Resolves to the ENABLED account for a username. Usernames are no longer
+    // unique at the DB level (a deactivated account may share its old
+    // username with a new active one), so this always prefers the active
+    // row. Safe for all existing call sites, which only ever look up the
+    // currently logged-in user (who is, by definition, enabled).
     public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findEnabledByUsername(username);
     }
 
     public Optional<User> findById(Long id) {

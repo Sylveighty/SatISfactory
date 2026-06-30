@@ -16,7 +16,12 @@ public class Faculty {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 30)
+    // NOTE: unique constraint intentionally removed.
+    // A deactivated faculty member may keep their old facultyId on a
+    // disabled record, while a new faculty record reuses the same ID
+    // after a mis-encode correction. Uniqueness among ACTIVE faculty is
+    // enforced in FacultyService instead of at the DB level.
+    @Column(nullable = false, length = 30)
     private String facultyId;
 
     @Column(nullable = false, length = 150)

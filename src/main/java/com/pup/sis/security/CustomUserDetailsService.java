@@ -25,7 +25,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        // Resolves to the ENABLED account only. If a deactivated account
+        // shares the same username (e.g. an old mis-encoded student number
+        // reused by a new student), it is ignored here, so login always
+        // succeeds against the active record.
+        User user = userRepository.findEnabledByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
         // Spring Security expects authorities in "ROLE_X" format.

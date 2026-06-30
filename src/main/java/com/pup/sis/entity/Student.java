@@ -18,7 +18,12 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 30)
+    // NOTE: unique constraint intentionally removed.
+    // A deactivated (soft-deleted) student may keep their old studentNumber
+    // on a disabled record, while a new student is created with the same
+    // number (e.g. after a mis-encode). Uniqueness among ACTIVE students is
+    // enforced in StudentService instead of at the DB level.
+    @Column(nullable = false, length = 30)
     private String studentNumber;
 
     @Column(nullable = false, length = 150)

@@ -37,6 +37,13 @@ public class StudentService {
         return studentRepository.findByStudentNumber(studentNumber);
     }
 
+    // Returns true only if the given student number is currently held by an
+    // ACTIVE student. A deactivated student (e.g. a mis-encode that was
+    // soft-deleted) does not block the number from being reused.
+    public boolean isStudentNumberActive(String studentNumber) {
+        return studentRepository.findActiveByStudentNumber(studentNumber).isPresent();
+    }
+
     public List<Student> search(String query) {
         return studentRepository.findByFullNameContainingIgnoreCase(query);
     }
@@ -60,6 +67,8 @@ public class StudentService {
 
     // Soft delete: disables the student's login account without removing any records.
     // Grade history, enrollment data, and the student record itself are all preserved.
+    // Their old studentNumber becomes reusable by a new student, since duplicate
+    // checks only consider ACTIVE students (see isStudentNumberActive above).
     @Transactional
     public void deactivate(Long id) {
         studentRepository.findById(id).ifPresent(student -> {
@@ -70,7 +79,9 @@ public class StudentService {
         });
     }
 
-    // Hard delete: kept for emergencies (e.g. duplicate/test records with no grades)
+    // Hard delete — not exposed in the UI. Reserved for direct database
+    // administration (e.g. via Workbench) for genuine mis-encodes with no
+    // associated records. Kept here only as a service-layer capability.
     public void delete(Long id) {
         studentRepository.deleteById(id);
     }

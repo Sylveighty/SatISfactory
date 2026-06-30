@@ -61,8 +61,9 @@ public class AdminFacultyController {
             @RequestParam(required = false) String email,
             RedirectAttributes redirectAttributes) {
 
-        // Check if the faculty ID already exists to prevent duplicates
-        if (facultyService.findByFacultyId(facultyId).isPresent()) {
+        // Check if the faculty ID is already held by an ACTIVE faculty member.
+        // A deactivated record (e.g. a corrected mis-encode) does not block reuse.
+        if (facultyService.isFacultyIdActive(facultyId)) {
             redirectAttributes.addFlashAttribute("error",
                     "Faculty ID " + facultyId + " already exists.");
             return "redirect:/admin/faculty";
