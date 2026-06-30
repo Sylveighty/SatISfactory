@@ -48,23 +48,37 @@ public class GradeService {
     }
 
     /**
-     * Calculates GPA from a list of grades.
-     * Only numeric passing grades (1.0 to 3.0) are included.
+     * Calculates GWA (General Weighted Average) from a list of grades,
+     * weighted by each subject's unit count — matching how GWA is actually
+     * computed (a 3-unit subject counts more than a 1-unit subject).
+     *
+     * Includes numeric grades from 1.0 to 5.0 (5.0 = failed is included,
+     * since a failing grade should still pull the average up/down, the same
+     * way it does in the real PUP grading system). Excludes non-numeric
+     * statuses (INC, DRP) since those aren't final outcomes yet.
+     *
      * Returns null if no gradeable records exist.
      */
     public Double calculateGPA(List<Grade> grades) {
-        List<Double> numeric = grades.stream()
-                .filter(g -> g.getFinalGrade() != null)
-                .filter(g -> isNumericGrade(g.getFinalGrade()))
-                .map(g -> Double.parseDouble(g.getFinalGrade()))
-                .toList();
+        double weightedSum = 0.0;
+        int totalUnits = 0;
 
-        if (numeric.isEmpty()) return null;
+        for (Grade g : grades) {
+            if (g.getFinalGrade() == null || !isNumericGrade(g.getFinalGrade())) {
+                continue;
+            }
+            int units = (g.getSubject() != null && g.getSubject().getUnits() != null)
+                    ? g.getSubject().getUnits() : 0;
+            if (units <= 0) {
+                continue;
+            }
+            weightedSum += Double.parseDouble(g.getFinalGrade()) * units;
+            totalUnits += units;
+        }
 
-        return numeric.stream()
-                .mapToDouble(Double::doubleValue)
-                .average()
-                .orElse(0.0);
+        if (totalUnits == 0) return null;
+
+        return weightedSum / totalUnits;
     }
 
     /**
@@ -98,7 +112,9 @@ public class GradeService {
     private boolean isNumericGrade(String grade) {
         try {
             double val = Double.parseDouble(grade);
-            return val >= 1.0 && val <= 3.0;
+            // Valid PUP numeric grades range from 1.0 (highest) to 5.0 (failed).
+            // INC and DRP are non-numeric and fail to parse here, which is correct.
+            return val >= 1.0 && val <= 5.0;
         } catch (NumberFormatException e) {
             return false;
         }

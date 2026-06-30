@@ -101,6 +101,10 @@ public class AdminScheduleController {
 
     scheduleService.save(schedule);
 
+    // Keep lecture/lab (and any other meeting times) for this subject +
+    // section in sync with whichever faculty was just assigned here.
+    scheduleService.syncFacultyAcrossSiblings(schedule);
+
     redirectAttributes.addFlashAttribute("success", "Schedule added successfully.");
     return "redirect:/admin/schedules";
     }
@@ -140,6 +144,11 @@ if (conflict != null) {
 }
 
 scheduleService.save(schedule);
+
+// If the admin just reassigned this subject's faculty, propagate the
+// change to its other meeting times (e.g. lab follows lecture, or
+// vice versa) instead of leaving them mismatched.
+scheduleService.syncFacultyAcrossSiblings(schedule);
 
 redirectAttributes.addFlashAttribute("success", "Schedule updated.");
 return "redirect:/admin/schedules";

@@ -8,6 +8,8 @@
   This file defines a reusable sidebar fragment.
   Usage in any page:  <div th:replace="~{fragments/sidebar :: sidebar}"></div>
   The sec:authorize attributes show/hide nav groups based on the logged-in role.
+  The "active" class is applied automatically based on the current request URL,
+  so whichever page you're on glows in the sidebar.
 -->
 <nav th:fragment="sidebar" class="sidebar">
 
@@ -27,47 +29,65 @@
     <ul sec:authorize="hasRole('ADMIN')" class="sidebar-nav">
         <li class="nav-label">Administration</li>
         <li>
-            <a th:href="@{/admin/dashboard}" class="nav-link">
+            <a th:href="@{/admin/dashboard}"
+               th:classappend="${currentPath == '/admin/dashboard'} ? 'active'"
+               class="nav-link">
                 <i class="nav-icon">⊞</i> Dashboard
             </a>
         </li>
         <li>
-            <a th:href="@{/admin/curriculum}" class="nav-link">
+            <a th:href="@{/admin/curriculum}"
+               th:classappend="${currentPath == '/admin/curriculum'} ? 'active'"
+               class="nav-link">
                 <i class="nav-icon">📚</i> Curriculum
             </a>
         </li>
         <li>
-            <a th:href="@{/admin/students}" class="nav-link">
+            <a th:href="@{/admin/students}"
+               th:classappend="${currentPath == '/admin/students'} ? 'active'"
+               class="nav-link">
                 <i class="nav-icon">👥</i> Students
             </a>
         </li>
         <li>
-            <a th:href="@{/admin/faculty}" class="nav-link">
+            <a th:href="@{/admin/faculty}"
+               th:classappend="${currentPath == '/admin/faculty'} ? 'active'"
+               class="nav-link">
                 <i class="nav-icon">👤</i> Faculty
             </a>
         </li>
         <li>
-            <a th:href="@{/admin/subjects}" class="nav-link">
+            <a th:href="@{/admin/subjects}"
+               th:classappend="${currentPath == '/admin/subjects'} ? 'active'"
+               class="nav-link">
                 <i class="nav-icon">📖</i> Subjects
             </a>
         </li>
         <li>
-            <a th:href="@{/admin/sections}" class="nav-link">
+            <a th:href="@{/admin/sections}"
+               th:classappend="${currentPath == '/admin/sections'} ? 'active'"
+               class="nav-link">
                 <i class="nav-icon">🏫</i> Sections
             </a>
         </li>
         <li>
-            <a th:href="@{/admin/schedules}" class="nav-link">
+            <a th:href="@{/admin/schedules}"
+               th:classappend="${currentPath == '/admin/schedules'} ? 'active'"
+               class="nav-link">
                 <i class="nav-icon">📅</i> Schedules
             </a>
         </li>
         <li>
-            <a th:href="@{/admin/announcements}" class="nav-link">
+            <a th:href="@{/admin/announcements}"
+               th:classappend="${currentPath == '/admin/announcements'} ? 'active'"
+               class="nav-link">
                 <i class="nav-icon">📢</i> Announcements
             </a>
         </li>
         <li>
-            <a th:href="@{/admin/messages}" class="nav-link">
+            <a th:href="@{/admin/messages}"
+               th:classappend="${currentPath == '/admin/messages'} ? 'active'"
+               class="nav-link">
                 <i class="nav-icon">✉</i> Send Message
             </a>
         </li>
@@ -77,37 +97,51 @@
 <ul sec:authorize="hasRole('FACULTY')" class="sidebar-nav">
     <li class="nav-label">Faculty Portal</li>
     <li>
-        <a th:href="@{/faculty/dashboard}" class="nav-link">
+        <a th:href="@{/faculty/dashboard}"
+           th:classappend="${currentPath == '/faculty/dashboard'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">⊞</i> Dashboard
         </a>
     </li>
     <li>
-        <a th:href="@{/faculty/profile}" class="nav-link">
+        <a th:href="@{/faculty/profile}"
+           th:classappend="${currentPath == '/faculty/profile'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">👤</i> My Profile
         </a>
     </li>
     <li>
-        <a th:href="@{/faculty/schedules}" class="nav-link">
+        <a th:href="@{/faculty/schedules}"
+           th:classappend="${currentPath == '/faculty/schedules'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">📅</i> My Schedules
         </a>
     </li>
     <li>
-        <a th:href="@{/faculty/classes}" class="nav-link">
+        <a th:href="@{/faculty/classes}"
+           th:classappend="${currentPath == '/faculty/classes'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">👥</i> Class Lists
         </a>
     </li>
     <li>
-        <a th:href="@{/faculty/grades}" class="nav-link">
+        <a th:href="@{/faculty/grades}"
+           th:classappend="${currentPath == '/faculty/grades'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">📝</i> Encode Grades
         </a>
     </li>
     <li>
-        <a th:href="@{/faculty/change-password}" class="nav-link">
+        <a th:href="@{/faculty/change-password}"
+           th:classappend="${currentPath == '/faculty/change-password'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">🔑</i> Change Password
         </a>
     </li>
     <li>
-        <a th:href="@{/faculty/inbox}" class="nav-link">
+        <a th:href="@{/faculty/inbox}"
+           th:classappend="${currentPath == '/faculty/inbox'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">✉</i> Inbox
         </a>
     </li>
@@ -117,37 +151,51 @@
     <ul sec:authorize="hasRole('STUDENT')" class="sidebar-nav">
     <li class="nav-label">Student Portal</li>
     <li>
-        <a th:href="@{/student/dashboard}" class="nav-link">
+        <a th:href="@{/student/dashboard}"
+           th:classappend="${currentPath == '/student/dashboard'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">⊞</i> Dashboard
         </a>
     </li>
     <li>
-        <a th:href="@{/student/profile}" class="nav-link">
+        <a th:href="@{/student/profile}"
+           th:classappend="${currentPath == '/student/profile'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">👤</i> My Profile
         </a>
     </li>
     <li>
-        <a th:href="@{/student/grades}" class="nav-link">
+        <a th:href="@{/student/grades}"
+           th:classappend="${currentPath == '/student/grades'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">📊</i> My Grades
         </a>
     </li>
     <li>
-        <a th:href="@{/student/schedule}" class="nav-link">
+        <a th:href="@{/student/schedule}"
+           th:classappend="${currentPath == '/student/schedule'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">📅</i> My Schedule
         </a>
     </li>
     <li>
-        <a th:href="@{/student/enrollment}" class="nav-link">
+        <a th:href="@{/student/enrollment}"
+           th:classappend="${currentPath == '/student/enrollment'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">📋</i> Enrollment
         </a>
     </li>
     <li>
-        <a th:href="@{/student/change-password}" class="nav-link">
+        <a th:href="@{/student/change-password}"
+           th:classappend="${currentPath == '/student/change-password'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">🔑</i> Change Password
         </a>
     </li>
     <li>
-        <a th:href="@{/student/inbox}" class="nav-link">
+        <a th:href="@{/student/inbox}"
+           th:classappend="${currentPath == '/student/inbox'} ? 'active'"
+           class="nav-link">
             <i class="nav-icon">✉</i> Inbox
         </a>
     </li>
@@ -156,7 +204,8 @@
     <!-- Logout at the bottom -->
     <div class="sidebar-footer">
         <div class="sidebar-user" sec:authentication="name"></div>
-        <form th:action="@{/logout}" method="post">
+        <form th:action="@{/logout}" method="post"
+              onsubmit="return confirm('Are you sure you want to sign out?')">
             <button type="submit" class="btn-logout">🚪 Sign Out</button>
         </form>
     </div>

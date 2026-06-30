@@ -52,4 +52,23 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             @Param("startTime") LocalTime startTime,
             @Param("endTime") LocalTime endTime,
             @Param("excludeId") Long excludeId);
+
+    // Other schedule rows for the same subject + section + term (e.g. the
+    // lecture row when creating/editing the lab row, or vice versa).
+    // Used to enforce that the same subject/section is always taught by the
+    // same faculty member across all of its meeting times (lec and lab),
+    // since grades are recorded per subject, not per meeting type — having
+    // two different faculty would mean one silently overwrites the other's
+    // submitted grades.
+    @Query("SELECT s FROM Schedule s WHERE s.subject = :subject " +
+           "AND s.section = :section " +
+           "AND s.schoolYear = :schoolYear " +
+           "AND s.semester = :semester " +
+           "AND s.id != :excludeId")
+    List<Schedule> findOtherSchedulesForSameSubjectSection(
+            @Param("subject") com.pup.sis.entity.Subject subject,
+            @Param("section") Section section,
+            @Param("schoolYear") String schoolYear,
+            @Param("semester") String semester,
+            @Param("excludeId") Long excludeId);
 }

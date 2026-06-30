@@ -170,6 +170,7 @@ background: #fff;
 color: var(--maroon);
 font-weight: 600;
 border-left: 4px solid var(--accent-gold);
+box-shadow: 0 0 12px 1px rgba(201, 168, 64, 0.65), 0 0 2px rgba(255,255,255,0.9);
 }
 .nav-icon {
 font-style: normal;

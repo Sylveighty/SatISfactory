@@ -22,6 +22,10 @@ import java.util.List;
 @RequestMapping("/student")
 public class StudentPortalController {
 
+    // Maximum total units a student may enroll in per semester.
+    // Kept in sync with the client-side cap shown in enrollment.html.
+    private static final int MAX_UNITS = 23;
+
     private final StudentService studentService;
     private final UserService userService;
     private final SubjectService subjectService;
@@ -238,6 +242,23 @@ public class StudentPortalController {
         if (student.getSection() == null) {
             redirectAttributes.addFlashAttribute("error",
                     "You have not been assigned to a section yet. Please contact the administrator.");
+            return "redirect:/student/enrollment";
+        }
+
+        // Server-side enforcement of the unit cap. The client-side counter in
+        // enrollment.html is a visual aid only and can be bypassed, so the
+        // real check must happen here before anything is saved.
+        int totalUnits = subjectIds.stream()
+                .map(subjectService::findById)
+                .filter(java.util.Optional::isPresent)
+                .map(java.util.Optional::get)
+                .mapToInt(subject -> subject.getUnits() != null ? subject.getUnits() : 0)
+                .sum();
+
+        if (totalUnits > MAX_UNITS) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Total units (" + totalUnits + ") exceed the maximum allowed (" + MAX_UNITS + "). "
+                    + "Please deselect some subjects.");
             return "redirect:/student/enrollment";
         }
 

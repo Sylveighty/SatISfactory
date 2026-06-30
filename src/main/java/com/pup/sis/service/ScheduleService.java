@@ -86,11 +86,50 @@ public class ScheduleService {
             }
         }
 
+        // NOTE: Same-faculty-per-subject-section is enforced by auto-syncing
+        // the faculty across sibling schedule rows (lecture/lab) instead of
+        // blocking the edit here. See ScheduleService.syncFacultyAcrossSiblings,
+        // called by AdminScheduleController after a successful save. Blocking
+        // here would make it impossible to ever reassign a subject's faculty
+        // once both lecture and lab rows exist.
+
         return null; // no conflict
     }
 
     public Schedule save(Schedule schedule) {
         return scheduleRepository.save(schedule);
+    }
+
+    /**
+     * Propagates a schedule's faculty assignment to all sibling schedule
+     * rows for the same subject + section + term (e.g. lecture and lab
+     * meeting times). This keeps the same-faculty-per-subject-section
+     * invariant intact without ever blocking an admin from reassigning a
+     * subject's faculty — editing any one meeting time (lecture or lab)
+     * updates all of them together.
+     *
+     * Should be called after saving a schedule whose faculty was changed.
+     */
+    public void syncFacultyAcrossSiblings(Schedule schedule) {
+        if (schedule.getSubject() == null || schedule.getSection() == null
+                || schedule.getFaculty() == null) {
+            return;
+        }
+
+        List<Schedule> siblings = scheduleRepository.findOtherSchedulesForSameSubjectSection(
+                schedule.getSubject(),
+                schedule.getSection(),
+                schedule.getSchoolYear(),
+                schedule.getSemester(),
+                schedule.getId() != null ? schedule.getId() : -1L);
+
+        for (Schedule sibling : siblings) {
+            if (sibling.getFaculty() == null
+                    || !sibling.getFaculty().getId().equals(schedule.getFaculty().getId())) {
+                sibling.setFaculty(schedule.getFaculty());
+                scheduleRepository.save(sibling);
+            }
+        }
     }
 
     public void delete(Long id) {

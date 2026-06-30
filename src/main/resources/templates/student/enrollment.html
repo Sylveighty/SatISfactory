@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="modal-actions" style="justify-content: flex-end; margin-top: 14px">
-                        <button type="submit" class="btn-modal-save"
+                        <button type="submit" class="btn-modal-save" id="saveBtn"
                                 style="background: var(--maroon); color: white;">Save &amp; Assess</button>
                     </div>
                 </form>
@@ -120,9 +120,12 @@
             total += parseInt($(this).data('units')) || 0;
         });
         $('#unitTotal').text(total);
-        $('#unitWarning').toggle(total > 23);
+        const overLimit = total > 23;
+        $('#unitWarning').toggle(overLimit);
+        $('#saveBtn').prop('disabled', overLimit);
     }
     $('.enroll-check').on('change', updateUnitTotal);
+    updateUnitTotal();
 </script>
 
 </body>

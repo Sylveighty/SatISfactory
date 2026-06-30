@@ -47,12 +47,17 @@ public class DataSeeder {
             if (userRepository.count() == 0) {
                 Course bsit = courseRepository.findByCode("BSIT")
                         .orElseThrow(() -> new RuntimeException("BSIT not found"));
+                Course bscs = courseRepository.findByCode("BSCS")
+                        .orElseThrow(() -> new RuntimeException("BSCS not found"));
+                Course bsis = courseRepository.findByCode("BSIS")
+                        .orElseThrow(() -> new RuntimeException("BSIS not found"));
 
                 // Admin
                 userRepository.save(buildUser("ADM-0001", "admin123",
                         "ADMIN USER", "admin@pup.edu.ph", Role.ADMIN, passwordEncoder));
 
-                // Faculty
+                // ── Faculty ───────────────────────────────────────────
+                // BSIT faculty
                 seedFaculty(userRepository, facultyRepository, passwordEncoder,
                         "FAC-2024-001", "DELA CRUZ, JUAN BATUMBAKAL",
                         "Information Technology", "Full Time",
@@ -73,9 +78,33 @@ public class DataSeeder {
                         "FAC-2024-005", "REYES, MC JOBEN RODRIGUEZ",
                         "Information Technology", "Part Time",
                         "0955-555-5555", "mj.reyes@pup.edu.ph");
+
+                // BSCS faculty
+                seedFaculty(userRepository, facultyRepository, passwordEncoder,
+                        "FAC-2024-006", "MENDOZA, ISABEL TRINIDAD",
+                        "Computer Science", "Full Time",
+                        "0966-666-6661", "it.mendoza@pup.edu.ph");
+                seedFaculty(userRepository, facultyRepository, passwordEncoder,
+                        "FAC-2024-007", "AQUINO, LORENZO BAUTISTA",
+                        "Computer Science", "Full Time",
+                        "0966-666-6662", "lb.aquino@pup.edu.ph");
+                seedFaculty(userRepository, facultyRepository, passwordEncoder,
+                        "FAC-2024-008", "RAMOS, CATALINA VICENTE",
+                        "Computer Science", "Part Time",
+                        "0966-666-6663", "cv.ramos@pup.edu.ph");
+
+                // BSIS faculty
+                seedFaculty(userRepository, facultyRepository, passwordEncoder,
+                        "FAC-2024-009", "VILLANUEVA, MARCO ANTONIO",
+                        "Information Systems", "Full Time",
+                        "0977-777-7771", "ma.villanueva@pup.edu.ph");
+                seedFaculty(userRepository, facultyRepository, passwordEncoder,
+                        "FAC-2024-010", "FERNANDEZ, ROSARIO DE GUZMAN",
+                        "Information Systems", "Part Time",
+                        "0977-777-7772", "rd.fernandez@pup.edu.ph");
                 System.out.println("✓ Faculty seeded.");
 
-                // Students
+                // ── Students: BSIT ──────────────────────────────────────
                 seedStudent(userRepository, studentRepository, passwordEncoder,
                         "2026-00001-SP-0", "VANCE, ALEXANDER",
                         bsit, 1, "Male", LocalDate.of(2007, 3, 15));
@@ -106,6 +135,53 @@ public class DataSeeder {
                 seedStudent(userRepository, studentRepository, passwordEncoder,
                         "2023-00001-SP-0", "HAYES, GENEVIEVE",
                         bsit, 4, "Female", LocalDate.of(2004, 12, 14));
+
+                // ── Students: BSCS ──────────────────────────────────────
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2026-00004-SP-0", "PARK, JI-WOO",
+                        bscs, 1, "Male", LocalDate.of(2007, 2, 11));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2026-00005-SP-0", "OKONKWO, CHIDERA",
+                        bscs, 1, "Female", LocalDate.of(2007, 5, 19));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2025-00005-SP-0", "IVANOV, DMITRI",
+                        bscs, 2, "Male", LocalDate.of(2006, 3, 2));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2025-00006-SP-0", "KAUR, SIMRAN",
+                        bscs, 2, "Female", LocalDate.of(2006, 10, 14));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2025-00007-SP-0", "BAUTISTA, GABRIEL",
+                        bscs, 2, "Male", LocalDate.of(2006, 12, 1));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2024-00003-SP-0", "NAKAMURA, YUKI",
+                        bscs, 3, "Female", LocalDate.of(2005, 1, 27));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2024-00004-SP-0", "MWANGI, AMARA",
+                        bscs, 3, "Female", LocalDate.of(2005, 9, 8));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2023-00002-SP-0", "PETROV, ALEXEI",
+                        bscs, 4, "Male", LocalDate.of(2004, 4, 30));
+
+                // ── Students: BSIS ──────────────────────────────────────
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2026-00006-SP-0", "CRUZ, ISABELLA",
+                        bsis, 1, "Female", LocalDate.of(2007, 6, 6));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2026-00007-SP-0", "TAN, MARCUS",
+                        bsis, 1, "Male", LocalDate.of(2007, 8, 17));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2025-00008-SP-0", "FLORES, DANIELA",
+                        bsis, 2, "Female", LocalDate.of(2006, 2, 23));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2025-00009-SP-0", "ABDULLAH, YUSUF",
+                        bsis, 2, "Male", LocalDate.of(2006, 7, 9));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2024-00005-SP-0", "GARCIA, SOFIA",
+                        bsis, 3, "Female", LocalDate.of(2005, 11, 20));
+                seedStudent(userRepository, studentRepository, passwordEncoder,
+                        "2023-00003-SP-0", "REYES, MIGUEL",
+                        bsis, 4, "Male", LocalDate.of(2004, 3, 5));
+
                 System.out.println("✓ Students seeded.");
             }
 
@@ -113,11 +189,28 @@ public class DataSeeder {
             if (subjectRepository.count() == 0) {
                 Course bsit = courseRepository.findByCode("BSIT")
                         .orElseThrow(() -> new RuntimeException("BSIT not found"));
-                List<Course> bsitOnly = List.of(bsit);
+                Course bscs = courseRepository.findByCode("BSCS")
+                        .orElseThrow(() -> new RuntimeException("BSCS not found"));
+                Course bsis = courseRepository.findByCode("BSIS")
+                        .orElseThrow(() -> new RuntimeException("BSIS not found"));
 
+                List<Course> bsitOnly = List.of(bsit);
+                List<Course> bscsOnly = List.of(bscs);
+                List<Course> bsisOnly = List.of(bsis);
+                List<Course> allCourses = List.of(bsit, bscs, bsis);
+
+                // ── Shared / common subjects (offered to all 3 courses) ──
                 subjectRepository.save(buildSubject("COMP 002",
                         "Computer Programming 1",
-                        3, 2.0, 3.0, 5.0, 1, 1, bsitOnly));
+                        3, 2.0, 3.0, 5.0, 1, 1, allCourses));
+                subjectRepository.save(buildSubject("COMP 003",
+                        "Computer Programming 2",
+                        3, 2.0, 3.0, 5.0, 1, 2, allCourses));
+                subjectRepository.save(buildSubject("PATHFIT 4",
+                        "Physical Activity Towards Health and Fitness 4",
+                        2, 2.0, 0.0, 2.0, 2, 2, allCourses));
+
+                // ── BSIT-specific subjects ──────────────────────────────
                 subjectRepository.save(buildSubject("COMP 009",
                         "Object Oriented Programming",
                         3, 2.0, 3.0, 5.0, 2, 1, bsitOnly));
@@ -139,20 +232,68 @@ public class DataSeeder {
                 subjectRepository.save(buildSubject("INTE 202",
                         "Integrative Programming and Technologies 1",
                         3, 2.0, 3.0, 5.0, 2, 2, bsitOnly));
-                subjectRepository.save(buildSubject("PATHFIT 4",
-                        "Physical Activity Towards Health and Fitness 4",
-                        2, 2.0, 0.0, 2.0, 2, 2, bsitOnly));
                 subjectRepository.save(buildSubject("COMP 018",
                         "Database Administration",
                         3, 2.0, 3.0, 5.0, 3, 1, bsitOnly));
                 subjectRepository.save(buildSubject("COMP 023",
                         "Social and Professional Issues in Computing",
                         3, 3.0, 0.0, 3.0, 4, 1, bsitOnly));
+
+                // ── BSCS-specific subjects ──────────────────────────────
+                subjectRepository.save(buildSubject("CSC 101",
+                        "Discrete Structures 1",
+                        3, 3.0, 0.0, 3.0, 1, 2, bscsOnly));
+                subjectRepository.save(buildSubject("CSC 201",
+                        "Data Structures and Algorithms",
+                        3, 2.0, 3.0, 5.0, 2, 1, bscsOnly));
+                subjectRepository.save(buildSubject("CSC 202",
+                        "Automata Theory and Formal Languages",
+                        3, 3.0, 0.0, 3.0, 2, 1, bscsOnly));
+                subjectRepository.save(buildSubject("CSC 210",
+                        "Operating Systems",
+                        3, 2.0, 3.0, 5.0, 2, 2, bscsOnly));
+                subjectRepository.save(buildSubject("CSC 211",
+                        "Architecture and Organization",
+                        3, 2.0, 3.0, 5.0, 2, 2, bscsOnly));
+                subjectRepository.save(buildSubject("CSC 301",
+                        "Software Engineering 1",
+                        3, 2.0, 3.0, 5.0, 3, 1, bscsOnly));
+                subjectRepository.save(buildSubject("CSC 310",
+                        "Algorithms and Complexity",
+                        3, 3.0, 0.0, 3.0, 3, 2, bscsOnly));
+                subjectRepository.save(buildSubject("CSC 401",
+                        "Machine Learning",
+                        3, 2.0, 3.0, 5.0, 4, 1, bscsOnly));
+
+                // ── BSIS-specific subjects ──────────────────────────────
+                subjectRepository.save(buildSubject("IS 101",
+                        "Fundamentals of Information Systems",
+                        3, 3.0, 0.0, 3.0, 1, 2, bsisOnly));
+                subjectRepository.save(buildSubject("IS 201",
+                        "Systems Analysis and Design",
+                        3, 2.0, 3.0, 5.0, 2, 1, bsisOnly));
+                subjectRepository.save(buildSubject("IS 202",
+                        "Business Process Management",
+                        3, 3.0, 0.0, 3.0, 2, 1, bsisOnly));
+                subjectRepository.save(buildSubject("IS 210",
+                        "Enterprise Architecture",
+                        3, 2.0, 3.0, 5.0, 2, 2, bsisOnly));
+                subjectRepository.save(buildSubject("IS 301",
+                        "IT Project Management",
+                        3, 3.0, 0.0, 3.0, 3, 1, bsisOnly));
+                subjectRepository.save(buildSubject("IS 310",
+                        "Enterprise Resource Planning",
+                        3, 2.0, 3.0, 5.0, 3, 2, bsisOnly));
+                subjectRepository.save(buildSubject("IS 401",
+                        "IT Audit and Controls",
+                        3, 3.0, 0.0, 3.0, 4, 1, bsisOnly));
+
                 System.out.println("✓ Subjects seeded.");
             } else {
                 // Update year level and semester on existing subjects
                 // Safe to run every time - only updates if field is null
                 updateSubjectMeta(subjectRepository, "COMP 002", 1, 1);
+                updateSubjectMeta(subjectRepository, "COMP 003", 1, 2);
                 updateSubjectMeta(subjectRepository, "COMP 009", 2, 1);
                 updateSubjectMeta(subjectRepository, "COMP 010", 2, 1);
                 updateSubjectMeta(subjectRepository, "COMP 012", 2, 2);
@@ -163,6 +304,21 @@ public class DataSeeder {
                 updateSubjectMeta(subjectRepository, "PATHFIT 4", 2, 2);
                 updateSubjectMeta(subjectRepository, "COMP 018", 3, 1);
                 updateSubjectMeta(subjectRepository, "COMP 023", 4, 1);
+                updateSubjectMeta(subjectRepository, "CSC 101", 1, 2);
+                updateSubjectMeta(subjectRepository, "CSC 201", 2, 1);
+                updateSubjectMeta(subjectRepository, "CSC 202", 2, 1);
+                updateSubjectMeta(subjectRepository, "CSC 210", 2, 2);
+                updateSubjectMeta(subjectRepository, "CSC 211", 2, 2);
+                updateSubjectMeta(subjectRepository, "CSC 301", 3, 1);
+                updateSubjectMeta(subjectRepository, "CSC 310", 3, 2);
+                updateSubjectMeta(subjectRepository, "CSC 401", 4, 1);
+                updateSubjectMeta(subjectRepository, "IS 101", 1, 2);
+                updateSubjectMeta(subjectRepository, "IS 201", 2, 1);
+                updateSubjectMeta(subjectRepository, "IS 202", 2, 1);
+                updateSubjectMeta(subjectRepository, "IS 210", 2, 2);
+                updateSubjectMeta(subjectRepository, "IS 301", 3, 1);
+                updateSubjectMeta(subjectRepository, "IS 310", 3, 2);
+                updateSubjectMeta(subjectRepository, "IS 401", 4, 1);
                 System.out.println("✓ Subject year levels updated.");
             }
 
@@ -170,7 +326,12 @@ public class DataSeeder {
             if (sectionRepository.count() == 0) {
                 Course bsit = courseRepository.findByCode("BSIT")
                         .orElseThrow(() -> new RuntimeException("BSIT not found"));
+                Course bscs = courseRepository.findByCode("BSCS")
+                        .orElseThrow(() -> new RuntimeException("BSCS not found"));
+                Course bsis = courseRepository.findByCode("BSIS")
+                        .orElseThrow(() -> new RuntimeException("BSIS not found"));
 
+                // ── BSIT sections ───────────────────────────────────────
                 Section bsit1_1 = sectionRepository.save(
                         buildSection("BSIT-SP 1-1", bsit, 1));
                 Section bsit1_2 = sectionRepository.save(
@@ -195,12 +356,49 @@ public class DataSeeder {
                 assignSection(studentRepository, "2024-00002-SP-0", bsit3_1);
                 assignSection(studentRepository, "2023-00001-SP-0", bsit4_1);
 
+                // ── BSCS sections ───────────────────────────────────────
+                Section bscs1_1 = sectionRepository.save(
+                        buildSection("BSCS-SP 1-1", bscs, 1));
+                Section bscs2_1 = sectionRepository.save(
+                        buildSection("BSCS-SP 2-1", bscs, 2));
+                Section bscs3_1 = sectionRepository.save(
+                        buildSection("BSCS-SP 3-1", bscs, 3));
+                Section bscs4_1 = sectionRepository.save(
+                        buildSection("BSCS-SP 4-1", bscs, 4));
+
+                assignSection(studentRepository, "2026-00004-SP-0", bscs1_1);
+                assignSection(studentRepository, "2026-00005-SP-0", bscs1_1);
+                assignSection(studentRepository, "2025-00005-SP-0", bscs2_1);
+                assignSection(studentRepository, "2025-00006-SP-0", bscs2_1);
+                assignSection(studentRepository, "2025-00007-SP-0", bscs2_1);
+                assignSection(studentRepository, "2024-00003-SP-0", bscs3_1);
+                assignSection(studentRepository, "2024-00004-SP-0", bscs3_1);
+                assignSection(studentRepository, "2023-00002-SP-0", bscs4_1);
+
+                // ── BSIS sections ───────────────────────────────────────
+                Section bsis1_1 = sectionRepository.save(
+                        buildSection("BSIS-SP 1-1", bsis, 1));
+                Section bsis2_1 = sectionRepository.save(
+                        buildSection("BSIS-SP 2-1", bsis, 2));
+                Section bsis3_1 = sectionRepository.save(
+                        buildSection("BSIS-SP 3-1", bsis, 3));
+                Section bsis4_1 = sectionRepository.save(
+                        buildSection("BSIS-SP 4-1", bsis, 4));
+
+                assignSection(studentRepository, "2026-00006-SP-0", bsis1_1);
+                assignSection(studentRepository, "2026-00007-SP-0", bsis1_1);
+                assignSection(studentRepository, "2025-00008-SP-0", bsis2_1);
+                assignSection(studentRepository, "2025-00009-SP-0", bsis2_1);
+                assignSection(studentRepository, "2024-00005-SP-0", bsis3_1);
+                assignSection(studentRepository, "2023-00003-SP-0", bsis4_1);
+
                 System.out.println("✓ Sections seeded and students assigned.");
             }
 
             // ── Schedules ─────────────────────────────────────────────
             if (scheduleRepository.count() == 0) {
 
+                // ── BSIT-SP 2-1 schedules ───────────────────────────────
                 Section bsit2_1 = sectionRepository.findAll().stream()
                         .filter(s -> s.getSectionName().equals("BSIT-SP 2-1"))
                         .findFirst().orElse(null);
@@ -219,7 +417,6 @@ public class DataSeeder {
                     Subject inte202 = subjectRepository.findByCode("INTE 202").orElse(null);
                     Subject pathfit = subjectRepository.findByCode("PATHFIT 4").orElse(null);
 
-                    // BSIT-SP 2-1 schedules
                     if (comp009 != null && fac1 != null)
                         scheduleRepository.save(buildSchedule(
                                 bsit2_1, comp009, fac1,
@@ -267,12 +464,98 @@ public class DataSeeder {
                                 CURRENT_YEAR, CURRENT_SEM));
                 }
 
+                // ── BSCS-SP 2-1 schedules ───────────────────────────────
+                Section bscs2_1 = sectionRepository.findAll().stream()
+                        .filter(s -> s.getSectionName().equals("BSCS-SP 2-1"))
+                        .findFirst().orElse(null);
+
+                if (bscs2_1 != null) {
+                    Faculty fac6 = facultyRepository.findByFacultyId("FAC-2024-006").orElse(null);
+                    Faculty fac7 = facultyRepository.findByFacultyId("FAC-2024-007").orElse(null);
+                    Faculty fac8 = facultyRepository.findByFacultyId("FAC-2024-008").orElse(null);
+
+                    Subject csc201 = subjectRepository.findByCode("CSC 201").orElse(null);
+                    Subject csc202 = subjectRepository.findByCode("CSC 202").orElse(null);
+                    Subject csc210 = subjectRepository.findByCode("CSC 210").orElse(null);
+                    Subject csc211 = subjectRepository.findByCode("CSC 211").orElse(null);
+
+                    if (csc201 != null && fac6 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bscs2_1, csc201, fac6,
+                                "Monday", "08:00", "10:00", "Room 401",
+                                CURRENT_YEAR, CURRENT_SEM));
+                    if (csc201 != null && fac6 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bscs2_1, csc201, fac6,
+                                "Monday", "10:30", "13:30", "Lab 401",
+                                CURRENT_YEAR, CURRENT_SEM));
+                    if (csc202 != null && fac7 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bscs2_1, csc202, fac7,
+                                "Tuesday", "13:00", "16:00", "Room 402",
+                                CURRENT_YEAR, CURRENT_SEM));
+                    if (csc210 != null && fac8 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bscs2_1, csc210, fac8,
+                                "Wednesday", "08:00", "10:00", "Room 403",
+                                CURRENT_YEAR, CURRENT_SEM));
+                    if (csc210 != null && fac8 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bscs2_1, csc210, fac8,
+                                "Wednesday", "10:30", "13:30", "Lab 402",
+                                CURRENT_YEAR, CURRENT_SEM));
+                    if (csc211 != null && fac7 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bscs2_1, csc211, fac7,
+                                "Thursday", "14:00", "17:00", "Lab 403",
+                                CURRENT_YEAR, CURRENT_SEM));
+                }
+
+                // ── BSIS-SP 2-1 schedules ───────────────────────────────
+                Section bsis2_1 = sectionRepository.findAll().stream()
+                        .filter(s -> s.getSectionName().equals("BSIS-SP 2-1"))
+                        .findFirst().orElse(null);
+
+                if (bsis2_1 != null) {
+                    Faculty fac9  = facultyRepository.findByFacultyId("FAC-2024-009").orElse(null);
+                    Faculty fac10 = facultyRepository.findByFacultyId("FAC-2024-010").orElse(null);
+
+                    Subject is201 = subjectRepository.findByCode("IS 201").orElse(null);
+                    Subject is202 = subjectRepository.findByCode("IS 202").orElse(null);
+                    Subject is210 = subjectRepository.findByCode("IS 210").orElse(null);
+
+                    if (is201 != null && fac9 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bsis2_1, is201, fac9,
+                                "Monday", "08:00", "10:00", "Room 501",
+                                CURRENT_YEAR, CURRENT_SEM));
+                    if (is201 != null && fac9 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bsis2_1, is201, fac9,
+                                "Monday", "10:30", "13:30", "Lab 501",
+                                CURRENT_YEAR, CURRENT_SEM));
+                    if (is202 != null && fac10 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bsis2_1, is202, fac10,
+                                "Tuesday", "13:00", "16:00", "Room 502",
+                                CURRENT_YEAR, CURRENT_SEM));
+                    if (is210 != null && fac9 != null)
+                        scheduleRepository.save(buildSchedule(
+                                bsis2_1, is210, fac9,
+                                "Wednesday", "14:00", "17:00", "Lab 502",
+                                CURRENT_YEAR, CURRENT_SEM));
+                }
+
                 System.out.println("✓ Schedules seeded.");
             }
 
             // ── Grades ────────────────────────────────────────────────
             if (gradeRepository.count() == 0) {
 
+                String prevYear = "2024-2025";
+                String prevSem  = "First Semester";
+
+                // ── BSIT-SP 2-1 grades ──────────────────────────────────
                 Section bsit2_1 = sectionRepository.findAll().stream()
                         .filter(s -> s.getSectionName().equals("BSIT-SP 2-1"))
                         .findFirst().orElse(null);
@@ -285,11 +568,6 @@ public class DataSeeder {
                     Subject comp009 = subjectRepository.findByCode("COMP 009").orElse(null);
                     Subject comp010 = subjectRepository.findByCode("COMP 010").orElse(null);
                     Subject comp013 = subjectRepository.findByCode("COMP 013").orElse(null);
-
-                    // Sample grades for BSIT-SP 2-1 students
-                    // School year: 2024-2025 First Semester (a completed term)
-                    String prevYear = "2024-2025";
-                    String prevSem  = "First Semester";
 
                     Student zhou = studentRepository.findByStudentNumber("2025-00001-SP-0").orElse(null);
                     Student santos = studentRepository.findByStudentNumber("2025-00002-SP-0").orElse(null);
@@ -319,6 +597,68 @@ public class DataSeeder {
                         gradeRepository.save(buildGrade(silva, comp009, bsit2_1, fac1, prevYear, prevSem, "2.5"));
                     if (silva != null && comp013 != null && fac5 != null)
                         gradeRepository.save(buildGrade(silva, comp013, bsit2_1, fac5, prevYear, prevSem, "INC"));
+                }
+
+                // ── BSCS-SP 2-1 grades ──────────────────────────────────
+                Section bscs2_1 = sectionRepository.findAll().stream()
+                        .filter(s -> s.getSectionName().equals("BSCS-SP 2-1"))
+                        .findFirst().orElse(null);
+
+                if (bscs2_1 != null) {
+                    Faculty fac6 = facultyRepository.findByFacultyId("FAC-2024-006").orElse(null);
+                    Faculty fac7 = facultyRepository.findByFacultyId("FAC-2024-007").orElse(null);
+                    Faculty fac8 = facultyRepository.findByFacultyId("FAC-2024-008").orElse(null);
+
+                    Subject csc201 = subjectRepository.findByCode("CSC 201").orElse(null);
+                    Subject csc202 = subjectRepository.findByCode("CSC 202").orElse(null);
+                    Subject csc210 = subjectRepository.findByCode("CSC 210").orElse(null);
+
+                    Student ivanov = studentRepository.findByStudentNumber("2025-00005-SP-0").orElse(null);
+                    Student kaur = studentRepository.findByStudentNumber("2025-00006-SP-0").orElse(null);
+                    Student bautista = studentRepository.findByStudentNumber("2025-00007-SP-0").orElse(null);
+
+                    if (ivanov != null && csc201 != null && fac6 != null)
+                        gradeRepository.save(buildGrade(ivanov, csc201, bscs2_1, fac6, prevYear, prevSem, "1.25"));
+                    if (ivanov != null && csc202 != null && fac7 != null)
+                        gradeRepository.save(buildGrade(ivanov, csc202, bscs2_1, fac7, prevYear, prevSem, "1.5"));
+                    if (ivanov != null && csc210 != null && fac8 != null)
+                        gradeRepository.save(buildGrade(ivanov, csc210, bscs2_1, fac8, prevYear, prevSem, "1.75"));
+
+                    if (kaur != null && csc201 != null && fac6 != null)
+                        gradeRepository.save(buildGrade(kaur, csc201, bscs2_1, fac6, prevYear, prevSem, "1.0"));
+                    if (kaur != null && csc202 != null && fac7 != null)
+                        gradeRepository.save(buildGrade(kaur, csc202, bscs2_1, fac7, prevYear, prevSem, "1.25"));
+
+                    if (bautista != null && csc201 != null && fac6 != null)
+                        gradeRepository.save(buildGrade(bautista, csc201, bscs2_1, fac6, prevYear, prevSem, "2.5"));
+                    if (bautista != null && csc210 != null && fac8 != null)
+                        gradeRepository.save(buildGrade(bautista, csc210, bscs2_1, fac8, prevYear, prevSem, "5.0"));
+                }
+
+                // ── BSIS-SP 2-1 grades ──────────────────────────────────
+                Section bsis2_1 = sectionRepository.findAll().stream()
+                        .filter(s -> s.getSectionName().equals("BSIS-SP 2-1"))
+                        .findFirst().orElse(null);
+
+                if (bsis2_1 != null) {
+                    Faculty fac9  = facultyRepository.findByFacultyId("FAC-2024-009").orElse(null);
+                    Faculty fac10 = facultyRepository.findByFacultyId("FAC-2024-010").orElse(null);
+
+                    Subject is201 = subjectRepository.findByCode("IS 201").orElse(null);
+                    Subject is202 = subjectRepository.findByCode("IS 202").orElse(null);
+
+                    Student flores = studentRepository.findByStudentNumber("2025-00008-SP-0").orElse(null);
+                    Student abdullah = studentRepository.findByStudentNumber("2025-00009-SP-0").orElse(null);
+
+                    if (flores != null && is201 != null && fac9 != null)
+                        gradeRepository.save(buildGrade(flores, is201, bsis2_1, fac9, prevYear, prevSem, "1.75"));
+                    if (flores != null && is202 != null && fac10 != null)
+                        gradeRepository.save(buildGrade(flores, is202, bsis2_1, fac10, prevYear, prevSem, "2.0"));
+
+                    if (abdullah != null && is201 != null && fac9 != null)
+                        gradeRepository.save(buildGrade(abdullah, is201, bsis2_1, fac9, prevYear, prevSem, "1.5"));
+                    if (abdullah != null && is202 != null && fac10 != null)
+                        gradeRepository.save(buildGrade(abdullah, is202, bsis2_1, fac10, prevYear, prevSem, "DRP"));
                 }
 
                 System.out.println("✓ Sample grades seeded.");
